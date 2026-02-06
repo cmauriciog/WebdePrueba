@@ -1,0 +1,38 @@
+/*.modalflash {*/
+		/*	position: fixed;*/
+		/*	top: 50%;*/
+		/*	left: 50%;*/
+		/*	transform: translate(-50%, -50%);*/
+		/*	max-width: 75vh;*/
+		/*	max-height: 60vh;*/
+		/*	height: 100vh !important;55%;*/
+		/*	background-color: yellow;*/
+		/*	border-radius: 10px;*/
+		/*	box-shadow: 0 0 10px rgba(0,0,0,0.3);*/
+		/*	display: flex;*/
+		/*	flex-direction: column;*/
+		/*	z-index: 1010;*/
+		/*	overflow: auto;*/
+		/*}*/
+
+		/*.modalflash-cabecera {*/
+		/*	background-color: red;*/
+		/*	color: white;*/
+		/*	padding: 10px;*/
+		/*	text-align: center;*/
+		/*	font-weight: bold;*/
+		/*	border-top-left-radius: 10px;*/
+		/*	border-top-right-radius: 10px;*/
+		/*	flex-shrink: 0;*/
+		/*}*/
+		/*.modalflash-cuerpo {*/
+		/*	max-height: calc(95vh - 60px);*/
+		/*	height: 95vh;*/
+		/*	overflow: auto;*/
+		/*	padding: 10px;*/
+		/*}*/		
+		
+				#cuerpomodalnovisitar {
+			overflow:auto !important;
+			max-height:300px !important;
+		}
