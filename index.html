@@ -209,13 +209,62 @@
 			flex: 1;                /* OCUPA TODA LA ALTURA RESTANTE */
 			overflow-y: auto;       /* SCROLL SI SE LLENA */
 		}
+		.modalflash-botones {
+			display: flex;              /* CLAVE */
+			justify-content: center;    /* centra horizontal */
+			align-items: center;
+			gap: 20px;                  /* espacio entre botones */
+			margin-top: 15px;
+		}
+
+		/* estilos de botones */
+		.modalflash-botones button {
+			height: 30px;
+			width: 90px;
+			color: white;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		#btn-indicaciones-modal-flash {
+			background-color: blue;
+			color:white;
+			border: 1px solid white;
+			height:30px;
+			width:90px;
+			display: flex;
+			align-items: center;      /* centra vertical */
+			justify-content: center;  /* centra horizontal */
+		}
+
+		#btn-cerrar-modal-flash {
+			background-color: red;
+			color:white;
+			border: 1px solid white;
+			height:30px;
+			width:90px;
+			display: flex;
+			align-items: center;      /* centra vertical */
+			justify-content: center;  /* centra horizontal */
+		}
+		.modalflash-contador {
+			display: flex;
+			justify-content: center;   /* centra horizontal */
+			align-items: center;
+			margin-top: 10px;
+			text-align: center;
+		}
 
 		@media (max-width: 600px) {
 			.modalflash {
-			width: 90vw;
-			height: 80vh;
-			overflow-y: auto;
+				width: 83vw;
+				height: 75vh;
+				/*overflow-y: auto;*/
 			}
+			.fila {
+				flex-wrap: nowrap;
+			}
+			.novedad{left:8px;right:8px;max-width:calc(100% - 16px)}
 		}
 		
 		/*Botón para recargar la página*/
@@ -770,7 +819,7 @@
 		</button>
 	</div>
 	
-	<div class="modalflash" id="MiModalFlash" style="font-size:14px;">
+	<div class="modalflash" id="MiModalFlash">
 		<div class="modalflash-cabecera" id="titulomodalflash">¡¡¡ BIENVENIDO AL MAPA WEB DE LA CONGREGACION SUR VILLA NUEVA...!!!</div>
 		<p class="modalflash-cuerpo" id="cuerpomodalflash"><img src="./images/presentacion.jpg" style="display: block; margin: auto; height:80px" id="imagenmodalflash"/><br><strong>Si sos un publicador, este mapa en línea te permitirá:</strong>
 			<br>Ubicar un territorio con la opción de hacerlo a partir de tu ubicación en tiempo real.
@@ -789,10 +838,14 @@
 					<input id="nomostrarinicial" type="checkbox" style="width:16px; height:16px;"/>
 					No volver a mostrar
 				</label>
-				<button id="btn-indicaciones-modal-flash" style="height:30px; width:90px; background-color:blue;border-color:white;color:white;" onclick="TrazarRuta()">Sí</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-				<button id="btn-cerrar-modal-flash" style="height:30px; width:90px; background-color:red;border-color:white;color:white;">Cerrar</button>
+				<div class="modalflash-botones" id="botonesModalFlash">
+					<button id="btn-indicaciones-modal-flash" onclick="IniciarRuteo()">Sí</button>
+					<button id="btn-cerrar-modal-flash">Cerrar</button>
+				</div>
 			</div>
-			<span style="font-weight: bold; color:red; text-align: center;">Me cierro en: <span id="contador"> </span> segundos</span>
+			<div class="modalflash-contador">
+				<span style="font-weight: bold; color:red; text-align: center;">Me cierro en: <span id="contador"> </span> segundos</span>
+			</div>
 		</p>
 	</div>
 	
@@ -974,7 +1027,7 @@
 		var capa_popups=null;
 		var infoterritorios=null;
 		var infoterritorio=null;
-		var orientarme="no";
+		var orientarme="";
 		var ruta="";
 		var actualizarruta="si";
 		var coordenadas_ubicacion_real="";
@@ -1280,7 +1333,7 @@
 				titulomodalflash.innerText="TRAZAR RUTA";
 				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 				'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
-				document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
+				btnindicacionesmodalflash.style.display='flex';
 				tiempomodalflash=5000;
 				ModalFlash(tiempomodalflash);
 			};
@@ -1325,7 +1378,7 @@
 				titulomodalflash.innerText="TRAZAR RUTA";
 				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 				'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
-				document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
+				btnindicacionesmodalflash.style.display='flex';
 				tiempomodalflash=5000;
 				ModalFlash(tiempomodalflash);
 			};
@@ -1527,15 +1580,18 @@
 			VerificarConexion();
 			if (conexion==="si") {
 				VerificarGPS();
-				if ((dispositivo=="pc") && seguimiento=="no") {
+				if ((dispositivo=="pc") && orientarme=="") {
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>Puede que la ubicación que te muestre NO SEA LA REAL.</b><br><br><span style="color:black">Parece que estás conectado desde una PC; por lo que la ubicación tal vez sea la de tu proveedor de internet; en vez del lugar donde estás.-<br></span>';
-					document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+					btnindicacionesmodalflash.style.display='none';
+					btncerrarmodalflash.textContent="Cerrar";
 					tiempomodalflash=9000;
 					ModalFlash(tiempomodalflash);
 				};
+				if (dispositivo==="pc") {botoncentrado.style.display='block'};
+				cajadistancia.classList.add("visible");
 				seguimiento="si";
-				document.getElementById("miubicacion").style.visibility='visible';
+				//document.getElementById("miubicacion").style.visibility='visible';
 				mapa.locate({setView: false, watch: true, enableHighAccuracy: true});
 				mapa.on('locationfound', ActualizarUbicacion);
 				mapa.on('locationerror', ErrorGPS);
@@ -1557,65 +1613,131 @@
 				coordenadas_ubicacion_real=e.latlng;
 				mapa.setView(coordenadas_ubicacion_real, 17);
 			};
-			document.getElementById("vermiubicacion").style.visibility='visible';
+			//document.getElementById("vermiubicacion").style.visibility='visible';
 			dentro = ChequearPredio(coordenadas_ubicacion_real);
 			distancia=DistanciaEnTiempoReal();
-			if (!dentro || dentro==null) {
-				dentropredio=""} else {dentropredio="si"};
-			if (orientarme=="no" && dentropredio=="") {
-				titulomodalflash.innerText="TRAZAR RUTA";
-				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
-				'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
-				document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
-				tiempomodalflash=5000;
-				ModalFlash(tiempomodalflash);
+			<!-- if (!dentro || dentro==null) { -->
+				<!-- dentropredio=""} else {dentropredio="si"}; -->
+			<!-- if (orientarme=="no" && dentropredio=="") { -->
+				<!-- titulomodalflash.innerText="TRAZAR RUTA"; -->
+				<!-- cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+ -->
+				<!-- 'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>'; -->
+				<!-- document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible'; -->
+				<!-- tiempomodalflash=5000; -->
+				<!-- ModalFlash(tiempomodalflash); -->
+			<!-- }; -->
+			<!-- if (orientarme=="no" && dentropredio=="si" && distancia>7) { -->
+				<!-- titulomodalflash.innerText="TRAZAR RUTA"; -->
+				<!-- cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo mostrarte en tiempo real por dónde vas '+ -->
+				<!-- 'y el destino con vista de ambos puntos en el mapa.-<br></span>'; -->
+				<!-- document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible'; -->
+				<!-- tiempomodalflash=5000; -->
+				<!-- ModalFlash(tiempomodalflash); -->
+			<!-- }; -->
+			<!-- if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.classList.add("visible")}; -->
+			<!-- if (distancia > 7 && orientarme=="si") { -->
+				<!-- cajadistancia.classList.add("visible"); -->
+				<!-- if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"}; -->
+				<!-- if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"}; -->
+				<!-- cajadistancia.textContent = msg; -->
+				<!-- cajadistancia.style.background = "#d4edda"; -->
+				<!-- cajadistancia.style.color = "#155724"; -->
+			<!-- }; -->
+			<!-- if (distancia <= 7 && orientarme=="si") { -->
+				<!-- setTimeout(() => { -->
+					<!-- //cajadistancia.style.opacity = "0"; -->
+					<!-- //cajadistancia.style.visibility="visible"; -->
+					<!-- cajadistancia.classList.add("visible"); -->
+					<!-- cajadistancia.textContent = "¡Has llegado a tu destino!"; -->
+					<!-- cajadistancia.style.background = "#d4edda"; -->
+					<!-- cajadistancia.style.color = "#155724"; -->
+					<!-- setTimeout(()=> elemento.style.display = "none", 1000); // espera al fade-out -->
+				<!-- }, 10000); -->
+			
+				<!-- if (avisollegada==="si") {AlertaLlegada("Has llegado a tu destino")}; -->
+			<!-- }; -->
+			if (orientarme=="") {
+				if (distancia>1100) {
+					titulomodalflash.innerText="TRAZAR RUTA";
+					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
+					'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
+					btnindicacionesmodalflash.style.display='flex';
+					btncerrarmodalflash.style.display='flex';
+					btncerrarmodalflash.innerHTML = "No";
+					tiempomodalflash=5000;
+					ModalFlash(tiempomodalflash);
+				};
+				if (distancia<=1100 && distancia>10) {
+					titulomodalflash.innerText="TRAZAR RUTA";
+					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo mostrarte en tiempo real por dónde vas '+
+					'y el destino con vista de ambos puntos en el mapa.-<br></span>';
+					btnindicacionesmodalflash.style.display='flex';
+					btncerrarmodalflash.style.display='flex';
+					btncerrarmodalflash.innerHTML = "No";
+					tiempomodalflash=5000;
+					ModalFlash(tiempomodalflash);
+				};
 			};
-			if (orientarme=="no" && dentropredio=="si" && distancia>7) {
-				titulomodalflash.innerText="TRAZAR RUTA";
-				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo mostrarte en tiempo real por dónde vas '+
-				'y el destino con vista de ambos puntos en el mapa.-<br></span>';
-				document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
-				tiempomodalflash=5000;
-				ModalFlash(tiempomodalflash);
+			if (orientarme=="si") {
+				if (distancia<=1100) {
+					botondetallesruta.style.display="none";
+					panelrutas.style.display="none";
+					if (ruta) {
+						ruta.remove();
+					};
+				};
+				if (distancia>1100) {
+					botondetallesruta.style.display="block";
+				};
 			};
-			if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.classList.add("visible")};
-			if (distancia > 7 && orientarme=="si") {
-				cajadistancia.classList.add("visible");
-				if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
-				if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
-				cajadistancia.textContent = msg;
+			if (distancia > 10) {
+				if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino!"};
+				if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino!"};
+			};
+			if (!dentro) { //|| aer || lugar) {
+				cajadistancia.textContent = msg+" (En línea recta).-";
+				cajadistancia.style.background = "#d4edda";
+				cajadistancia.style.color = "#155724"
+			} else {
+				if (dispositivo=="movil") {cajadistancia.innerHTML = "Estás dentro del territorio de la congegación.<br>La velocidad máxima recomendada para circular aqui es de 30 km/h.-"};
+				if (dispositivo=="pc") {cajadistancia.innerHTML = "Estás dentro del territorio de la congregación.-"};
 				cajadistancia.style.background = "#d4edda";
 				cajadistancia.style.color = "#155724";
+				botondetallesruta.style.display="none";
 			};
-			if (distancia <= 7 && orientarme=="si") {
+			if (distancia >80 && distancia <= 180 && dispositivo=="movil") {
+				msg="Avanza despacio y con atención. ¡Estás a pocos metros del destino!.";
+				if (avisollegada=="si") {AlertaLlegada(msg)};
+			};
+			if (distancia>10 && distancia<80) {avisollegada="si"};
+			if (distancia <= 10) {
+				cajadistancia.textContent = "¡Has llegado a tu destino!.-";
+				refrescoRutaActivo = false;
+				clearInterval(intervaloRuta);
+				intervaloRuta = null;
 				setTimeout(() => {
-					cajadistancia.style.opacity = "0";
-					cajadistancia.style.visibility="visible";
-					cajadistancia.textContent = "¡Has llegado a tu destino!";
-					cajadistancia.style.background = "#d4edda";
-					cajadistancia.style.color = "#155724";
-					setTimeout(()=> elemento.style.display = "none", 1000); // espera al fade-out
+					cajadistancia.classList.remove("visible");
 				}, 10000);
-			
-				if (avisollegada==="si") {AlertaLlegada("Has llegado a tu destino")};
+				mapa.setView(coordenadas_ubicacion_real, 19);
+				if (avisollegada=="si") {AlertaLlegada("Has llegado a tu destino "+msgencontrado)};
 			};
 		};
 
 		// Evento en caso de error
 		function ErrorGPS(e) {
-			if (!dispositivo=="pc") {
-				cajadistancia.textContent = "No se pudo obtener la ubicación: " + e.message;
-				cajadistancia.style.color = "red";
-				botondetallesruta.style.display="none";
-			};
+			cajadistancia.classList.add("visible");
+			cajadistancia.textContent = "No se pudo obtener la ubicación: " + e.message;
+			cajadistancia.style.background = "white";
+			cajadistancia.style.color = "red";
+			botondetallesruta.style.display='none';
 		};
 		
 		//Anuncio en voz alta de cercanía/llegada a destino
 		function AlertaLlegada(msg) {
 			const utterance = new SpeechSynthesisUtterance(msg);
 			speechSynthesis.speak(utterance);
-			avisollegada="no";
-			orientarme="no";
+			if (distancia>10) {avisollegada="no"};
+			if (distancia<=10) {avisollegada="no";DetenerActualizarUbicacion()};
 			clearTimeout(temporizadormodalflash);
 		};
 		
@@ -1670,21 +1792,20 @@
 		
 		// Función para detener geolocalización
 		function DetenerActualizarUbicacion() {
-			orientarme="no";
-			clearInterval(actualizarruta);
+			clearInterval(intervalo);
+			clearInterval(intervaloRuta);
+			clearTimeout(temporizadormodalflash);
+			clearTimeout(tiempo);
 			actualizarruta="si";
-			titulomodalflash.innerText="SEGUIMIENTO DETENIDO";
-			cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>Se cancelará la actualización del trazado de ruta.</b><br><br><span style="color:black">porque apagaste el GPS.-</span>';
-			tiempomodalflash=5000;
-			ModalFlash(tiempomodalflash);
-			//document.getElementById("dondestoy").style.visibility='hidden';
+			if (ruta) {ruta.remove()};
+			botondetallesruta.style.display='none';
 			coordenadas_ubicacion_real="";
 			distancia="";
 			mapa.stopLocate();
 			mapa.off('locationfound', ActualizarUbicacion);
 			mapa.off('locationerror', ErrorGPS);
 			if (marca_ubicacion_real) {
-				mapa.removeLayer(marca_ubicacion_real);
+				marca_ubicacion_real.remove();
 				coordenadas_ubicacion_real = "";
 				marca_ubicacion_real = "";
 			};
@@ -1693,6 +1814,7 @@
 			'No podrás visualizar tu posición ni recibir indicaciones para llegar a un lugar.'+
 			'<br><br>Podrás volver a activarla en el momento que lo desees.</span>';
 			tiempomodalflash=5000;
+			//btncerrarmodalflash.textContent === "Cerrar";
 			ModalFlash(tiempomodalflash);
 		};
 
@@ -1710,24 +1832,52 @@
 
 		<!--Función para detener el seguimiento en tiempo real-->
 		function desactivar_seguimiento() {
+			botondetallesruta.style.display='none';
 			barralateral.close();
-			seguimiento="no";
-			avisollegada="";
-			dentropredio="";
-			document.getElementById("vermiubicacion").style.visibility='hidden';
-			document.getElementById("gps").src="./images/slide_off.jpg";
-			document.getElementById("miubicacion").style.visibility='hidden';
+			seguimiento="";
+			orientarme="";
+			//avisollegada="";
+			//dentropredio="";
+			//document.getElementById("vermiubicacion").style.visibility='hidden';
+			//document.getElementById("gps").src="./images/slide_off.jpg";
+			//document.getElementById("miubicacion").style.visibility='hidden';
 			//document.getElementById("gpson").style.visibility='hidden';
 			//document.getElementById("gpsoff").style.visibility='visible';
-			document.getElementById("botoncentrado").style.visibility='hidden';
-			document.getElementById("activargps").style.visibility='visible';
-			cajadistancia.style.visibility="hidden";
+			//document.getElementById("botoncentrado").style.visibility='hidden';
+			//document.getElementById("activargps").style.visibility='visible';
+			//cajadistancia.classList.remove("visible");
 			//document.getElementById("dondestoy").style.visibility='hidden';
-			document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento()";
-			DetenerActualizarUbicacion();
-			if (marca_ubicacion_real) {mapa.removeLayer(marca_ubicacion_real)};
-			marca_ubicacion_real="";
+			//document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento()";
+			//DetenerActualizarUbicacion();
+			//if (marca_ubicacion_real) {mapa.removeLayer(marca_ubicacion_real)};
+			//marca_ubicacion_real="";
+			//coordenadas_ubicacion_real="";
+			//if (ruta) {ruta.remove()};
+			botoncentrado.style.display='none';
+			cajadistancia.classList.remove("visible");
+			//document.getElementById("dondestoy").style.visibility='hidden';
+			document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento(seguimiento)";
+			clearInterval(intervalo);
+			clearInterval(intervaloRuta);
+			clearTimeout(temporizadormodalflash);
+			clearTimeout(tiempo);
+			if (ruta) {ruta.remove()};
+			botondetallesruta.style.display='none';
 			coordenadas_ubicacion_real="";
+			distancia="";
+			mapa.stopLocate();
+			if (marca_ubicacion_real) {
+				marca_ubicacion_real.remove();
+				coordenadas_ubicacion_real = "";
+				marca_ubicacion_real = "";
+			};
+			titulomodalflash.innerText="SEGUIMIENTO DETENIDO";
+			cuerpomodalflash.innerHTML = '<span style="display: block; text-align: center; width: 100%; color:green;"><br><b>Servicio de seguimiento en tiempo real detenido.</b><br><br><span style="color:black">'+
+			'No podrás visualizar tu posición ni recibir indicaciones para llegar a un lugar.'+
+			'<br><br>Podrás volver a activarla en el momento que lo desees.</span>';
+			btncerrarmodalflash.textContent = "Cerrar";
+			tiempomodalflash=5000;
+			ModalFlash(tiempomodalflash);
 			if (ruta) {ruta.remove()};
 			if (marcapuntosalida) {marcapuntosalida.remove()};
 			mapa.flyTo([-32.9280586817747, -68.77360525273423],15);
@@ -1760,8 +1910,8 @@
 			distancia=DistanciaEnTiempoReal();
 			avisollegada="si";
 			//if (ruta) {ruta.remove()};
-			document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
-			document.getElementById("MiModalFlash").style.visibility='hidden';
+			//document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+			//document.getElementById("MiModalFlash").style.visibility='hidden';
 			
 			
 			
@@ -1943,8 +2093,9 @@
 	
 		//Bloque Modal Flash
 		function ModalFlash(tiempo) {
-			document.getElementById("MiModalFlash").style.visibility='visible';
-			let intervalo;
+			//document.getElementById("MiModalFlash").style.visibility='visible';
+			mimodalflash.style.display='block';
+			//let intervalo;
 			let timeout;
 			let restante = tiempo/1000;
 			document.getElementById('contador').textContent = restante;
@@ -1954,10 +2105,11 @@
 				if (restante <= 0) clearInterval(intervalo);
 				}, 1000);
 			temporizadormodalflash=setTimeout(() => {
-				document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
-				document.getElementById("MiModalFlash").style.visibility='hidden';
+				btnindicacionesmodalflash.style.display='none';
+				mimodalflash.style.display='none';
+				clearTimeout(temporizadormodalflash);
 				//document.getElementById("modal-inicial").close();
-				modalinicial.close();
+				//modalinicial.close();
 				if (nomostrarinicial.checked) {localStorage.setItem('MOSTRAR_INICIAL', Version);document.getElementById("borrableinicial").style.display="none"};
 				//if (mail=="si") {EnviarMail()};
 			}, tiempo);
@@ -1983,8 +2135,8 @@
 		};
 		
 		btncerrarmodalflash.addEventListener("click",()=>{
-			document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
-			document.getElementById("MiModalFlash").style.visibility='hidden';
+			btnindicacionesmodalflash.style.display='none';
+			mimodalflash.style.display='none';
 			modalinicial.close();
 			if (ruta) {ruta.remove();botondetallesruta.style.display="none"};
 			if (nomostrarinicial.checked) {
@@ -2014,6 +2166,14 @@
 			clearInterval(intervalo);
 			clearInterval(intervaloRuta);
 			clearTimeout(tiempo);
+			if (dispositivo=="movil") {
+				titulomodalflash.innerText="TRAZAR RUTA";
+				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>Se te ofrecerán alertas por voz.</b><br><br><span style="color:black">Por lo tanto, asegurate de tener activado el sonido del dispositivo y a un volumen que puedas escucharlo sin distraerte demasiado.-<br></span>';
+				btnindicacionesmodalflash.style.display='none';
+				btncerrarmodalflash.textContent = "Cerrar";
+				tiempomodalflash=5000;
+				ModalFlash(tiempomodalflash);
+			};
 		});
 		
 		btncerrarmodalinicial.addEventListener("click",()=>{
@@ -2030,8 +2190,8 @@
 		});
 		
 		nomostrarinicial.addEventListener("click",()=>{
-			document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
-			document.getElementById("MiModalFlash").style.visibility='hidden';
+			btnindicacionesmodalflash.style.display='none';
+			mimodalflash.style.display='none';
 			//document.getElementById("modalinicial").close();
 			modalinicial.close();
 			if (nomostrarinicial.checked) {
@@ -2414,7 +2574,7 @@
 						titulomodalflash.innerText="TRAZAR RUTA";
 						cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 						'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
-						document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
+						btnindicacionesmodalflash.style.display='flex';
 						tiempomodalflash=5000;
 						ModalFlash(tiempomodalflash);
 					};
@@ -2819,7 +2979,7 @@
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("botoncentrado").style.visibility='hidden';
-		document.getElementById("MiModalFlash").style.visibility='hidden';
+		mimodalflash.style.display='none';
 		botondetallesruta.style.display='none';
 		VerificarConexion();
 		VerificarVersion();
