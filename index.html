@@ -154,20 +154,30 @@
 		.botoncentrado img:hover {
 			transform: scale(1.5);
 		}
+		
 		#distancia {
 			position: absolute;
-			top: 10px;
+			top: 1px;
 			left: 50%;
 			transform: translateX(-50%);
-			background: "#d4edda";
-			font-size: 16px;
-			padding: 8px 14px;
+			width: 80%;
+			max-width: 580px;
+			min-width: 280px;
+			padding: 10px 14px;
 			border-radius: 8px;
-			box-shadow: 0 0 6px rgba(0,0,0,0.2);
-			z-index: 999;
+			text-align: center;
+			font-size: 15px;
 			font-weight: bold;
-			transition: background 0.3s;
+			background: #d4edda;
+			color: #155724;
+			box-shadow: 0 0 6px rgba(0,0,0,0.3);
+			z-index: 999;
+			display: none;
 		}
+		#distancia.visible {
+			display: block;
+		}
+
 		
 		/*Modal Flash*/
 		.modalflash {
@@ -959,7 +969,7 @@
 		var capa_numerosterritorios={};
 		var capa_territoriofiltrado={};
 		var capa_territoriofiltradonumero={};
-		var puntomascercano=L.latLng[-32.9280586817747, -68.77360525273423];
+		var puntomascercano=L.latLng[-32.92740078150927, -68.77696817942217];
 		var numeroterritorio="";
 		var capa_popups=null;
 		var infoterritorios=null;
@@ -1000,6 +1010,7 @@
 		const nomostrarlonuevo = document.getElementById('nomostrarlonuevo');
 		const botondetallesruta =document.getElementById("BotonDetallesRuta");
 		const panelrutas=document.getElementById("PanelRutas");
+		const mimodalflash=document.querySelector("#MiModalFlash");
 		
 		// Crear grupo de puntos
 		var grupomanzanas = L.geoJSON(manzanas, {
@@ -1531,7 +1542,7 @@
 			};
 		};
 
-		// Evento al encontrar la ubicación
+		// Evento al encontrar la ubicación	
 		function ActualizarUbicacion(e) {
 			if (coordenadas_ubicacion_real) {
 				mapa.removeLayer(marca_ubicacion_real);
@@ -1547,12 +1558,10 @@
 				mapa.setView(coordenadas_ubicacion_real, 17);
 			};
 			document.getElementById("vermiubicacion").style.visibility='visible';
+			dentro = ChequearPredio(coordenadas_ubicacion_real);
 			distancia=DistanciaEnTiempoReal();
-			const dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
 			if (!dentro || dentro==null) {
 				dentropredio=""} else {dentropredio="si"};
-			//if (dentropredio=="si") {alert("Estás dentro del teritorio")};
-			//if (distancia>2200 && orientarme=="no") {
 			if (orientarme=="no" && dentropredio=="") {
 				titulomodalflash.innerText="TRAZAR RUTA";
 				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
@@ -1561,7 +1570,6 @@
 				tiempomodalflash=5000;
 				ModalFlash(tiempomodalflash);
 			};
-			//if (distancia<=2200 && distancia>7 && orientarme=="no") {
 			if (orientarme=="no" && dentropredio=="si" && distancia>7) {
 				titulomodalflash.innerText="TRAZAR RUTA";
 				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo mostrarte en tiempo real por dónde vas '+
@@ -1570,11 +1578,9 @@
 				tiempomodalflash=5000;
 				ModalFlash(tiempomodalflash);
 			};
-			//if (orientarme=="si" && distancia>1100) {cajadistancia.style.visibility="visible"};
-			//if (orientarme=="si" && capa_territoriofiltradonumero) {cajadistancia.style.visibility="visible"};
-			if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
+			if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.classList.add("visible")};
 			if (distancia > 7 && orientarme=="si") {
-				cajadistancia.style.visibility="visible";
+				cajadistancia.classList.add("visible");
 				if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 				if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 				cajadistancia.textContent = msg;
@@ -1583,15 +1589,12 @@
 			};
 			if (distancia <= 7 && orientarme=="si") {
 				setTimeout(() => {
-					//const elemento = document.getElementById("cajadistancia");
-					//if (elemento) {
 					cajadistancia.style.opacity = "0";
 					cajadistancia.style.visibility="visible";
 					cajadistancia.textContent = "¡Has llegado a tu destino!";
 					cajadistancia.style.background = "#d4edda";
 					cajadistancia.style.color = "#155724";
 					setTimeout(()=> elemento.style.display = "none", 1000); // espera al fade-out
-					//}
 				}, 10000);
 			
 				if (avisollegada==="si") {AlertaLlegada("Has llegado a tu destino")};
@@ -1729,125 +1732,214 @@
 			if (marcapuntosalida) {marcapuntosalida.remove()};
 			mapa.flyTo([-32.9280586817747, -68.77360525273423],15);
 		};
+		
+		function RefrescarRuta() {
+			if (!refrescoRutaActivo) return;
+			TrazarRuta();
+			setTimeout(RefrescarRuta, 180000); // 3 minutos
+		};
+
+		function IniciarRuteo() {
+			if (refrescoRutaActivo) return;
+			refrescoRutaActivo = true;
+			RefrescarRuta(); // arranca
+		};
 
 		<!--Función para Trazar Ruta Sugerida con OSRM-->
 		function TrazarRuta() {
+			clearTimeout(temporizadormodalflash);
+			clearTimeout(tiempo);
+			modalinicial.close();
+			mimodalflash.style.display='none';
+			btnindicacionesmodalflash.style.display='none';
+			//visitas.style.display='none';
+			document.getElementById("borrableinicial").style.display='none';
+			botoncentrado.style.display="block";
 			VerificarConexion();
-			if (conexion==="si") {
-				VerificarGPS();
-			};
+			if (conexion==="si") {VerificarGPS()};
+			distancia=DistanciaEnTiempoReal();
 			avisollegada="si";
-			if (ruta) {ruta.remove()};
+			//if (ruta) {ruta.remove()};
 			document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
 			document.getElementById("MiModalFlash").style.visibility='hidden';
-			distancia=DistanciaEnTiempoReal();
-			const dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
-			if (!dentro || dentro==null) {
-				dentropredio=""} else {dentropredio="si"};
-			//if (dentropredio=="si") {alert("Estás dentro del teritorio")};
-			if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
-			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
-			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
-			cajadistancia.textContent = msg;
-			cajadistancia.style.background = "#d4edda";
-			cajadistancia.style.color = "#155724";
-			if (distancia<=2200 && lugar) {
-				if (ruta) {ruta.remove()};
-				clearInterval(actualizarruta);
+			
+			
+			
+			
+			// 🚶 Cerca del destino → NO rutea, pero NO mata el intervalo
+			if (distancia <= 1100) {
 				ActualizarUbicacion();
+				return;
+			}
+			// 🔥 eliminar ruta anterior
+			if (ruta) {
+				mapa.removeControl(ruta);
+				ruta = null;
+			}
+			// 🔥 crear nueva ruta
+			ruta = L.Routing.control({
+				waypoints: [
+					L.latLng(coordenadas_ubicacion_real.lat, coordenadas_ubicacion_real.lng),
+					L.latLng(puntomascercano.lat, puntomascercano.lng)
+				],
+				router: L.Routing.osrmv1({
+					serviceUrl: 'https://router.project-osrm.org/route/v1',
+					language: 'es'
+				}),
+				showAlternatives: true,
+				draggableWaypoints: false,
+				createMarker: () => null,
+				lineOptions: {
+					styles: [{ color: 'red', weight: 9, opacity: 0.9 }]},
+				altLineOptions: {styles: [{color: 'blue', weight: 6, opacity: 0.6, dashArray: '8,12'}]} 
+			}).addTo(mapa);
+			
+			
+			//Probando desde acá......
+			function segundosAHorasMinutos(segundos) {
+				const horas = Math.floor(segundos / 3600);
+				const minutos = Math.round((segundos % 3600) / 60);
+				if (horas > 0) {
+					return `${horas} h ${minutos} min`;
+				}
+				return `${minutos} min`;
 			};
-			if (distancia>2200) {
-				ruta=L.Routing.control({
-					waypoints: [coordenadas_ubicacion_real, puntomascercano],
-					router: L.Routing.osrmv1({
-						serviceUrl: 'https://router.project-osrm.org/route/v1',
-						language: 'es',
-					}),
-					showAlternatives: true,
-					routeWhileDragging: true,
-					draggableWaypoints: false,
-					collapsible: true,
-					waypointMode: 'snap',
-					lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]},
-					altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]},
-					createMarker: function(i, wp) {
-						return L.marker(wp.latLng, {
-							draggable: false,
-							icon: L.icon({
-								iconUrl: './images/posicion.png',
-								iconSize: [0, 0]
-							})
-						});
-					}
-				}).addTo(mapa);
-				botondetallesruta.style.display = "block";
-				panelrutas.style.display = "block";
-				panelrutas.replaceChildren(ruta.getContainer());
-				//Centrar el mapa para que se vean ubicación en tiempo real y EEA ó Sector/Persona buscado **SOLO la primera vez**
-				if (actualizarruta=="si") {const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});};
-				//const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordenadas_ubicacion_real.lng},${coordenadas_ubicacion_real.lat};${puntomascercano.lng},${puntomascercano.lat}?overview=full&geometries=geojson`;
-				//Solicito la ruta y la dibujo con animación
-				//fetch(osrmUrl)
-				//	.then(response => response.json())
-				//	.then(data => {
-				//		if (data.routes && data.routes.length > 0) {
-				//			const route = data.routes[0].geometry;
-				//			// Convertimos las coordenadas de GeoJSON a un formato que Leaflet entienda
-				//			const latlngs = route.coordinates.map(coord => [coord[1], coord[0]]);
-				//		};
-				//	})
-				//	.catch(error => {
-				//		titulomodalflash.innerText="PROBLEMAS PARA SUGERIR UNA RUTA";
-				//		cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>El servidor de OSRM no puede sugerirte una ruta en este momento.-</span>';
-				//		tiempomodalflash=5000;
-				//		ModalFlash(tiempomodalflash);
-				//	});
+			
+			ruta.on('routesfound', function (e) {
+				panelrutas.innerHTML = '';
+				e.routes.forEach((route, index) => {
+					const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+					const tiempoFormateado = segundosAHorasMinutos(route.summary.totalTime);
+					const div = document.createElement('div');
+					div.style.padding = '8px';
+					div.style.borderBottom = '1px solid #ccc';
+					div.innerHTML = `
+						<strong>Ruta ${index === 0 ? 'principal' : 'alternativa ' + index}</strong><br>
+						📏 Distancia: ${distanciaKm} km<br>
+						⏱️ Tiempo estimado: ${tiempoFormateado}
+					`;
+					panelrutas.appendChild(div);
+				});
+			});
+			//Hasta acá.-
+		
+		
+		botondetallesruta.style.display = "block";
+		panelrutas.style.display = "block";
+		panelrutas.replaceChildren(ruta.getContainer());
+			
+			};
+			
+			
+			
+			//distancia=DistanciaEnTiempoReal();
+			//dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
+			<!-- if (!dentro || dentro==null) { -->
+				<!-- dentropredio=""} else {dentropredio="si"}; -->
+			<!-- //if (dentropredio=="si") {alert("Estás dentro del teritorio")}; -->
+			<!-- if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"}; -->
+			<!-- if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"}; -->
+			<!-- if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"}; -->
+			<!-- cajadistancia.textContent = msg; -->
+			<!-- cajadistancia.style.background = "#d4edda"; -->
+			<!-- cajadistancia.style.color = "#155724"; -->
+			<!-- if (distancia<=2200 && lugar) { -->
+				<!-- if (ruta) {ruta.remove()}; -->
+				<!-- clearInterval(actualizarruta); -->
+				<!-- ActualizarUbicacion(); -->
+			<!-- }; -->
+			<!-- if (distancia>2200) { -->
+				<!-- ruta=L.Routing.control({ -->
+					<!-- waypoints: [coordenadas_ubicacion_real, puntomascercano], -->
+					<!-- router: L.Routing.osrmv1({ -->
+						<!-- serviceUrl: 'https://router.project-osrm.org/route/v1', -->
+						<!-- language: 'es', -->
+					<!-- }), -->
+					<!-- showAlternatives: true, -->
+					<!-- routeWhileDragging: true, -->
+					<!-- draggableWaypoints: false, -->
+					<!-- collapsible: true, -->
+					<!-- waypointMode: 'snap', -->
+					<!-- lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]}, -->
+					<!-- altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]}, -->
+					<!-- createMarker: function(i, wp) { -->
+						<!-- return L.marker(wp.latLng, { -->
+							<!-- draggable: false, -->
+							<!-- icon: L.icon({ -->
+								<!-- iconUrl: './images/posicion.png', -->
+								<!-- iconSize: [0, 0] -->
+							<!-- }) -->
+						<!-- }); -->
+					<!-- } -->
+				<!-- }).addTo(mapa); -->
+				<!-- botondetallesruta.style.display = "block"; -->
+				<!-- panelrutas.style.display = "block"; -->
+				<!-- panelrutas.replaceChildren(ruta.getContainer()); -->
+				<!-- //Centrar el mapa para que se vean ubicación en tiempo real y EEA ó Sector/Persona buscado **SOLO la primera vez** -->
+				<!-- if (actualizarruta=="si") {const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});}; -->
+				<!-- //const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordenadas_ubicacion_real.lng},${coordenadas_ubicacion_real.lat};${puntomascercano.lng},${puntomascercano.lat}?overview=full&geometries=geojson`; -->
+				<!-- //Solicito la ruta y la dibujo con animación -->
+				<!-- //fetch(osrmUrl) -->
+				<!-- //	.then(response => response.json()) -->
+				<!-- //	.then(data => { -->
+				<!-- //		if (data.routes && data.routes.length > 0) { -->
+				<!-- //			const route = data.routes[0].geometry; -->
+				<!-- //			// Convertimos las coordenadas de GeoJSON a un formato que Leaflet entienda -->
+				<!-- //			const latlngs = route.coordinates.map(coord => [coord[1], coord[0]]); -->
+				<!-- //		}; -->
+				<!-- //	}) -->
+				<!-- //	.catch(error => { -->
+				<!-- //		titulomodalflash.innerText="PROBLEMAS PARA SUGERIR UNA RUTA"; -->
+				<!-- //		cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>El servidor de OSRM no puede sugerirte una ruta en este momento.-</span>'; -->
+				<!-- //		tiempomodalflash=5000; -->
+				<!-- //		ModalFlash(tiempomodalflash); -->
+				<!-- //	}); -->
 					
-				actualizarruta=setInterval(()=>{
-					if (ruta) {ruta.remove()};
-					ruta=L.Routing.control({
-					waypoints: [coordenadas_ubicacion_real, puntomascercano],
-					router: L.Routing.osrmv1({
-						serviceUrl: 'https://router.project-osrm.org/route/v1',
-						language: 'es',
-					}),
-					showAlternatives: true,
-					routeWhileDragging: true,
-					draggableWaypoints: false,
-					collapsible: true,
-					waypointMode: 'snap',
-					lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]},
-					altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]},
-					createMarker: function(i, wp) {
-						return L.marker(wp.latLng, {
-							draggable: false,
-							icon: L.icon({
-								iconUrl: './images/posicion.png',
-								iconSize: [0, 0]
-							})
-						});
-					}
-					}).addTo(mapa);
-					//const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordenadas_ubicacion_real.lng},${coordenadas_ubicacion_real.lat};${puntomascercano.lng},${puntomascercano.lat}?overview=full&geometries=geojson`;
-					//Solicito la ruta y la dibujo con animación
-					//fetch(osrmUrl)
-					//	.then(response => response.json())
-					//	.then(data => {
-					//		if (data.routes && data.routes.length > 0) {
-					//			const route = data.routes[0].geometry;
-					//			// Convertimos las coordenadas de GeoJSON a un formato que Leaflet entienda
-					//			const latlngs = route.coordinates.map(coord => [coord[1], coord[0]]);
-					//		};
-					//	})
-					//	.catch(error => {
-					//		titulomodalflash.innerText="PROBLEMAS PARA SUGERIR UNA RUTA";
-					//		cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>El servidor de OSRM no puede sugerirte una ruta en este momento.-</span>';
-					//		tiempomodalflash=5000;
-					//		ModalFlash(tiempomodalflash);
-					//	});
-				},300000);
-			};
-		};
+				<!-- actualizarruta=setInterval(()=>{ -->
+					<!-- if (ruta) {ruta.remove()}; -->
+					<!-- ruta=L.Routing.control({ -->
+					<!-- waypoints: [coordenadas_ubicacion_real, puntomascercano], -->
+					<!-- router: L.Routing.osrmv1({ -->
+						<!-- serviceUrl: 'https://router.project-osrm.org/route/v1', -->
+						<!-- language: 'es', -->
+					<!-- }), -->
+					<!-- showAlternatives: true, -->
+					<!-- routeWhileDragging: true, -->
+					<!-- draggableWaypoints: false, -->
+					<!-- collapsible: true, -->
+					<!-- waypointMode: 'snap', -->
+					<!-- lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]}, -->
+					<!-- altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]}, -->
+					<!-- createMarker: function(i, wp) { -->
+						<!-- return L.marker(wp.latLng, { -->
+							<!-- draggable: false, -->
+							<!-- icon: L.icon({ -->
+								<!-- iconUrl: './images/posicion.png', -->
+								<!-- iconSize: [0, 0] -->
+							<!-- }) -->
+						<!-- }); -->
+					<!-- } -->
+					<!-- }).addTo(mapa); -->
+					<!-- //const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordenadas_ubicacion_real.lng},${coordenadas_ubicacion_real.lat};${puntomascercano.lng},${puntomascercano.lat}?overview=full&geometries=geojson`; -->
+					<!-- //Solicito la ruta y la dibujo con animación -->
+					<!-- //fetch(osrmUrl) -->
+					<!-- //	.then(response => response.json()) -->
+					<!-- //	.then(data => { -->
+					<!-- //		if (data.routes && data.routes.length > 0) { -->
+					<!-- //			const route = data.routes[0].geometry; -->
+					<!-- //			// Convertimos las coordenadas de GeoJSON a un formato que Leaflet entienda -->
+					<!-- //			const latlngs = route.coordinates.map(coord => [coord[1], coord[0]]); -->
+					<!-- //		}; -->
+					<!-- //	}) -->
+					<!-- //	.catch(error => { -->
+					<!-- //		titulomodalflash.innerText="PROBLEMAS PARA SUGERIR UNA RUTA"; -->
+					<!-- //		cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>El servidor de OSRM no puede sugerirte una ruta en este momento.-</span>'; -->
+					<!-- //		tiempomodalflash=5000; -->
+					<!-- //		ModalFlash(tiempomodalflash); -->
+					<!-- //	}); -->
+				<!-- },300000); -->
+			<!-- }; -->
+		//};
 	
 		//Bloque Modal Flash
 		function ModalFlash(tiempo) {
