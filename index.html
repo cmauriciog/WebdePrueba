@@ -193,7 +193,8 @@
 			border-radius: 10px;
 			display: flex;
 			flex-direction: column;
-			overflow: hidden;
+			/*overflow: hidden;*/
+			overflow-y: auto;
 			z-index: 99999;   /* MUY IMPORTANTE */
 		}
 		.modalflash-cabecera {
@@ -823,12 +824,9 @@
 		<div class="modalflash-cabecera" id="titulomodalflash">¡¡¡ BIENVENIDO AL MAPA WEB DE LA CONGREGACION SUR VILLA NUEVA...!!!</div>
 		<p class="modalflash-cuerpo" id="cuerpomodalflash"><img src="./images/presentacion.jpg" style="display: block; margin: auto; height:80px" id="imagenmodalflash"/><br><strong>Si sos un publicador, este mapa en línea te permitirá:</strong>
 			<br>Ubicar un territorio con la opción de hacerlo a partir de tu ubicación en tiempo real.
-			<br>
 			<br>Es decir, si vos se lo autorizás, te trazará una ruta con las indicaciones necesarias para llegar...!!!. Te incluirá una distancia y demora estimadas y hasta te avisará con voz cuando estés cerca y cuando hayás llegado...!!!
-			<br>
 			<br>Podrás consultar las salidas del mes en curso y si dirigiste alguna salida, podrás enviarle los detalles de lo que se abarcó al hermano encargado de los territorios.
 			<br>Además, si alguien pidió que no lo visitemos más, podrás avisar para que se registre.
-			<br>
 			<br><br><strong>Por otra parte, si sos el viajante, además podrás:</strong>
 			<br>Localizar las casas y los puntos donde puedas tener tus arreglos para almuerzos, pastoreos y actividad.
 			<br><br><strong>En la barra lateral podrás encontrar secciones con las herramientas disponibles y un apartado de ayuda para orientarte a encontrarlas y saber su función.-</strong>
@@ -1064,6 +1062,7 @@
 		const botondetallesruta =document.getElementById("BotonDetallesRuta");
 		const panelrutas=document.getElementById("PanelRutas");
 		const mimodalflash=document.querySelector("#MiModalFlash");
+		let refrescoRutaActivo = false;
 		
 		// Crear grupo de puntos
 		var grupomanzanas = L.geoJSON(manzanas, {
@@ -1330,6 +1329,7 @@
 			puntomascercano=L.latLng(nada.features[0].geometry.coordinates[0][1],nada.features[0].geometry.coordinates[0][0]);
 			cartografiar="casa";
 			if (seguimiento==="si") {
+				alert("Acá... 1!!!");
 				titulomodalflash.innerText="TRAZAR RUTA";
 				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 				'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
@@ -1375,6 +1375,7 @@
 			capa_territoriofiltradonumero=L.geoJSON(territorios,{filter:Filtrar_Territorios, onEachFeature: NumeroTerritorio}).addTo(mapa);
 			if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
 			if (seguimiento==="si") {
+				alert("Acá 1...!!!");
 				titulomodalflash.innerText="TRAZAR RUTA";
 				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 				'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
@@ -1658,6 +1659,7 @@
 			<!-- }; -->
 			if (orientarme=="") {
 				if (distancia>1100) {
+					alert("Acá... 2!!!");
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 					'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
@@ -1668,6 +1670,7 @@
 					ModalFlash(tiempomodalflash);
 				};
 				if (distancia<=1100 && distancia>10) {
+					alert("Acá... 3!!!");
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo mostrarte en tiempo real por dónde vas '+
 					'y el destino con vista de ambos puntos en el mapa.-<br></span>';
@@ -1705,12 +1708,13 @@
 				cajadistancia.style.color = "#155724";
 				botondetallesruta.style.display="none";
 			};
+			if (distancia>180) {avisollegada="si"};
 			if (distancia >80 && distancia <= 180 && dispositivo=="movil") {
 				msg="Avanza despacio y con atención. ¡Estás a pocos metros del destino!.";
 				if (avisollegada=="si") {AlertaLlegada(msg)};
 			};
 			if (distancia>10 && distancia<80) {avisollegada="si"};
-			if (distancia <= 10) {
+			if (distancia <= 10 && dispositivo=="movil") {
 				cajadistancia.textContent = "¡Has llegado a tu destino!.-";
 				refrescoRutaActivo = false;
 				clearInterval(intervaloRuta);
@@ -2138,6 +2142,10 @@
 			btnindicacionesmodalflash.style.display='none';
 			mimodalflash.style.display='none';
 			modalinicial.close();
+			clearInterval(intervalo);
+			clearInterval(intervaloRuta);
+			clearTimeout(temporizadormodalflash);
+			clearTimeout(tiempo);
 			if (ruta) {ruta.remove();botondetallesruta.style.display="none"};
 			if (nomostrarinicial.checked) {
 				try {
@@ -2571,6 +2579,7 @@
 					if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
 					//capa_territoriofiltradonumero=L.geoJSON(territorios,{filter:FiltrarVariosTerritoriosNumero, onEachFeature: NumeroTerritorio}).addTo(mapa);
 					if (seguimiento==="si") {
+						alert("Acá...!!!");
 						titulomodalflash.innerText="TRAZAR RUTA";
 						cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 						'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
@@ -2967,8 +2976,6 @@
 		document.getElementById("vermiubicacion").style.visibility='hidden';
 		document.getElementById("flecharoja").style.visibility='hidden';
 		document.getElementById("miubicacion").style.visibility='hidden';
-		document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
-		document.getElementById("distancia").style.visibility='hidden';
 		document.getElementById("botoncentrado").style.visibility='hidden';
 		document.getElementById("botonnorte").style.visibility='hidden';
 		document.getElementById("ModalReportePredicado").style.visibility='hidden';
@@ -2979,6 +2986,7 @@
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("botoncentrado").style.visibility='hidden';
+		cajadistancia.classList.remove('visible');
 		mimodalflash.style.display='none';
 		botondetallesruta.style.display='none';
 		VerificarConexion();
