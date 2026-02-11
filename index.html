@@ -1329,7 +1329,6 @@
 			puntomascercano=L.latLng(nada.features[0].geometry.coordinates[0][1],nada.features[0].geometry.coordinates[0][0]);
 			cartografiar="casa";
 			if (seguimiento==="si") {
-				alert("Acá... 1!!!");
 				titulomodalflash.innerText="TRAZAR RUTA";
 				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 				'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
@@ -1375,7 +1374,6 @@
 			capa_territoriofiltradonumero=L.geoJSON(territorios,{filter:Filtrar_Territorios, onEachFeature: NumeroTerritorio}).addTo(mapa);
 			if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
 			if (seguimiento==="si") {
-				alert("Acá 1...!!!");
 				titulomodalflash.innerText="TRAZAR RUTA";
 				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 				'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
@@ -1592,7 +1590,6 @@
 				if (dispositivo==="pc") {botoncentrado.style.display='block'};
 				cajadistancia.classList.add("visible");
 				seguimiento="si";
-				//document.getElementById("miubicacion").style.visibility='visible';
 				mapa.locate({setView: false, watch: true, enableHighAccuracy: true});
 				mapa.on('locationfound', ActualizarUbicacion);
 				mapa.on('locationerror', ErrorGPS);
@@ -1614,52 +1611,10 @@
 				coordenadas_ubicacion_real=e.latlng;
 				mapa.setView(coordenadas_ubicacion_real, 17);
 			};
-			//document.getElementById("vermiubicacion").style.visibility='visible';
 			dentro = ChequearPredio(coordenadas_ubicacion_real);
 			distancia=DistanciaEnTiempoReal();
-			<!-- if (!dentro || dentro==null) { -->
-				<!-- dentropredio=""} else {dentropredio="si"}; -->
-			<!-- if (orientarme=="no" && dentropredio=="") { -->
-				<!-- titulomodalflash.innerText="TRAZAR RUTA"; -->
-				<!-- cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+ -->
-				<!-- 'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>'; -->
-				<!-- document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible'; -->
-				<!-- tiempomodalflash=5000; -->
-				<!-- ModalFlash(tiempomodalflash); -->
-			<!-- }; -->
-			<!-- if (orientarme=="no" && dentropredio=="si" && distancia>7) { -->
-				<!-- titulomodalflash.innerText="TRAZAR RUTA"; -->
-				<!-- cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo mostrarte en tiempo real por dónde vas '+ -->
-				<!-- 'y el destino con vista de ambos puntos en el mapa.-<br></span>'; -->
-				<!-- document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible'; -->
-				<!-- tiempomodalflash=5000; -->
-				<!-- ModalFlash(tiempomodalflash); -->
-			<!-- }; -->
-			<!-- if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.classList.add("visible")}; -->
-			<!-- if (distancia > 7 && orientarme=="si") { -->
-				<!-- cajadistancia.classList.add("visible"); -->
-				<!-- if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"}; -->
-				<!-- if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"}; -->
-				<!-- cajadistancia.textContent = msg; -->
-				<!-- cajadistancia.style.background = "#d4edda"; -->
-				<!-- cajadistancia.style.color = "#155724"; -->
-			<!-- }; -->
-			<!-- if (distancia <= 7 && orientarme=="si") { -->
-				<!-- setTimeout(() => { -->
-					<!-- //cajadistancia.style.opacity = "0"; -->
-					<!-- //cajadistancia.style.visibility="visible"; -->
-					<!-- cajadistancia.classList.add("visible"); -->
-					<!-- cajadistancia.textContent = "¡Has llegado a tu destino!"; -->
-					<!-- cajadistancia.style.background = "#d4edda"; -->
-					<!-- cajadistancia.style.color = "#155724"; -->
-					<!-- setTimeout(()=> elemento.style.display = "none", 1000); // espera al fade-out -->
-				<!-- }, 10000); -->
-			
-				<!-- if (avisollegada==="si") {AlertaLlegada("Has llegado a tu destino")}; -->
-			<!-- }; -->
 			if (orientarme=="") {
 				if (distancia>1100) {
-					alert("Acá... 2!!!");
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 					'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
@@ -1670,7 +1625,6 @@
 					ModalFlash(tiempomodalflash);
 				};
 				if (distancia<=1100 && distancia>10) {
-					alert("Acá... 3!!!");
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo mostrarte en tiempo real por dónde vas '+
 					'y el destino con vista de ambos puntos en el mapa.-<br></span>';
@@ -1913,12 +1867,6 @@
 			if (conexion==="si") {VerificarGPS()};
 			distancia=DistanciaEnTiempoReal();
 			avisollegada="si";
-			//if (ruta) {ruta.remove()};
-			//document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
-			//document.getElementById("MiModalFlash").style.visibility='hidden';
-			
-			
-			
 			
 			// 🚶 Cerca del destino → NO rutea, pero NO mata el intervalo
 			if (distancia <= 1100) {
@@ -1976,130 +1924,14 @@
 				});
 			});
 			//Hasta acá.-
-		
-		
-		botondetallesruta.style.display = "block";
-		panelrutas.style.display = "block";
-		panelrutas.replaceChildren(ruta.getContainer());
-			
+			botondetallesruta.style.display = "block";
+			panelrutas.style.display = "block";
+			panelrutas.replaceChildren(ruta.getContainer());			
 			};
-			
-			
-			
-			//distancia=DistanciaEnTiempoReal();
-			//dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
-			<!-- if (!dentro || dentro==null) { -->
-				<!-- dentropredio=""} else {dentropredio="si"}; -->
-			<!-- //if (dentropredio=="si") {alert("Estás dentro del teritorio")}; -->
-			<!-- if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"}; -->
-			<!-- if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"}; -->
-			<!-- if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"}; -->
-			<!-- cajadistancia.textContent = msg; -->
-			<!-- cajadistancia.style.background = "#d4edda"; -->
-			<!-- cajadistancia.style.color = "#155724"; -->
-			<!-- if (distancia<=2200 && lugar) { -->
-				<!-- if (ruta) {ruta.remove()}; -->
-				<!-- clearInterval(actualizarruta); -->
-				<!-- ActualizarUbicacion(); -->
-			<!-- }; -->
-			<!-- if (distancia>2200) { -->
-				<!-- ruta=L.Routing.control({ -->
-					<!-- waypoints: [coordenadas_ubicacion_real, puntomascercano], -->
-					<!-- router: L.Routing.osrmv1({ -->
-						<!-- serviceUrl: 'https://router.project-osrm.org/route/v1', -->
-						<!-- language: 'es', -->
-					<!-- }), -->
-					<!-- showAlternatives: true, -->
-					<!-- routeWhileDragging: true, -->
-					<!-- draggableWaypoints: false, -->
-					<!-- collapsible: true, -->
-					<!-- waypointMode: 'snap', -->
-					<!-- lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]}, -->
-					<!-- altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]}, -->
-					<!-- createMarker: function(i, wp) { -->
-						<!-- return L.marker(wp.latLng, { -->
-							<!-- draggable: false, -->
-							<!-- icon: L.icon({ -->
-								<!-- iconUrl: './images/posicion.png', -->
-								<!-- iconSize: [0, 0] -->
-							<!-- }) -->
-						<!-- }); -->
-					<!-- } -->
-				<!-- }).addTo(mapa); -->
-				<!-- botondetallesruta.style.display = "block"; -->
-				<!-- panelrutas.style.display = "block"; -->
-				<!-- panelrutas.replaceChildren(ruta.getContainer()); -->
-				<!-- //Centrar el mapa para que se vean ubicación en tiempo real y EEA ó Sector/Persona buscado **SOLO la primera vez** -->
-				<!-- if (actualizarruta=="si") {const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});}; -->
-				<!-- //const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordenadas_ubicacion_real.lng},${coordenadas_ubicacion_real.lat};${puntomascercano.lng},${puntomascercano.lat}?overview=full&geometries=geojson`; -->
-				<!-- //Solicito la ruta y la dibujo con animación -->
-				<!-- //fetch(osrmUrl) -->
-				<!-- //	.then(response => response.json()) -->
-				<!-- //	.then(data => { -->
-				<!-- //		if (data.routes && data.routes.length > 0) { -->
-				<!-- //			const route = data.routes[0].geometry; -->
-				<!-- //			// Convertimos las coordenadas de GeoJSON a un formato que Leaflet entienda -->
-				<!-- //			const latlngs = route.coordinates.map(coord => [coord[1], coord[0]]); -->
-				<!-- //		}; -->
-				<!-- //	}) -->
-				<!-- //	.catch(error => { -->
-				<!-- //		titulomodalflash.innerText="PROBLEMAS PARA SUGERIR UNA RUTA"; -->
-				<!-- //		cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>El servidor de OSRM no puede sugerirte una ruta en este momento.-</span>'; -->
-				<!-- //		tiempomodalflash=5000; -->
-				<!-- //		ModalFlash(tiempomodalflash); -->
-				<!-- //	}); -->
-					
-				<!-- actualizarruta=setInterval(()=>{ -->
-					<!-- if (ruta) {ruta.remove()}; -->
-					<!-- ruta=L.Routing.control({ -->
-					<!-- waypoints: [coordenadas_ubicacion_real, puntomascercano], -->
-					<!-- router: L.Routing.osrmv1({ -->
-						<!-- serviceUrl: 'https://router.project-osrm.org/route/v1', -->
-						<!-- language: 'es', -->
-					<!-- }), -->
-					<!-- showAlternatives: true, -->
-					<!-- routeWhileDragging: true, -->
-					<!-- draggableWaypoints: false, -->
-					<!-- collapsible: true, -->
-					<!-- waypointMode: 'snap', -->
-					<!-- lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]}, -->
-					<!-- altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]}, -->
-					<!-- createMarker: function(i, wp) { -->
-						<!-- return L.marker(wp.latLng, { -->
-							<!-- draggable: false, -->
-							<!-- icon: L.icon({ -->
-								<!-- iconUrl: './images/posicion.png', -->
-								<!-- iconSize: [0, 0] -->
-							<!-- }) -->
-						<!-- }); -->
-					<!-- } -->
-					<!-- }).addTo(mapa); -->
-					<!-- //const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordenadas_ubicacion_real.lng},${coordenadas_ubicacion_real.lat};${puntomascercano.lng},${puntomascercano.lat}?overview=full&geometries=geojson`; -->
-					<!-- //Solicito la ruta y la dibujo con animación -->
-					<!-- //fetch(osrmUrl) -->
-					<!-- //	.then(response => response.json()) -->
-					<!-- //	.then(data => { -->
-					<!-- //		if (data.routes && data.routes.length > 0) { -->
-					<!-- //			const route = data.routes[0].geometry; -->
-					<!-- //			// Convertimos las coordenadas de GeoJSON a un formato que Leaflet entienda -->
-					<!-- //			const latlngs = route.coordinates.map(coord => [coord[1], coord[0]]); -->
-					<!-- //		}; -->
-					<!-- //	}) -->
-					<!-- //	.catch(error => { -->
-					<!-- //		titulomodalflash.innerText="PROBLEMAS PARA SUGERIR UNA RUTA"; -->
-					<!-- //		cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>El servidor de OSRM no puede sugerirte una ruta en este momento.-</span>'; -->
-					<!-- //		tiempomodalflash=5000; -->
-					<!-- //		ModalFlash(tiempomodalflash); -->
-					<!-- //	}); -->
-				<!-- },300000); -->
-			<!-- }; -->
-		//};
 	
 		//Bloque Modal Flash
 		function ModalFlash(tiempo) {
-			//document.getElementById("MiModalFlash").style.visibility='visible';
 			mimodalflash.style.display='block';
-			//let intervalo;
 			let timeout;
 			let restante = tiempo/1000;
 			document.getElementById('contador').textContent = restante;
@@ -2112,10 +1944,7 @@
 				btnindicacionesmodalflash.style.display='none';
 				mimodalflash.style.display='none';
 				clearTimeout(temporizadormodalflash);
-				//document.getElementById("modal-inicial").close();
-				//modalinicial.close();
 				if (nomostrarinicial.checked) {localStorage.setItem('MOSTRAR_INICIAL', Version);document.getElementById("borrableinicial").style.display="none"};
-				//if (mail=="si") {EnviarMail()};
 			}, tiempo);
 		};
 		
@@ -2123,7 +1952,6 @@
 		document.getElementById("ayuda_usuario").style.display='none';
 		document.getElementById("log_si").style.display='none';
 		document.getElementById("ocultarflias").style.display="none";
-		//document.getElementById("localizacion").style.display='none';
 		
 		if (conexion=="no") {
 			document.getElementById("Conectividad").style.display="inline";
@@ -2132,7 +1960,6 @@
 		};
 
 		if (! navigator.userAgent.match(/Windows/i) && localStorage.getItem('MOSTRAR_CELULAR') !=="no") {
-			//document.getElementById("modal_inicial").showModal()
 			modalinicial.showModal();
 		} else {
 			if (conexion=="no") {document.getElementById("Conectividad").style.display="inline"; document.getElementById("Apaisado").style.display="none";modalinicial.showModal()};//document.getElementById("modal_inicial").showModal();}
@@ -2200,7 +2027,6 @@
 		nomostrarinicial.addEventListener("click",()=>{
 			btnindicacionesmodalflash.style.display='none';
 			mimodalflash.style.display='none';
-			//document.getElementById("modalinicial").close();
 			modalinicial.close();
 			if (nomostrarinicial.checked) {
 				try {
@@ -2256,7 +2082,6 @@
 		};
 		
 		//Bloque para el Calendario
-		//const borrarfecha = document.getElementById('BorrarFecha');
 		const titulocalendario = document.getElementById('TituloCalendario');
 		const diasdelasemanaEl = document.getElementById('diasdelasemana');
 		const diasEl = document.getElementById('dias');
@@ -2339,12 +2164,9 @@
 		// ==== 5) Abrir/Cerrar modal ====
 		function AbrirModalCalendario(id) {
 			barralateral.close();
-			//document.getElementById("BorrarFecha").style.display="none";
 			document.getElementById("ModalCalendario").classList.add("active");
 			document.getElementById(id).style.display = "block";
 			document.getElementById("botonnorte").style.display="none";
-			//document.getElementById("botonsalidas").style.display="none";
-			//document.getElementById("botonrecargar").style.display="none";
 		};
 		
 		function CerrarModalCalendario(id) {
@@ -2355,8 +2177,6 @@
 			if (!modal1Visible && !modal2Visible) {
 				document.getElementById("ModalCalendario").classList.remove("active");
 				document.getElementById("botonnorte").style.display="inline";
-				//document.getElementById("botonsalidas").style.display="inline";
-				//document.getElementById("botonrecargar").style.display="inline";
 			};
 		};
 
@@ -2577,7 +2397,6 @@
 					cartografiar="salida";
 					FiltrarVariosTerritorios(territorioapredicar);
 					if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
-					//capa_territoriofiltradonumero=L.geoJSON(territorios,{filter:FiltrarVariosTerritoriosNumero, onEachFeature: NumeroTerritorio}).addTo(mapa);
 					if (seguimiento==="si") {
 						alert("Acá...!!!");
 						titulomodalflash.innerText="TRAZAR RUTA";
@@ -2656,8 +2475,6 @@
 			document.getElementById("leyendamanzanaspredicadas").style.visibility='hidden';
 			document.getElementById("btn-cerrar-reporte").style.visibility="hidden";
 			document.getElementById("btn-enviar-reporte").style.visibility="hidden";
-			//document.getElementById("btn-cerrar-reportenovisitar").style.visibility='hidden';
-			//document.getElementById("btn-enviar-reportenovisitar").style.visibility='hidden';
 			clearTimeout(temporizadorpredicado);
 		};
 		
@@ -2750,8 +2567,6 @@
 			document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
 			document.getElementById("btn-cerrar-reportenovisitar").style.visibility='hidden';
 			document.getElementById("btn-enviar-reportenovisitar").style.visibility='hidden';
-			//document.getElementById("btn-cerrar-reporte").style.visibility='hidden';
-			//document.getElementById("btn-enviar-reporte").style.visibility='hidden';
 			clearTimeout(temporizadornovisitar);
 		};
 		
@@ -2760,8 +2575,6 @@
 			document.getElementById("btn-cerrar-reporte").style.visibility="visible";
 			document.getElementById("btn-enviar-reporte").style.visibility="visible";
 			const enviando = document.getElementById('enviandoreportenovisitar');
-			//document.getElementById("leyendadetallemotivonovisitar").style.display = "none";
-			//document.getElementById("motivonovisitar").style.display = "none";
 			if (document.getElementById('nombrenovisitar').value==="" || document.getElementById('territorionovisitar').value==="" || document.getElementById('fechanovisitar').value==="" || document.getElementById('direccionnovisitar').value===""
 			|| (!expresonovisitar.checked && !noexpresonovisitar.checked) || (noexpresonovisitar.checked && document.getElementById('detallemotivonovisitar').value==="")) {
 				if (document.getElementById('fechanovisitar').value==="") {document.getElementById("fechanovisitar").placeholder = "Por favor, ingresá alguna fecha aquí...";document.getElementById("fechanovisitar").focus()};
@@ -2849,7 +2662,6 @@
 		mapa.on("zoomend", ActualizarVistaManzanas);
 		
 		//Bloque para resaltar o remarcar lo nuevo
-		//const elementonovedoso = document.getElementById('botonreportarpredicado');
 		const elementonovedoso = document.getElementById('barralateral');
 		const novedaden="barralateral";//Cambiar si fuera otro elemento el que contenga la novedad
 		// Fechas de inicio y fin para resaltar o remarcar una novedad (pueden incluir hora si querés)
@@ -2985,7 +2797,6 @@
 		document.getElementById("motivonovisitar").style.visibility='hidden';
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
-		document.getElementById("botoncentrado").style.visibility='hidden';
 		cajadistancia.classList.remove('visible');
 		btnindicacionesmodalflash.style.display='none';
 		mimodalflash.style.display='none';
@@ -2993,7 +2804,6 @@
 		VerificarConexion();
 		VerificarVersion();
 		VerificarNoVolverAMostrar();
-		//if (dispositivo==="movil") {mapa.style.height = "80%"};
 		if (dispositivo==="") {dispositivo="desconocido"};
 		window.addEventListener("load", async () => {
 			const fd = new FormData();
