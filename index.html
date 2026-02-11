@@ -1020,7 +1020,8 @@
 		var capa_numerosterritorios={};
 		var capa_territoriofiltrado={};
 		var capa_territoriofiltradonumero={};
-		var puntomascercano=L.latLng[-32.92740078150927, -68.77696817942217];
+		//var puntomascercano=L.latLng[-32.92740078150927, -68.77696817942217];
+		var centroterritorio = {lat: -68.77696817942217, lng: -32.92740078150927};
 		var numeroterritorio="";
 		var capa_popups=null;
 		var infoterritorios=null;
@@ -1207,7 +1208,6 @@
 				listaterritorios=sinRepetidos.sort((a, b) => a - b);
 				layer.bindPopup("<strong>Territorio Nº "+feature.properties.Numero+"</strong>"+"<br>Barrio: "+barrio+"<br><br><strong>NO VISITAR:</strong><br>"+novisitar);
 			};
-			//ArmarListaTerritorios();
 		};
 		
 		function NumerosTerritorios(feature, layer) {
@@ -1729,7 +1729,8 @@
 						nearestSegment = segment;
 					};
 				});
-				puntomascercano= [nearestPoint.geometry.coordinates[1], nearestPoint.geometry.coordinates[0]];
+				//puntomascercano= [nearestPoint.geometry.coordinates[1], nearestPoint.geometry.coordinates[0]];
+				puntomascercano={lat: -68.77696817942217, lng: -32.92740078150927};
 				return minDistance;
 			};
 		};
@@ -1772,7 +1773,6 @@
 			'No podrás visualizar tu posición ni recibir indicaciones para llegar a un lugar.'+
 			'<br><br>Podrás volver a activarla en el momento que lo desees.</span>';
 			tiempomodalflash=5000;
-			//btncerrarmodalflash.textContent === "Cerrar";
 			ModalFlash(tiempomodalflash);
 		};
 
@@ -1794,26 +1794,8 @@
 			barralateral.close();
 			seguimiento="";
 			orientarme="";
-			//avisollegada="";
-			//dentropredio="";
-			//document.getElementById("vermiubicacion").style.visibility='hidden';
-			//document.getElementById("gps").src="./images/slide_off.jpg";
-			//document.getElementById("miubicacion").style.visibility='hidden';
-			//document.getElementById("gpson").style.visibility='hidden';
-			//document.getElementById("gpsoff").style.visibility='visible';
-			//document.getElementById("botoncentrado").style.visibility='hidden';
-			//document.getElementById("activargps").style.visibility='visible';
-			//cajadistancia.classList.remove("visible");
-			//document.getElementById("dondestoy").style.visibility='hidden';
-			//document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento()";
-			//DetenerActualizarUbicacion();
-			//if (marca_ubicacion_real) {mapa.removeLayer(marca_ubicacion_real)};
-			//marca_ubicacion_real="";
-			//coordenadas_ubicacion_real="";
-			//if (ruta) {ruta.remove()};
 			botoncentrado.style.display='none';
 			cajadistancia.classList.remove("visible");
-			//document.getElementById("dondestoy").style.visibility='hidden';
 			document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento(seguimiento)";
 			clearInterval(intervalo);
 			clearInterval(intervaloRuta);
@@ -1860,7 +1842,6 @@
 			modalinicial.close();
 			mimodalflash.style.display='none';
 			btnindicacionesmodalflash.style.display='none';
-			//visitas.style.display='none';
 			document.getElementById("borrableinicial").style.display='none';
 			botoncentrado.style.display="block";
 			VerificarConexion();
@@ -1872,12 +1853,14 @@
 			if (distancia <= 1100) {
 				ActualizarUbicacion();
 				return;
-			}
+			};
 			// 🔥 eliminar ruta anterior
 			if (ruta) {
 				mapa.removeControl(ruta);
 				ruta = null;
-			}
+			};
+			console.log(coordenadas_ubicacion_real,typeof(coordenadas_ubicacion_real));
+			console.log(puntomascercano,typeof(puntomascercano));
 			// 🔥 crear nueva ruta
 			ruta = L.Routing.control({
 				waypoints: [
@@ -2398,7 +2381,6 @@
 					FiltrarVariosTerritorios(territorioapredicar);
 					if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
 					if (seguimiento==="si") {
-						alert("Acá...!!!");
 						titulomodalflash.innerText="TRAZAR RUTA";
 						cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
 						'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
