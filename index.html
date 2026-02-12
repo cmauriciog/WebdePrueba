@@ -841,7 +841,7 @@
 					No volver a mostrar
 				</label>
 				<div class="modalflash-botones" id="botonesModalFlash">
-					<button id="btn-indicaciones-modal-flash" onclick="IniciarRuteo()">Sí</button>
+					<button id="btn-indicaciones-modal-flash" onclick="IniciarActualizacionRuta()">Sí</button>
 					<button id="btn-cerrar-modal-flash">Cerrar</button>
 				</div>
 			</div>
@@ -1025,7 +1025,6 @@
 		var capa_territoriofiltrado={};
 		var capa_territoriofiltradonumero={};
 		var puntomascercano=L.latLng[-32.92740776117796, -68.77695417460903];
-		//var centroterritorio = {lat: -68.77696817942217, lng: -32.92740078150927};
 		var numeroterritorio="";
 		var capa_popups=null;
 		var infoterritorios=null;
@@ -1067,7 +1066,6 @@
 		const botondetallesruta =document.getElementById("BotonDetallesRuta");
 		const panelrutas=document.getElementById("PanelRutas");
 		const mimodalflash=document.querySelector("#MiModalFlash");
-		let refrescoRutaActivo = false;
 		
 		// Crear grupo de puntos
 		var grupomanzanas = L.geoJSON(manzanas, {
@@ -1832,17 +1830,17 @@
 			mapa.flyTo([-32.9280586817747, -68.77360525273423],15);
 		};
 		
-		function RefrescarRuta() {
-			if (!refrescoRutaActivo) return;
-			TrazarRuta();
-			setTimeout(RefrescarRuta, 180000); // 3 minutos
-		};
+		//function RefrescarRuta() {
+		//	if (!refrescoRutaActivo) return;
+		//	TrazarRuta();
+		//	setTimeout(RefrescarRuta, 180000); // 3 minutos
+		//};
 
-		function IniciarRuteo() {
-			if (refrescoRutaActivo) return;
-			refrescoRutaActivo = true;
-			RefrescarRuta(); // arranca
-		};
+		//function IniciarRuteo() {
+		//	if (refrescoRutaActivo) return;
+		//	refrescoRutaActivo = true;
+		//	RefrescarRuta(); // arranca
+		//};
 
 		<!--Función para Trazar Ruta Sugerida con OSRM-->
 		function TrazarRuta() {
@@ -1850,7 +1848,6 @@
 			clearTimeout(tiempo);
 			modalinicial.close();
 			mimodalflash.style.display='none';
-			//btnindicacionesmodalflash.style.display='none';
 			btnindicacionesmodalflash.classList.add("ocultarboton");
 			document.getElementById("borrableinicial").style.display='none';
 			botoncentrado.style.display="block";
@@ -1870,8 +1867,6 @@
 				mapa.removeControl(ruta);
 				ruta = null;
 			};
-			//console.log(coordenadas_ubicacion_real,typeof(coordenadas_ubicacion_real));
-			//console.log(puntomascercano,typeof(puntomascercano));
 			// 🔥 crear nueva ruta
 			ruta = L.Routing.control({
 				waypoints: [coordenadas_ubicacion_real, puntomascercano
@@ -1924,7 +1919,26 @@
 			panelrutas.style.display = "block";
 			panelrutas.replaceChildren(ruta.getContainer());
 			const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});
-			};
+		};
+		
+		function IniciarActualizacionRuta() {
+			// Evita múltiples intervalos
+			if (intervaloRuta) return;
+			console.log("Actualización automática iniciada");
+			TrazarRuta(); // ejecutar inmediatamente
+			intervaloRuta = setInterval(() => {
+				console.log("Actualizando ruta...");
+				TrazarRuta();
+			}, 180000); // 3 minutos
+		};
+		
+		function DetenerActualizacionRuta() {
+			if (intervaloRuta) {
+				clearInterval(intervaloRuta);
+				intervaloRuta = null;
+				console.log("Actualización detenida");
+			}
+		};
 	
 		//Bloque Modal Flash
 		function ModalFlash(tiempo) {
@@ -1989,6 +2003,7 @@
 		});
 		
 		btnindicacionesmodalflash.addEventListener("click",()=>{
+			DetenerActualizacionRuta();
 			clearTimeout(temporizadormodalflash);
 			orientarme="si";
 			avisollegada="si";
