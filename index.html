@@ -841,7 +841,7 @@
 					No volver a mostrar
 				</label>
 				<div class="modalflash-botones" id="botonesModalFlash">
-					<button id="btn-indicaciones-modal-flash" onclick="IniciarActualizacionRuta()">Sí</button>
+					<button id="btn-indicaciones-modal-flash" onclick="TrazarRuta()">Sí</button>
 					<button id="btn-cerrar-modal-flash">Cerrar</button>
 				</div>
 			</div>
@@ -1844,100 +1844,174 @@
 
 		<!--Función para Trazar Ruta Sugerida con OSRM-->
 		function TrazarRuta() {
-			clearTimeout(temporizadormodalflash);
-			clearTimeout(tiempo);
-			modalinicial.close();
-			mimodalflash.style.display='none';
-			btnindicacionesmodalflash.classList.add("ocultarboton");
-			document.getElementById("borrableinicial").style.display='none';
-			botoncentrado.style.display="block";
-			VerificarConexion();
-			if (conexion==="si") {VerificarGPS()};
-			distancia=DistanciaEnTiempoReal();
+			
+		//## LO VIEJO..
+			//clearTimeout(temporizadormodalflash);
+			//clearTimeout(tiempo);
+			//modalinicial.close();
+			//mimodalflash.style.display='none';
+			//btnindicacionesmodalflash.classList.add("ocultarboton");
+			//document.getElementById("borrableinicial").style.display='none';
+			//botoncentrado.style.display="block";
+			//VerificarConexion();
+			//if (conexion==="si") {VerificarGPS()};
+			//distancia=DistanciaEnTiempoReal();
 			//alert("Coordenadas: ",puntomascercano,"Tipo variable coordenadas: ",typeof(puntomascercano),"Orden de mapeo: ",cartografiar);
-			avisollegada="si";
+			//avisollegada="si";
 			
 			// 🚶 Cerca del destino → NO rutea, pero NO mata el intervalo
-			if (distancia <= 1100) {
-				ActualizarUbicacion();
-				return;
-			};
+			//if (distancia <= 1100) {
+			//	ActualizarUbicacion();
+			//	return;
+			//};
 			// 🔥 eliminar ruta anterior
-			if (ruta) {
-				mapa.removeControl(ruta);
-				ruta = null;
-			};
+			//if (ruta) {
+			//	mapa.removeControl(ruta);
+			//	ruta = null;
+			//};
 			// 🔥 crear nueva ruta
-			ruta = L.Routing.control({
-				waypoints: [coordenadas_ubicacion_real, puntomascercano
+			//ruta = L.Routing.control({
+			//	waypoints: [coordenadas_ubicacion_real, puntomascercano
 					//L.latLng(coordenadas_ubicacion_real.lat, coordenadas_ubicacion_real.lng),
 					//L.latLng(puntomascercano.lat, puntomascercano.lng)
-				],
-				router: L.Routing.osrmv1({
-					serviceUrl: 'https://router.project-osrm.org/route/v1',
-					language: 'es'
-				}),
-				showAlternatives: true,
-				draggableWaypoints: false,
-				createMarker: () => null,
-				lineOptions: {
-					styles: [{ color: 'red', weight: 9, opacity: 0.9 }]},
-				altLineOptions: {styles: [{color: 'blue', weight: 6, opacity: 0.6, dashArray: '8,12'}]} 
-			}).addTo(mapa);
+			//	],
+			//	router: L.Routing.osrmv1({
+			//		serviceUrl: 'https://router.project-osrm.org/route/v1',
+			//		language: 'es'
+			//	}),
+			//	showAlternatives: true,
+			//	draggableWaypoints: false,
+			//	createMarker: () => null,
+			//	lineOptions: {
+			//		styles: [{ color: 'red', weight: 9, opacity: 0.9 }]},
+			//	altLineOptions: {styles: [{color: 'blue', weight: 6, opacity: 0.6, dashArray: '8,12'}]} 
+			//}).addTo(mapa);
+			//botondetallesruta.style.display = "block";
+			//panelrutas.style.display = "block";
+			//panelrutas.replaceChildren(ruta.getContainer());
+			//const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});
+		//## FIN DE LO VIEJO
 			
-			
-			//Probando desde acá......
-			<!-- function segundosAHorasMinutos(segundos) { -->
-				<!-- const horas = Math.floor(segundos / 3600); -->
-				<!-- const minutos = Math.round((segundos % 3600) / 60); -->
-				<!-- if (horas > 0) { -->
-					<!-- return `${horas} h ${minutos} min`; -->
-				<!-- } -->
-				<!-- return `${minutos} min`; -->
-			<!-- }; -->
-			
-			<!-- ruta.on('routesfound', function (e) { -->
-				<!-- panelrutas.innerHTML = ''; -->
-				<!-- e.routes.forEach((route, index) => { -->
-					<!-- const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2); -->
-					<!-- const tiempoFormateado = segundosAHorasMinutos(route.summary.totalTime); -->
-					<!-- const div = document.createElement('div'); -->
-					<!-- div.style.padding = '8px'; -->
-					<!-- div.style.borderBottom = '1px solid #ccc'; -->
-					<!-- div.innerHTML = ` -->
-						<!-- <strong>Ruta ${index === 0 ? 'principal' : 'alternativa ' + index}</strong><br> -->
-						<!-- 📏 Distancia: ${distanciaKm} km<br> -->
-						<!-- ⏱️ Tiempo estimado: ${tiempoFormateado} -->
-					<!-- `; -->
-					<!-- panelrutas.appendChild(div); -->
-				<!-- }); -->
-			<!-- }); -->
-			//Hasta acá.-
-			
-			
-			botondetallesruta.style.display = "block";
-			panelrutas.style.display = "block";
-			panelrutas.replaceChildren(ruta.getContainer());
-			const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});
-		};
-		
-		function IniciarActualizacionRuta() {
-			// Evita múltiples intervalos
-			if (intervaloRuta) return;
-			console.log("Actualización automática iniciada");
-			TrazarRuta(); // ejecutar inmediatamente
-			intervaloRuta = setInterval(() => {
-				console.log("Actualizando ruta...");
-				TrazarRuta();
-			}, 180000); // 3 minutos
-		};
-		
-		function DetenerActualizacionRuta() {
-			if (intervaloRuta) {
-				clearInterval(intervaloRuta);
-				intervaloRuta = null;
-				console.log("Actualización detenida");
-			}
+			VerificarConexion();
+			if (conexion==="si") {
+				VerificarGPS();
+			};
+			avisollegada="si";
+			if (ruta) {ruta.remove();clearInterval(actualizarruta)};
+			btnindicacionesmodalflash.classList.add("ocultarboton");
+			mimodalflash.style.display="none";
+			distancia=DistanciaEnTiempoReal();
+			const dentro = ChequearPredio(coordenadas_ubicacion_real);
+			if (!dentro || dentro==null) {
+				dentropredio=""} else {dentropredio="si"};
+			if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
+			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
+			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
+			cajadistancia.textContent = msg;
+			cajadistancia.style.background = "#d4edda";
+			cajadistancia.style.color = "#155724";
+			if (distancia<=2200 && lugar) {
+				if (ruta) {ruta.remove()};
+				clearInterval(actualizarruta);
+				ActualizarUbicacion();
+			};
+			if (distancia>2200) {
+				ruta=L.Routing.control({
+					waypoints: [coordenadas_ubicacion_real, puntomascercano],
+					router: L.Routing.osrmv1({
+						serviceUrl: 'https://router.project-osrm.org/route/v1',
+						language: 'es',
+					}),
+					showAlternatives: true,
+					routeWhileDragging: true,
+					draggableWaypoints: false,
+					collapsible: true,
+					waypointMode: 'snap',
+					lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]},
+					altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]},
+					createMarker: function(i, wp) {
+						return L.marker(wp.latLng, {
+							draggable: false,
+							icon: L.icon({
+								iconUrl: './images/posicion.png',
+								iconSize: [0, 0]
+							})
+						});
+					}
+				}).addTo(mapa);
+				botondetallesruta.style.display = "block";
+				panelrutas.style.display = "block";
+				
+				
+				//Probando desde acá......
+				function segundosAHorasMinutos(segundos) {
+					const horas = Math.floor(segundos / 3600);
+					const minutos = Math.round((segundos % 3600) / 60);
+					if (horas > 0) {
+						return `${horas} h ${minutos} min`;
+					}
+					return `${minutos} min`;
+				};
+				ruta.on('routesfound', function (e) {
+					//panelrutas.innerHTML = '';
+					e.routes.forEach((route, index) => {
+						const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+						const tiempoFormateado = segundosAHorasMinutos(route.summary.totalTime);
+						//const div = document.createElement('div');
+						//div.style.padding = '8px';
+						//div.style.borderBottom = '1px solid #ccc';
+						//div.innerHTML = `
+						//	<strong>Ruta ${index === 0 ? 'principal' : 'alternativa ' + index}</strong><br>
+						//	📏 Distancia: ${distanciaKm} km<br>
+						//	⏱️ Tiempo estimado: ${tiempoFormateado}
+						//`;
+						//panelrutas.appendChild(div);
+						cajadistancia.insertAdjacentHTML('beforeend', `
+							<div style="padding:8px; border-bottom:1px solid #ccc;">
+							<strong>Ruta ${index === 0 ? 'principal' : 'alternativa ' + index}</strong><br>
+							📏 Distancia: ${distanciaKm} km<br>
+							⏱️ Tiempo estimado: ${tiempoFormateado}
+							</div>
+						`);
+					});
+				});
+				//Hasta acá.-
+				
+				
+				
+				//panelrutas.replaceChildren(ruta.getContainer());
+				//Centrar el mapa para que se vean ubicación en tiempo real y EEA ó Sector/Persona buscado **SOLO la primera vez**
+				if (actualizarruta=="si") {const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});};
+				actualizarruta=setInterval(()=>{
+					if (ruta) {ruta.remove()};
+					ruta=L.Routing.control({
+					waypoints: [coordenadas_ubicacion_real, puntomascercano],
+					router: L.Routing.osrmv1({
+						serviceUrl: 'https://router.project-osrm.org/route/v1',
+						language: 'es',
+					}),
+					showAlternatives: true,
+					routeWhileDragging: true,
+					draggableWaypoints: false,
+					collapsible: true,
+					waypointMode: 'snap',
+					lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]},
+					altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]},
+					createMarker: function(i, wp) {
+						return L.marker(wp.latLng, {
+							draggable: false,
+							icon: L.icon({
+								iconUrl: './images/posicion.png',
+								iconSize: [0, 0]
+							})
+						});
+					}
+					}).addTo(mapa);
+					//botondetallesruta.style.display = "block";
+					//panelrutas.style.display = "block";
+					panelrutas.replaceChildren(ruta.getContainer());
+				},60000);
+			};
 		};
 	
 		//Bloque Modal Flash
@@ -1952,7 +2026,6 @@
 				if (restante <= 0) clearInterval(intervalo);
 				}, 1000);
 			temporizadormodalflash=setTimeout(() => {
-				//btnindicacionesmodalflash.style.display='none';
 				btnindicacionesmodalflash.classList.add("ocultarboton");
 				mimodalflash.style.display='none';
 				clearTimeout(temporizadormodalflash);
@@ -1978,7 +2051,6 @@
 		};
 		
 		btncerrarmodalflash.addEventListener("click",()=>{
-			//btnindicacionesmodalflash.style.display='none';
 			btnindicacionesmodalflash.classList.add("ocultarboton");
 			mimodalflash.style.display='none';
 			modalinicial.close();
@@ -2003,7 +2075,6 @@
 		});
 		
 		btnindicacionesmodalflash.addEventListener("click",()=>{
-			DetenerActualizacionRuta();
 			clearTimeout(temporizadormodalflash);
 			orientarme="si";
 			avisollegada="si";
