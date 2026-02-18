@@ -136,13 +136,13 @@
 		
 		.botoncentrado {
 			position: absolute;
-			top: 130px;
-			right: 80px;
+			top: 100px;
+			right: 60px;
 			background: none;
 			border: none;
 			cursor: pointer;
 			padding: 0;
-			z-index:1030;
+			z-index:999;
 		}
 		.botoncentrado img {
 			width: 35px;
@@ -1579,7 +1579,7 @@
 			sondeo_posicion=0;
 			barralateral.close();
 			document.getElementById("gps").src="./images/slide_on.jpg";
-			document.getElementById("activargps").style.visibility='hidden';
+			//document.getElementById("activargps").style.visibility='hidden';
 			document.getElementById("ubicacion_estado").href="javascript:desactivar_seguimiento()";
 			VerificarConexion();
 			if (conexion==="si") {
