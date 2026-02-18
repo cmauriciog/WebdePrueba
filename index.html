@@ -502,7 +502,7 @@
 			position: fixed;
 			top: 28%;
 			right: 3%;
-			z-index: 1050;
+			z-index: 999;
 			background: #fff;
 			color: white;
 			border: 1px solid #777;
@@ -1064,6 +1064,7 @@
 		const nomostrarcelular = document.getElementById('nomostrarcelular');
 		const nomostrarlonuevo = document.getElementById('nomostrarlonuevo');
 		const botondetallesruta =document.getElementById("BotonDetallesRuta");
+		const botoncentrado=document.getElementById("botoncentrado");
 		const panelrutas=document.getElementById("PanelRutas");
 		const mimodalflash=document.querySelector("#MiModalFlash");
 		
@@ -1797,6 +1798,7 @@
 
 		<!--Función para detener el seguimiento en tiempo real-->
 		function desactivar_seguimiento() {
+			document.getElementById("gps").src="./images/slide_off.jpg";
 			botondetallesruta.style.display='none';
 			barralateral.close();
 			seguimiento="";
@@ -1900,6 +1902,7 @@
 			if (ruta) {ruta.remove();clearInterval(actualizarruta)};
 			btnindicacionesmodalflash.classList.add("ocultarboton");
 			mimodalflash.style.display="none";
+			botoncentrado.style.display='block';
 			distancia=DistanciaEnTiempoReal();
 			const dentro = ChequearPredio(coordenadas_ubicacion_real);
 			if (!dentro || dentro==null) {
@@ -1940,7 +1943,7 @@
 					}
 				}).addTo(mapa);
 				botondetallesruta.style.display = "block";
-				panelrutas.style.display = "block";
+				panelrutas.replaceChildren(ruta.getContainer());
 				
 				
 				//Probando desde acá......
@@ -2007,8 +2010,6 @@
 						});
 					}
 					}).addTo(mapa);
-					//botondetallesruta.style.display = "block";
-					//panelrutas.style.display = "block";
 					panelrutas.replaceChildren(ruta.getContainer());
 				},60000);
 			};
@@ -2874,7 +2875,6 @@
 		document.getElementById("vermiubicacion").style.visibility='hidden';
 		document.getElementById("flecharoja").style.visibility='hidden';
 		document.getElementById("miubicacion").style.visibility='hidden';
-		document.getElementById("botoncentrado").style.visibility='hidden';
 		document.getElementById("botonnorte").style.visibility='hidden';
 		document.getElementById("ModalReportePredicado").style.visibility='hidden';
 		document.getElementById("manzanaspredicadas").style.visibility='hidden';
@@ -2884,10 +2884,10 @@
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
 		cajadistancia.classList.remove('visible');
-		//btnindicacionesmodalflash.style.display='none';
 		btnindicacionesmodalflash.classList.add("ocultarboton");
 		mimodalflash.style.display='none';
 		botondetallesruta.style.display='none';
+		botoncentrado.style.display='none';
 		VerificarConexion();
 		VerificarVersion();
 		VerificarNoVolverAMostrar();
