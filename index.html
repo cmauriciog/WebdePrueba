@@ -136,7 +136,7 @@
 		
 		.botoncentrado {
 			position: absolute;
-			top: 40px;
+			top: 70px;
 			right: 10px;
 			background: none;
 			border: none;
@@ -178,7 +178,6 @@
 			display: block;
 		}
 
-		
 		/*Modal Flash*/
 		.modalflash {
 			position: fixed;
@@ -2888,6 +2887,9 @@
 		mimodalflash.style.display='none';
 		botondetallesruta.style.display='none';
 		botoncentrado.style.display='none';
+		const contenedorzoom = document.querySelector('.leaflet-top.leaflet-right');
+		contenedorzoom.style.setProperty('top', '10px', 'important');
+		contenedorzoom.style.setProperty('right', '10px', 'important');
 		VerificarConexion();
 		VerificarVersion();
 		VerificarNoVolverAMostrar();
