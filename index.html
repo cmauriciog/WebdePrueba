@@ -1846,7 +1846,6 @@
 
 		<!--Función para Trazar Ruta Sugerida con OSRM-->
 		function TrazarRuta() {
-			
 		//## LO VIEJO..
 			//clearTimeout(temporizadormodalflash);
 			//clearTimeout(tiempo);
@@ -1893,11 +1892,8 @@
 			//panelrutas.replaceChildren(ruta.getContainer());
 			//const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});
 		//## FIN DE LO VIEJO
-			
 			VerificarConexion();
-			if (conexion==="si") {
-				VerificarGPS();
-			};
+			if (conexion==="si") {VerificarGPS()};
 			avisollegada="si";
 			if (ruta) {ruta.remove();clearInterval(actualizarruta)};
 			btnindicacionesmodalflash.classList.add("ocultarboton");
@@ -1914,12 +1910,12 @@
 			cajadistancia.textContent = msg;
 			cajadistancia.style.background = "#d4edda";
 			cajadistancia.style.color = "#155724";
-			if (distancia<=2200 && lugar) {
+			if (distancia<=1100 && lugar) {
 				if (ruta) {ruta.remove()};
 				clearInterval(actualizarruta);
 				ActualizarUbicacion();
 			};
-			if (distancia>2200) {
+			if (distancia>1100) {
 				ruta=L.Routing.control({
 					waypoints: [coordenadas_ubicacion_real, puntomascercano],
 					router: L.Routing.osrmv1({
@@ -2080,14 +2076,14 @@
 			clearInterval(intervalo);
 			clearInterval(intervaloRuta);
 			clearTimeout(tiempo);
-			//if (dispositivo=="movil") {
-			//	titulomodalflash.innerText="TRAZAR RUTA";
-			//	cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>Se te ofrecerán alertas por voz.</b><br><br><span style="color:black">Por lo tanto, asegurate de tener activado el sonido del dispositivo y a un volumen que puedas escucharlo sin distraerte demasiado.-<br></span>';
-			//	btnindicacionesmodalflash.style.display='none';
-			//	btncerrarmodalflash.textContent = "Cerrar";
-			//	tiempomodalflash=5000;
-			//	ModalFlash(tiempomodalflash);
-			//};
+			if (dispositivo=="movil") {
+				titulomodalflash.innerText="TRAZAR RUTA";
+				cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>Se te ofrecerán alertas por voz.</b><br><br><span style="color:black">Por lo tanto, asegurate de tener activado el sonido del dispositivo y a un volumen que puedas escucharlo sin distraerte demasiado.-<br></span>';
+				btnindicacionesmodalflash.style.display='none';
+				btncerrarmodalflash.textContent = "Cerrar";
+				tiempomodalflash=5000;
+				ModalFlash(tiempomodalflash);
+			};
 		});
 		
 		btncerrarmodalinicial.addEventListener("click",()=>{
