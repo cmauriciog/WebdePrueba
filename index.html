@@ -1066,6 +1066,7 @@
 		const botoncentrado=document.getElementById("botoncentrado");
 		const panelrutas=document.getElementById("PanelRutas");
 		const mimodalflash=document.querySelector("#MiModalFlash");
+		const flecharoja=document.getElementById("flecharoja");
 		
 		// Crear grupo de puntos
 		var grupomanzanas = L.geoJSON(manzanas, {
@@ -1479,13 +1480,13 @@
 				nombrefoto.forEach(nombre => nom_foto=nom_foto+nombre+"_");
 				nombrefoto = nom_foto.slice(0, nom_foto.length - 1);
 				<!--Establecer qué familias tienen fotos del frente de su casa y cuáles no para distinguir qué imagen mostrar-->
-				if (nombrefoto=="Andrada_Liliana" || nombrefoto=="Argüello" || nombrefoto=="Astudillo_Elio-Videla_Alejandro" || nombrefoto=="Astudillo_Jonatan" || nombrefoto=="Battaglia" || nombrefoto=="Biscontin_Irma" || nombrefoto=="Biscontin_Ruben"
+				if (nombrefoto=="Andrada_Liliana" || nombrefoto=="Argüello" || nombrefoto=="Astudillo_Elio" || nombrefoto=="Astudillo_Jonatan" || nombrefoto=="Battaglia" || nombrefoto=="Biscontin_Irma" || nombrefoto=="Biscontin_Ruben"
 				|| nombrefoto=="Bringas" || nombrefoto=="Bustos_Ethel" || nombrefoto=="Cabañez_Carlos" || nombrefoto=="Calderon-Andrada" || nombrefoto=="Candia" || nombrefoto=="Castillo" || nombrefoto=="Cinco-Castillo"
 				|| nombrefoto=="Del_Balzo" || nombrefoto=="Ferranti-Ricalde" || nombrefoto=="Figueroa" || nombrefoto=="Galdames" || nombrefoto=="Garcia_Cristian" || nombrefoto=="Garcia_Gonzalo" || nombrefoto=="Garcia_Roberto"
 				|| nombrefoto=="Godoy" || nombrefoto=="Gualpa" || nombrefoto=="Huallpa" || nombrefoto=="Leites" || nombrefoto=="Manresa" || nombrefoto=="Miron_Daniel" || nombrefoto=="Miron_Gustavo" || nombrefoto=="Muñoz"
 				|| nombrefoto=="Nuñez_Alejandro" || nombrefoto=="Nuñez_Estela" || nombrefoto=="Ortiz_Elias" || nombrefoto=="Ortiz_Hector" || nombrefoto=="Ortiz_Jose" || nombrefoto=="Quiroga_Jose"
-				|| nombrefoto=="Quiroga-Ramirez" || nombrefoto=="Reyes" || nombrefoto=="Rossi" || nombrefoto=="Sarmiento" || nombrefoto=="Snieg" || nombrefoto=="Sosa_Noelia" || nombrefoto=="Sosa_Tamara"
-				|| nombrefoto=="Vera_Debora" || nombrefoto=="Vera_Natalia") {var foto='./images/'+nombrefoto+".jpg";
+				|| nombrefoto=="Quiroga-Ramirez" || nombrefoto=="Reyes" || nombrefoto=="Rodriguez_Matias" || nombrefoto=="Rodriguez_Marta" || nombrefoto=="Rossi" || nombrefoto=="Sarmiento" || nombrefoto=="Snieg" || nombrefoto=="Sosa_Noelia" || nombrefoto=="Sosa_Tamara"
+				|| nombrefoto=="Tumbarello_Debora" || nombrefoto=="Vera_Natalia") {var foto='./images/'+nombrefoto+".jpg";
 				} else {
 					var foto='./images/'+'Casa.jpg';
 				};
@@ -1907,6 +1908,7 @@
 			if (!dentro || dentro==null) {
 				dentropredio=""} else {dentropredio="si"};
 			if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
+			cajadistancia.innerHTML = "";
 			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 			cajadistancia.textContent = msg;
@@ -1941,9 +1943,6 @@
 						});
 					}
 				}).addTo(mapa);
-				botondetallesruta.style.display = "block";
-				panelrutas.replaceChildren(ruta.getContainer());
-				
 				
 				//Probando desde acá......
 				function segundosAHorasMinutos(segundos) {
@@ -1954,34 +1953,18 @@
 					}
 					return `${minutos} min`;
 				};
+				
 				ruta.on('routesfound', function (e) {
-					//panelrutas.innerHTML = '';
 					e.routes.forEach((route, index) => {
 						const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
 						const tiempoFormateado = segundosAHorasMinutos(route.summary.totalTime);
-						//const div = document.createElement('div');
-						//div.style.padding = '8px';
-						//div.style.borderBottom = '1px solid #ccc';
-						//div.innerHTML = `
-						//	<strong>Ruta ${index === 0 ? 'principal' : 'alternativa ' + index}</strong><br>
-						//	📏 Distancia: ${distanciaKm} km<br>
-						//	⏱️ Tiempo estimado: ${tiempoFormateado}
-						//`;
-						//panelrutas.appendChild(div);
-						cajadistancia.insertAdjacentHTML('beforeend', `
-							<div style="padding:8px; border-bottom:1px solid #ccc;">
-							<strong>Ruta ${index === 0 ? 'principal' : 'alternativa ' + index}</strong><br>
-							📏 Distancia: ${distanciaKm} km<br>
-							⏱️ Tiempo estimado: ${tiempoFormateado}
-							</div>
-						`);
+						cajadistancia.insertAdjacentHTML('beforeend', `<br>Ruta ${index === 0 ? 'Recomendada (Rojo)' : 'Alternativa (Azul)'}: Distancia: ${distanciaKm} km, Tiempo estimado: ${tiempoFormateado}.`);
 					});
 				});
 				//Hasta acá.-
 				
 				
 				
-				//panelrutas.replaceChildren(ruta.getContainer());
 				//Centrar el mapa para que se vean ubicación en tiempo real y EEA ó Sector/Persona buscado **SOLO la primera vez**
 				if (actualizarruta=="si") {const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});};
 				actualizarruta=setInterval(()=>{
@@ -2010,8 +1993,18 @@
 					}
 					}).addTo(mapa);
 					panelrutas.replaceChildren(ruta.getContainer());
+					ruta.on('routesfound', function (e) {
+						e.routes.forEach((route, index) => {
+							const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+							const tiempoFormateado = segundosAHorasMinutos(route.summary.totalTime);
+							cajadistancia.insertAdjacentHTML('beforeend', `<br>Ruta ${index === 0 ? 'Recomendada (Rojo)' : 'Alternativa (Azul)'}: Distancia: ${distanciaKm} km, Tiempo estimado: ${tiempoFormateado}.`);
+						});
+					});
 				},60000);
 			};
+			botondetallesruta.style.display = "block";
+			panelrutas.style.display = "block";
+			panelrutas.replaceChildren(ruta.getContainer());
 		};
 	
 		//Bloque Modal Flash
@@ -2029,7 +2022,7 @@
 				btnindicacionesmodalflash.classList.add("ocultarboton");
 				mimodalflash.style.display='none';
 				clearTimeout(temporizadormodalflash);
-				if (nomostrarinicial.checked) {localStorage.setItem('MOSTRAR_INICIAL', Version);document.getElementById("borrableinicial").style.display="none"};
+				if (nomostrarinicial.checked) {localStorage.setItem('MOSTRAR_INICIAL', Version);document.getElementById("borrableinicial").style.display="none";flecharoja.style.visibility='hidden'};
 			}, tiempo);
 		};
 		
@@ -2063,6 +2056,7 @@
 				try {
 					localStorage.setItem('MOSTRAR_INICIAL', Version);
 					document.getElementById("borrableinicial").style.display="none";
+					flecharoja.style.visibility='hidden';
 				} catch(e){
 					// ignore storage errors
 					console.warn('No se pudo guardar preferencia en localStorage', e);
@@ -2118,6 +2112,7 @@
 				try {
 					localStorage.setItem('MOSTRAR_INICIAL', Version);
 					document.getElementById("borrableinicial").style.display="none";
+					flecharoja.style.visibility='hidden';
 				} catch(e){
 					// ignore storage errors
 					console.warn('No se pudo guardar preferencia en localStorage', e);
@@ -2146,7 +2141,7 @@
 			cartelnuevo.classList.remove('show');
 			// después de la transición, ocultamos
 			setTimeout(()=> cartelnuevo.style.display = 'none', 160);
-			document.getElementById("flecharoja").style.visibility='hidden';
+			flecharoja.style.visibility='hidden';
 			if (nomostrarlonuevo.checked) {
 				try {
 					localStorage.setItem('MOSTRAR_NUEVO', Version);
@@ -2770,7 +2765,7 @@
 		function abrirnovedad(){
 			cartelnuevo.style.display = 'block';
 			// posicionar la guía apuntando al botón
-			if (dispositivo !=="movil") {document.getElementById("flecharoja").style.visibility='visible'};
+			if (dispositivo !=="movil") {flecharoja.style.visibility='visible'};
 			posicionnovedad();
 			// animación de aparición
 			requestAnimationFrame(()=> cartelnuevo.classList.add('show'));
@@ -2780,7 +2775,7 @@
 			cartelnuevo.classList.remove('show');
 			// después de la transición, ocultamos
 			setTimeout(()=> cartelnuevo.style.display = 'none', 160);
-			document.getElementById("flecharoja").style.visibility='hidden';
+			flecharoja.style.visibility='hidden';
 			if (nomostrarlonuevo.checked) {
 				try {
 					localStorage.setItem('MOSTRAR_NUEVO', Version);
@@ -2864,15 +2859,18 @@
 		
 		//Función No Volver a mostrar sugerencia para girar el celular
 		function VerificarNoVolverAMostrar(){
-			if (Version !== (localStorage.getItem('MOSTRAR_INICIAL')|| null)) {ModalFlash(tiempomodalflash);document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrableinicial").style.display="none";document.getElementById("borrablelonuevo").display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
-			if (localStorage.getItem('MOSTRAR_CELULAR') !=="no" && dispositivo !=="pc") {modalinicial.showModal();document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrablecelular").display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
-			if (Version !== (localStorage.getItem('MOSTRAR_NUEVO') || null)) {document.getElementById("flecharoja").style.visibility='visible';abrirnovedad()} else {document.getElementById("flecharoja").style.visibility='hidden'};
+			//if (Version !== (localStorage.getItem('MOSTRAR_INICIAL')|| null)) {ModalFlash(tiempomodalflash);document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrableinicial").style.display="none";document.getElementById("borrablelonuevo").display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
+			//if (localStorage.getItem('MOSTRAR_CELULAR') !=="no" && dispositivo !=="pc") {modalinicial.showModal();document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrablecelular").display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
+			//if (Version !== (localStorage.getItem('MOSTRAR_NUEVO') || null)) {console.log(localStorage.getItem('MOSTRAR_NUEVO'));flecharoja.style.visibility='visible';abrirnovedad()} else {flecharoja.style.visibility='hidden'};
+			//if (dispositivo=="movil") {flecharoja.style.visibility='hidden'};
+			if (Version !== (localStorage.getItem('MOSTRAR_INICIAL') || null)) {ModalFlash(tiempomodalflash);document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrableinicial").style.display="none";document.getElementById("borrablelonuevo").style.display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
+			if (localStorage.getItem('MOSTRAR_CELULAR') !=="no" && dispositivo !=="pc") {modalinicial.showModal();document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrablecelular").style.display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
+			//if (Version !== (localStorage.getItem('MOSTRAR_NUEVO') || null)) {document.getElementById("flecharoja").style.visibility='visible';console.log(Version+localStorage.getItem('MOSTRAR_NUEVO'))} else {document.getElementById("flecharoja").style.visibility='hidden'};
 			if (dispositivo=="movil") {document.getElementById("flecharoja").style.visibility='hidden'};
 		};
 		
 		//Activar/Desactivar/Mostrar/Ocultar/Ejecutar lo que corresponda al iniciar
 		document.getElementById("vermiubicacion").style.visibility='hidden';
-		document.getElementById("flecharoja").style.visibility='hidden';
 		document.getElementById("miubicacion").style.visibility='hidden';
 		document.getElementById("botonnorte").style.visibility='hidden';
 		document.getElementById("ModalReportePredicado").style.visibility='hidden';
@@ -2882,6 +2880,7 @@
 		document.getElementById("motivonovisitar").style.visibility='hidden';
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
+		flecharoja.style.visibility='hidden';
 		cajadistancia.classList.remove('visible');
 		btnindicacionesmodalflash.classList.add("ocultarboton");
 		mimodalflash.style.display='none';
