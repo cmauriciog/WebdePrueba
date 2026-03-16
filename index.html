@@ -12,6 +12,7 @@
 	<script src="geojson/ensayos.geojson" type="text/javascript"></script>
 	<script src="geojson/personal.geojson" type="text/javascript"></script>
 	<script src="geojson/inta.geojson" type="text/javascript"></script>
+	<script src="geojson/caminosinternos.geojson" type="text/javascript"></script>
 	<script src="permisos.txt" type="text/javascript"></script>
 	<!-- JS -->
 	<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
@@ -1785,6 +1786,7 @@
 			mapa.setView(coordenadas_ubicacion_real, 17);
 		};
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
+		if (dentroeeamza) {alert("Llamar al bloque de trazado de ruta por caminos internos.-")};
 		distancia=DistanciaEnTiempoReal();
 		//TrazarRuta();
 		btnindicacionesmodalflash.click();
@@ -2099,6 +2101,159 @@
 		//panelrutas.style.display = "block";
 		//panelrutas.replaceChildren(ruta.getContainer());
 	};
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//BLOQUE TRAZADO RUTA SI ESTOY DENTRO DE LA EEA
+		//---------------- EXTRAER SEGMENTOS
+	var segmentos=[];
+	caminosinternos.features.forEach(f=>{
+		f.geometry.coordinates.forEach(line=>{
+			for(var i=0;i<line.length-1;i++){
+			segmentos.push([line[i],line[i+1]]);
+			}
+		});
+	});
+	//---------------- GRAFO
+	var graph={};
+	function addEdge(a,b){
+		var A=a.join(",");
+		var B=b.join(",");
+		var d=turf.distance(
+		turf.point(a),
+		turf.point(b),
+		{units:"kilometers"}
+		);
+		if(!graph[A])graph[A]=[];
+		if(!graph[B])graph[B]=[];
+		graph[A].push({node:B,weight:d});
+		graph[B].push({node:A,weight:d});
+	};
+	// crear aristas base
+	segmentos.forEach(s=>addEdge(s[0],s[1]));
+	//---------------- SNAP AL SEGMENTO
+	function snapSegment(pt){
+		var min=Infinity;
+		var mejor=null;
+		var segA,segB;
+		segmentos.forEach(s=>{
+			var line=turf.lineString([s[0],s[1]]);
+			var snap=turf.nearestPointOnLine(line,turf.point(pt));
+			var d=snap.properties.dist;
+			if(d<min){
+				min=d;
+				mejor=snap.geometry.coordinates;
+				segA=s[0];
+				segB=s[1];
+			}
+		});
+		return {p:mejor,a:segA,b:segB};
+	};
+	//---------------- INSERTAR NODO
+	function insertarNodo(info){
+		var p=info.p;
+		var a=info.a;
+		var b=info.b;
+		var key=p.join(",");
+		if(graph[key]) return key;
+		addEdge(a,p);
+		addEdge(p,b);
+		return key;
+	};
+	//---------------- DIJKSTRA
+	function dijkstra(start,end){
+		var dist={},prev={},pq=[start];
+		for(var n in graph) dist[n]=Infinity;
+		dist[start]=0;
+		while(pq.length){
+		pq.sort((a,b)=>dist[a]-dist[b]);
+		var u=pq.shift();
+		if(u==end) break;
+		graph[u].forEach(e=>{
+		var alt=dist[u]+e.weight;
+		if(alt<dist[e.node]){
+		dist[e.node]=alt;
+		prev[e.node]=u;
+		pq.push(e.node);
+		}
+		});
+		}
+		var path=[],u=end;
+		while(u){
+			path.unshift(u);
+			u=prev[u];
+		}
+		return path;
+	};
+	
+	//Revisar este bloque
+	//---------------- INTERACCION
+	//var clicks=[];
+	//var ruta;
+	//map.on("click",function(e){
+	//if(clicks.length==2){
+	//	clicks=[];
+	//	if(ruta) map.removeLayer(ruta);
+	//}
+	//clicks.push([e.latlng.lng,e.latlng.lat]);
+	//L.marker(e.latlng).addTo(map);
+	//if(clicks.length==2) calcular();
+	//});
+	
+	
+	//---------------- CALCULAR RUTA
+	function calcular(){
+		var s1=snapSegment(clicks[0]);
+		var s2=snapSegment(clicks[1]);
+		var start=insertarNodo(s1);
+		var end=insertarNodo(s2);
+		var path=dijkstra(start,end);
+		var coords=[];
+		var distancia=0;
+		for(var i=0;i<path.length;i++){
+			var c=path[i].split(",");
+			coords.push([parseFloat(c[1]),parseFloat(c[0])]);
+			if(i>0){
+				var a=path[i-1].split(",");
+				var b=path[i].split(",");
+				distancia+=turf.distance(
+					turf.point([parseFloat(a[0]),parseFloat(a[1])]),
+					turf.point([parseFloat(b[0]),parseFloat(b[1])]),
+					{units:"kilometers"}
+				);
+			}
+		}
+		ruta=L.polyline(coords,{
+			color:"red",
+			weight:5
+		}).addTo(map);
+		// velocidades
+		var velPie=5;   // km/h
+		var velAuto=30; // km/h
+		var tiempoPie=(distancia/velPie)*60;
+		var tiempoAuto=(distancia/velAuto)*60;
+		alert(
+			"Distancia: "+(distancia*1000).toFixed(0)+" m\n"+
+			"Tiempo a pie: "+tiempoPie.toFixed(0)+" min\n"+
+			"Tiempo en auto: "+tiempoAuto.toFixed(0)+" min"
+		);
+	};
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	<!--Funcion para mostrar imagen estadísticas en ventana modal-->
 	function Funcion_Modal(imagen, titulo, leyenda, ancho, alto) {
