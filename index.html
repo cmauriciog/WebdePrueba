@@ -1586,7 +1586,7 @@
 		//	tiempomodalflash=5000;
 		//	ModalFlash(tiempomodalflash);
 		//};
-		TrazarRuta();
+		if (seguimiento==="si") {TrazarRuta()};
 	};
 
 	<!--Funcion para resetear todo-->
@@ -1772,6 +1772,7 @@
 
 	// Evento al encontrar la ubicación
 	function ActualizarUbicacion(e) {
+		console.log(typeof(coordenadas_ubicacion_real),coordenadas_ubicacion_real,typeof(centroide),centroide);
 		if (coordenadas_ubicacion_real) {
 			marca_ubicacion_real.remove();
 			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
@@ -1788,7 +1789,6 @@
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
 		if (dentroeeamza) {alert("Llamar al bloque de trazado de ruta por caminos internos.-")};
 		distancia=DistanciaEnTiempoReal();
-		//TrazarRuta();
 		btnindicacionesmodalflash.click();
 		//if (orientarme=="") {
 			//if (distancia>1100) {
@@ -1847,12 +1847,6 @@
 		if (distancia>10 && distancia<80) {avisollegada="si"};
 		if (distancia <= 10 && dispositivo=="movil") {
 			cajadistancia.textContent = "¡Has llegado a tu destino!.-";
-			//refrescoRutaActivo = false;
-			//clearInterval(intervaloRuta);
-			//intervaloRuta = null;
-			//setTimeout(() => {
-			//	cajadistancia.classList.remove("visible");
-			//}, 10000);
 			mapa.setView(coordenadas_ubicacion_real, 19);
 			if (avisollegada=="si") {AlertaLlegada("Has llegado a tu destino "+msgencontrado)};
 		};
@@ -2008,6 +2002,7 @@
 		if (conexion === "si") VerificarGPS();
 		distancia = DistanciaEnTiempoReal();
 		avisollegada = "si";
+		//console.log(typeof(centroide.lat),centroide.lng);
 		// 🚶 Cerca del destino → NO rutea, pero NO mata el intervalo
 		if (distancia <= 1100) {
 			ActualizarUbicacion();
@@ -2061,8 +2056,12 @@
 		
 		//Centrar el mapa para que se vean ubicación en tiempo real y EEA ó Sector/Persona buscado **SOLO la primera vez**
 		if (actualizarruta=="si") {const centrar = L.latLngBounds(coordenadas_ubicacion_real, centroide);mapa.fitBounds(centrar, {padding: [50, 50]});};
-		if (distancia>1100 && dispositivo=="movil") {
+		if (distancia>1100 && dispositivo==="movil") {
 			actualizarruta=setInterval(()=>{
+				var ahora = new Date();
+				var horas = ahora.getHours();
+				var minutos = ahora.getMinutes();
+				console.log(horas,":",minutos);
 				if (ruta) {ruta.remove()};
 				ruta=L.Routing.control({
 				waypoints: [coordenadas_ubicacion_real, centroide],
