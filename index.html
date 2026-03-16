@@ -1772,7 +1772,7 @@
 
 	// Evento al encontrar la ubicación
 	function ActualizarUbicacion(e) {
-		console.log(typeof(coordenadas_ubicacion_real),coordenadas_ubicacion_real,typeof(centroide),centroide);
+		//console.log(typeof(coordenadas_ubicacion_real),coordenadas_ubicacion_real,typeof(centroide),centroide);
 		if (coordenadas_ubicacion_real) {
 			marca_ubicacion_real.remove();
 			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
@@ -1787,7 +1787,7 @@
 			mapa.setView(coordenadas_ubicacion_real, 17);
 		};
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
-		if (dentroeeamza) {alert("Llamar al bloque de trazado de ruta por caminos internos.-")};
+		//if (dentroeeamza) {alert("Llamar al bloque de trazado de ruta por caminos internos.-")};
 		distancia=DistanciaEnTiempoReal();
 		btnindicacionesmodalflash.click();
 		//if (orientarme=="") {
