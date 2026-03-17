@@ -202,6 +202,51 @@
 			flex: 1;                /* OCUPA TODA LA ALTURA RESTANTE */
 			overflow-y: auto;       /* SCROLL SI SE LLENA */
 		}
+		.modalflash-botones {
+			display: flex;              /* CLAVE */
+			justify-content: center;    /* centra horizontal */
+			align-items: center;
+			gap: 20px;                  /* espacio entre botones */
+			margin-top: 15px;
+		}
+
+		/* estilos de botones */
+		.modalflash-botones button {
+			height: 30px;
+			width: 90px;
+			color: white;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		#btn-indicaciones-modal-flash {
+			background-color: blue;
+			color:white;
+			border: 1px solid white;
+			height:30px;
+			width:90px;
+			display: flex;
+			align-items: center;      /* centra vertical */
+			justify-content: center;  /* centra horizontal */
+		}
+
+		#btn-cerrar-modal-flash {
+			background-color: red;
+			color:white;
+			border: 1px solid white;
+			height:30px;
+			width:90px;
+			display: flex;
+			align-items: center;      /* centra vertical */
+			justify-content: center;  /* centra horizontal */
+		}
+		.modalflash-contador {
+			display: flex;
+			justify-content: center;   /* centra horizontal */
+			align-items: center;
+			margin-top: 10px;
+			text-align: center;
+		}
 
 		@media (max-width: 600px) {
 			.modalflash {
@@ -599,6 +644,9 @@
 				filter: hue-rotate(180deg);
 			}
 		}
+		.ocultar {
+			display: none !important;
+		}
     </style>
 	<!--Icono para la pestaña del navegador-->
 	<link rel="shortcut icon" href="./images/Tetragramaton.ico" type="image/x-icon"/>
@@ -782,10 +830,14 @@
 					<input id="nomostrarinicial" type="checkbox" style="width:16px; height:16px;"/>
 					No volver a mostrar
 				</label>
-				<button id="btn-indicaciones-modal-flash" style="height:30px; width:90px; background-color:blue;border-color:white;color:white;" onclick="TrazarRuta()">Sí</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-				<button id="btn-cerrar-modal-flash" style="height:30px; width:90px; background-color:red;border-color:white;color:white;">Cerrar</button>
+				<div class="modalflash-botones" id="botonesModalFlash">
+					<button id="btn-indicaciones-modal-flash" onclick="TrazarRuta()">Sí</button>
+					<button id="btn-cerrar-modal-flash">Cerrar</button>
+				</div>
 			</div>
-			<span style="font-weight: bold; color:red; text-align: center;">Me cierro en: <span id="contador"> </span> segundos</span>
+			<div class="modalflash-contador">
+				<span style="font-weight: bold; color:red; text-align: center;">Me cierro en: <span id="contador"> </span> segundos</span>
+			</div>
 		</p>
 	</div>
 	
@@ -968,7 +1020,7 @@
 		var capa_popups=null;
 		var infoterritorios=null;
 		var infoterritorio=null;
-		//var orientarme="no";
+		var intervalo=null;
 		var ruta="";
 		var actualizarruta="si";
 		var coordenadas_ubicacion_real="";
@@ -1171,20 +1223,21 @@
 		
 		function NumeroTerritorio(feature, layer) {
 			if (feature.properties && feature.properties.Numero) {
-				let barrio = feature.properties.Barrio ?? "Sin información";
-				let novisitar = feature.properties.No_Visitar ?? "No hay casas 'NO VISITAR' en este territorio";
-				let centroide = layer.getBounds().getCenter();
-				let marcador = L.marker([centroide.lat, centroide.lng],{
-					icon:L.icon({
-						iconUrl:'images/'+feature.properties.Numero+'.jpg',
-						iconSize:[50,55],
-						iconAnchor:[16,37],
-						popupAnchor:[0,-28]
-					}),
-					title:feature.properties.Numero
-				})
-				.bindPopup("<strong>Territorio Nº "+feature.properties.Numero+"</strong><br>Barrio: "+barrio+"<br><br><strong>NO VISITAR:</strong><br>"+novisitar);
-				grupoNumeros.addLayer(marcador);
+				if (feature.properties.Barrio !==null) {
+					var barrio=feature.properties.Barrio}
+				else {
+					var barrio="Sin información"
+				};
+				if (feature.properties.No_Visitar !==null) {
+					var novisitar=feature.properties.No_Visitar}
+				else {
+					var novisitar="No hay casas 'NO VISITAR' en este territorio"
+				};
+				var centroide=layer.getBounds().getCenter();
+				var coord=[];
+				coord.push(centroide.lat,centroide.lng);
+				numeroterritorio=L.marker(coord,{icon:L.icon({iconUrl: 'images/'+feature.properties.Numero+'.jpg',iconSize: [50, 55],iconAnchor: [16, 37],popupAnchor: [0, -28]}),title:""+feature.properties.Numero})
+					.bindPopup("<strong>Territorio Nº "+feature.properties.Numero+"</strong>"+"<br>Barrio: "+barrio+"<br><br><strong>NO VISITAR:</strong><br>"+novisitar).addTo(mapa);
 			};
 		};
 		
@@ -1288,7 +1341,7 @@
 			if (capa_territoriofiltrado) {mapa.removeLayer(capa_territoriofiltrado)};
 			if (capa_territoriofiltradonumero) {mapa.removeLayer(capa_territoriofiltradonumero)};
 			if (numeroterritorio) {mapa.removeLayer(numeroterritorio)};
-			if (marcapuntosalida && ! cartografiar==="salida") {marcapuntosalida.remove()};
+			if (marcapuntosalida && tipo!=="salida") {marcapuntosalida.remove()};
 			if (capa_casas) {mapa.removeLayer(capa_casas)};
 			if (casa) {casa.remove()};
 			if (casitas) {casitas.remove()};
@@ -1509,7 +1562,8 @@
 		};
 		
 		function activar_seguimiento() {
-			botoncentrado.style.display='block';
+			//botoncentrado.style.display='block';
+			botoncentrado.classList.remove("ocultar");
 			sondeo_posicion=0;
 			barralateral.close();
 			document.getElementById("gps").src="./images/slide_on.jpg";
@@ -1518,17 +1572,17 @@
 			VerificarConexion();
 			if (conexion==="si") {
 				VerificarGPS();
-				if (dispositivo==="pc") {
+				if (dispositivo==="movil") {
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>Asegurate de tener activado el sonido y en un volumen cómodo.</b><br><br><span style="color:black">Recibirás alertas con voz cuando estés cerca y al llegar al destino.-<br></span>';
-					document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+					btnindicacionesmodalflash.classList.add("ocultar");
 					tiempomodalflash=9000;
 					ModalFlash(tiempomodalflash);
 				};
-				if (dispositivo==="movil") {
+				if (dispositivo==="pc") {
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>Puede que la ubicación que te muestre NO SEA LA REAL.</b><br><br><span style="color:black">Parece que estás conectado desde una PC; por lo que la ubicación tal vez sea la de tu proveedor de internet; en vez del lugar donde estás.-<br></span>';
-					document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+					btnindicacionesmodalflash.classList.add("ocultar");
 					tiempomodalflash=9000;
 					ModalFlash(tiempomodalflash);
 				};
@@ -1723,13 +1777,9 @@
 			document.getElementById("vermiubicacion").style.visibility='hidden';
 			document.getElementById("gps").src="./images/slide_off.jpg";
 			document.getElementById("miubicacion").style.visibility='hidden';
-			//document.getElementById("gpson").style.visibility='hidden';
-			//document.getElementById("gpsoff").style.visibility='visible';
-			//document.getElementById("botoncentrado").style.visibility='hidden';
-			botoncentrado.style.display='none';
+			botoncentrado.classList.add("ocultar");
 			document.getElementById("activargps").style.visibility='visible';
 			cajadistancia.style.visibility="hidden";
-			//document.getElementById("dondestoy").style.visibility='hidden';
 			document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento()";
 			DetenerActualizarUbicacion();
 			if (marca_ubicacion_real) {mapa.removeLayer(marca_ubicacion_real)};
@@ -1749,7 +1799,7 @@
 			};
 			avisollegada="si";
 			if (ruta) {ruta.remove()};
-			document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+			btnindicacionesmodalflash.classList.add("ocultar");
 			document.getElementById("MiModalFlash").style.visibility='hidden';
 			distancia=DistanciaEnTiempoReal();
 			const dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
@@ -1888,7 +1938,6 @@
 		//Bloque Modal Flash
 		function ModalFlash(tiempo) {
 			document.getElementById("MiModalFlash").style.visibility='visible';
-			let intervalo;
 			let timeout;
 			let restante = tiempo/1000;
 			document.getElementById('contador').textContent = restante;
@@ -1898,12 +1947,11 @@
 				if (restante <= 0) clearInterval(intervalo);
 				}, 1000);
 			temporizadormodalflash=setTimeout(() => {
-				document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+				btnindicacionesmodalflash.classList.add("ocultar");
 				document.getElementById("MiModalFlash").style.visibility='hidden';
-				//document.getElementById("modal-inicial").close();
+				clearInterval(intervalo);
 				modalinicial.close();
 				if (nomostrarinicial.checked) {localStorage.setItem('MOSTRAR_INICIAL', Version);document.getElementById("borrableinicial").style.display="none"};
-				//if (mail=="si") {EnviarMail()};
 			}, tiempo);
 		};
 		
@@ -1911,7 +1959,6 @@
 		document.getElementById("ayuda_usuario").style.display='none';
 		document.getElementById("log_si").style.display='none';
 		document.getElementById("ocultarflias").style.display="none";
-		//document.getElementById("localizacion").style.display='none';
 		
 		if (conexion=="no") {
 			document.getElementById("Conectividad").style.display="inline";
@@ -1920,16 +1967,20 @@
 		};
 
 		if (! navigator.userAgent.match(/Windows/i) && localStorage.getItem('MOSTRAR_CELULAR') !=="no") {
-			//document.getElementById("modal_inicial").showModal()
 			modalinicial.showModal();
 		} else {
 			if (conexion=="no") {document.getElementById("Conectividad").style.display="inline"; document.getElementById("Apaisado").style.display="none";modalinicial.showModal()};//document.getElementById("modal_inicial").showModal();}
 		};
 		
 		btncerrarmodalflash.addEventListener("click",()=>{
-			document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+			btnindicacionesmodalflash.classList.add("ocultar");
 			document.getElementById("MiModalFlash").style.visibility='hidden';
-			//document.getElementById("modalinicial").close();
+			document.getElementById("borrableinicial").classList.add("ocultar");
+			clearTimeout(temporizadorpredicado);
+			clearTimeout(temporizadornovisitar);
+			clearInterval(actualizarruta);
+			clearInterval(intervalo);
+			clearTimeout(temporizadormodalflash);
 			modalinicial.close();
 			if (nomostrarinicial.checked) {
 				try {
@@ -1940,15 +1991,12 @@
 					console.warn('No se pudo guardar preferencia en localStorage', e);
 				}
 			};
-			//orientarme="no";
 			avisollegada="no";
-			clearTimeout(temporizadormodalflash);
 			tiempomodalflash=5000;
 		});
 		
 		btnindicacionesmodalflash.addEventListener("click",()=>{
 			clearTimeout(temporizadormodalflash);
-			//orientarme="si";
 			avisollegada="si";
 			activar_seguimiento();
 		});
@@ -1967,9 +2015,8 @@
 		});
 		
 		nomostrarinicial.addEventListener("click",()=>{
-			document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+			btnindicacionesmodalflash.classList.add("ocultar");
 			document.getElementById("MiModalFlash").style.visibility='hidden';
-			//document.getElementById("modalinicial").close();
 			modalinicial.close();
 			if (nomostrarinicial.checked) {
 				try {
@@ -1980,7 +2027,6 @@
 					console.warn('No se pudo guardar preferencia en localStorage', e);
 				}
 			};
-			//orientarme="no";
 			avisollegada="no";
 			clearTimeout(temporizadormodalflash);
 			tiempomodalflash=5000;
@@ -2025,7 +2071,6 @@
 		};
 		
 		//Bloque para el Calendario
-		//const borrarfecha = document.getElementById('BorrarFecha');
 		const titulocalendario = document.getElementById('TituloCalendario');
 		const diasdelasemanaEl = document.getElementById('diasdelasemana');
 		const diasEl = document.getElementById('dias');
@@ -2108,12 +2153,9 @@
 		// ==== 5) Abrir/Cerrar modal ====
 		function AbrirModalCalendario(id) {
 			barralateral.close();
-			//document.getElementById("BorrarFecha").style.display="none";
 			document.getElementById("ModalCalendario").classList.add("active");
 			document.getElementById(id).style.display = "block";
 			document.getElementById("botonnorte").style.display="none";
-			//document.getElementById("botonsalidas").style.display="none";
-			//document.getElementById("botonrecargar").style.display="none";
 		};
 		
 		function CerrarModalCalendario(id) {
@@ -2124,8 +2166,6 @@
 			if (!modal1Visible && !modal2Visible) {
 				document.getElementById("ModalCalendario").classList.remove("active");
 				document.getElementById("botonnorte").style.display="inline";
-				//document.getElementById("botonsalidas").style.display="inline";
-				//document.getElementById("botonrecargar").style.display="inline";
 			};
 		};
 
@@ -2360,8 +2400,47 @@
 			};
 		};
 		
+		//function FiltrarVariosTerritorios(num_terr) {
+		//	if (numeroterritorio) {mapa.removeLayer(numeroterritorio)};
+		//	const idSet = AnalizarCadenaVariosTerritorios(num_terr);
+		//	capa_territoriofiltrado = L.geoJSON(territorios, {
+		//		filter: f => ConjuntoCoincidencias(f, idSet),
+		//		style: f => ConjuntoCoincidencias(f, idSet) ? highlightStyle : defaultStyle,
+		//		onEachFeature: (f, layer) => {
+		//			layer.bindPopup(`Numero: ${f.properties.Numero}<br>`);
+		//		}
+		//	}).addTo(mapa);
+		//	if (grupoNumeros) {grupoNumeros.clearLayers()};
+		//	capa_territoriofiltradonumero = L.geoJSON(territorios, {
+		//		filter: f => ConjuntoCoincidencias(f, idSet),
+		//		onEachFeature: NumeroTerritorio
+		//	}).addTo(mapa);
+		//};
+		
+		// --- Parser que soporta rangos ---
+		//function AnalizarCadenaVariosTerritorios(str) {
+		//	const result = new Set();
+		//	if (!str) return result;
+		//	str.split(',').forEach(part => {
+		//		const token = part.trim();
+		//		if (!token) return;
+		//		// Si es rango "x-y"
+		//		if (/^\d+\s*-\s*\d+$/.test(token)) {
+		//		let [start, end] = token.split('-').map(s => Number(s.trim()));
+		//		if (!isNaN(start) && !isNaN(end)) {
+		//			if (start > end) [start, end] = [end, start]; // soporta "7-3"
+		//			for (let i = start; i <= end; i++) result.add(i);
+		//		}
+		//		} else {
+		//			// Número suelto
+		//			const n = Number(token);
+		//			if (!isNaN(n)) result.add(n);
+		//		}
+		//	});
+		//	return result;
+		//};
+		
 		function FiltrarVariosTerritorios(num_terr) {
-			if (numeroterritorio) {mapa.removeLayer(numeroterritorio)};
 			const idSet = AnalizarCadenaVariosTerritorios(num_terr);
 			capa_territoriofiltrado = L.geoJSON(territorios, {
 				filter: f => ConjuntoCoincidencias(f, idSet),
@@ -2370,7 +2449,7 @@
 					layer.bindPopup(`Numero: ${f.properties.Numero}<br>`);
 				}
 			}).addTo(mapa);
-			if (grupoNumeros) {grupoNumeros.clearLayers()};
+			if (capa_territoriofiltradonumero) {mapa.removeLayer(capa_territoriofiltradonumero)};
 			capa_territoriofiltradonumero = L.geoJSON(territorios, {
 				filter: f => ConjuntoCoincidencias(f, idSet),
 				onEachFeature: NumeroTerritorio
@@ -2427,8 +2506,6 @@
 			document.getElementById("leyendamanzanaspredicadas").style.visibility='hidden';
 			document.getElementById("btn-cerrar-reporte").style.visibility="hidden";
 			document.getElementById("btn-enviar-reporte").style.visibility="hidden";
-			//document.getElementById("btn-cerrar-reportenovisitar").style.visibility='hidden';
-			//document.getElementById("btn-enviar-reportenovisitar").style.visibility='hidden';
 			clearTimeout(temporizadorpredicado);
 		};
 		
@@ -2521,8 +2598,6 @@
 			document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
 			document.getElementById("btn-cerrar-reportenovisitar").style.visibility='hidden';
 			document.getElementById("btn-enviar-reportenovisitar").style.visibility='hidden';
-			//document.getElementById("btn-cerrar-reporte").style.visibility='hidden';
-			//document.getElementById("btn-enviar-reporte").style.visibility='hidden';
 			clearTimeout(temporizadornovisitar);
 		};
 		
@@ -2531,8 +2606,6 @@
 			document.getElementById("btn-cerrar-reporte").style.visibility="visible";
 			document.getElementById("btn-enviar-reporte").style.visibility="visible";
 			const enviando = document.getElementById('enviandoreportenovisitar');
-			//document.getElementById("leyendadetallemotivonovisitar").style.display = "none";
-			//document.getElementById("motivonovisitar").style.display = "none";
 			if (document.getElementById('nombrenovisitar').value==="" || document.getElementById('territorionovisitar').value==="" || document.getElementById('fechanovisitar').value==="" || document.getElementById('direccionnovisitar').value===""
 			|| (!expresonovisitar.checked && !noexpresonovisitar.checked) || (noexpresonovisitar.checked && document.getElementById('detallemotivonovisitar').value==="")) {
 				if (document.getElementById('fechanovisitar').value==="") {document.getElementById("fechanovisitar").placeholder = "Por favor, ingresá alguna fecha aquí...";document.getElementById("fechanovisitar").focus()};
@@ -2745,10 +2818,10 @@
 		document.getElementById("vermiubicacion").style.visibility='hidden';
 		document.getElementById("flecharoja").style.visibility='hidden';
 		document.getElementById("miubicacion").style.visibility='hidden';
-		document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+		btnindicacionesmodalflash.classList.add("ocultar");
 		document.getElementById("distancia").style.visibility='hidden';
-		//document.getElementById("botoncentrado").style.visibility='hidden';
-		botoncentrado.style.display='none';
+		botoncentrado.classList.add("ocultar");
+		btnindicacionesmodalflash.classList.add("ocultar");
 		document.getElementById("botonnorte").style.visibility='hidden';
 		document.getElementById("ModalReportePredicado").style.visibility='hidden';
 		document.getElementById("manzanaspredicadas").style.visibility='hidden';
@@ -2757,7 +2830,6 @@
 		document.getElementById("motivonovisitar").style.visibility='hidden';
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
-		//document.getElementById("botoncentrado").style.visibility='hidden';
 		document.getElementById("MiModalFlash").style.visibility='hidden';
 		const contenedorzoom = document.querySelector('.leaflet-top.leaflet-right');
 		contenedorzoom.style.setProperty('top', '10px', 'important');
