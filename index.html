@@ -1004,7 +1004,7 @@
 		var buscar="territorio";
 		var distancia="";
 		var lugar="";
-		var dentropredio="";
+		//var dentropredio="";
 		var nada=L.layerGroup();
 		var grupoNumeros = L.layerGroup().addTo(mapa);
 		var barrio=null;
@@ -1115,6 +1115,7 @@
 				document.getElementById("log_si").style.display='inline';
 				document.getElementById("log_no").style.display='none';}
 			else {
+				document.getElementById("borrableinicial").classList.add("ocultar");
 				document.getElementById("titulo_modalinicial").innerHTML=("<h1>"+"DATOS INCORRECTOS...!!!"+"</h1>");
 				document.getElementById("cuerpo_modalinicial").innerHTML=("<h4>"+"El usuario y/o la contraseñas NO son las correctas...!!!"+"</h4>");
 				modalinicial.showModal();
@@ -1576,6 +1577,7 @@
 			if (conexion==="si") {
 				VerificarGPS();
 				if (dispositivo==="movil") {
+					MiModalFlash.style.width = "30vw";
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>Asegurate de tener activado el sonido y en un volumen cómodo.</b><br><br><span style="color:black">Recibirás alertas con voz cuando estés cerca y al llegar al destino.-<br></span>';
 					btnindicacionesmodalflash.classList.add("ocultar");
@@ -1583,6 +1585,7 @@
 					ModalFlash(tiempomodalflash);
 				};
 				if (dispositivo==="pc") {
+					MiModalFlash.style.width = "30vw";
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>Puede que la ubicación que te muestre NO SEA LA REAL.</b><br><br><span style="color:black">Parece que estás conectado desde una PC; por lo que la ubicación tal vez sea la de tu proveedor de internet; en vez del lugar donde estás.-<br></span>';
 					btnindicacionesmodalflash.classList.add("ocultar");
@@ -1614,10 +1617,10 @@
 			};
 			document.getElementById("vermiubicacion").style.visibility='visible';
 			distancia=DistanciaEnTiempoReal();
-			const dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
+			//const dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
 			//if (distancia>1100) {botondetallesruta.style.display="block"};
-			if (!dentro || dentro==null) {
-				dentropredio=""} else {dentropredio="si"};
+			//if (!dentro || dentro==null) {
+			//	dentropredio=""} else {dentropredio="si"};
 			//if (dentropredio=="si") {alert("Estás dentro del teritorio")};
 			//if (distancia>2200 && orientarme=="no") {
 			//if (orientarme=="no" && dentropredio=="") {
@@ -1727,19 +1730,19 @@
 			};
 		};
 		
-		function ChequearPredio(coords) {
-			const pt = turf.point([coords.lng, coords.lat]);
-			let found = null;
-			for (const f of perimetro.features) {
-				if (["Polygon", "MultiPolygon"].includes(f.geometry.type)) {
-					if (turf.booleanPointInPolygon(pt, f)) {
-						found = f;
-						break;
-					}
-				}
-			}
-			return found;
-		};
+		//function ChequearPredio(coords) {
+		//	const pt = turf.point([coords.lng, coords.lat]);
+		//	let found = null;
+		//	for (const f of perimetro.features) {
+		//		if (["Polygon", "MultiPolygon"].includes(f.geometry.type)) {
+		//			if (turf.booleanPointInPolygon(pt, f)) {
+		//				found = f;
+		//				break;
+		//			}
+		//		}
+		//	}
+		//	return found;
+		//};
 		
 		// Función para detener geolocalización
 		function DetenerActualizarUbicacion() {
@@ -1785,7 +1788,7 @@
 			barralateral.close();
 			seguimiento="no";
 			avisollegada="";
-			dentropredio="";
+			//dentropredio="";
 			document.getElementById("vermiubicacion").style.visibility='hidden';
 			document.getElementById("gps").src="./images/slide_off.jpg";
 			document.getElementById("miubicacion").style.visibility='hidden';
@@ -1814,9 +1817,9 @@
 			btnindicacionesmodalflash.classList.add("ocultar");
 			document.getElementById("MiModalFlash").style.visibility='hidden';
 			distancia=DistanciaEnTiempoReal();
-			const dentro = ChequearPredio(coordenadas_ubicacion_real);
-			if (!dentro || dentro==null) {
-				dentropredio=""} else {dentropredio="si"};
+			//const dentro = ChequearPredio(coordenadas_ubicacion_real);
+			//if (!dentro || dentro==null) {
+			//	dentropredio=""} else {dentropredio="si"};
 			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 			cajadistancia.textContent = msg;
