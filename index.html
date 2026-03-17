@@ -1289,7 +1289,7 @@
 				//document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
 				//tiempomodalflash=5000;
 				//ModalFlash(tiempomodalflash);
-				alert(seguimiento);
+				//alert(seguimiento);
 				btnindicacionesmodalflash.click();
 			};
 		};
@@ -1336,7 +1336,7 @@
 				//document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
 				//tiempomodalflash=5000;
 				//ModalFlash(tiempomodalflash);
-				alert(seguimiento);
+				//alert(seguimiento);
 				btnindicacionesmodalflash.click();
 			};
 		};
@@ -1847,7 +1847,7 @@
 				//		tiempomodalflash=5000;
 				//		ModalFlash(tiempomodalflash);
 				//	});
-					
+				if (dispositivo==="movil") {
 				actualizarruta=setInterval(()=>{
 					if (ruta) {ruta.remove()};
 					ruta=L.Routing.control({
@@ -1892,6 +1892,7 @@
 					panelrutas.replaceChildren(ruta.getContainer());
 					panelrutas.style.display = "block";
 				},60000);
+				};
 			};
 		};
 	
@@ -2363,7 +2364,7 @@
 						//document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
 						//tiempomodalflash=5000;
 						//ModalFlash(tiempomodalflash);
-						alert(seguimiento);
+						//alert(seguimiento);
 						btnindicacionesmodalflash.click();
 					};
 				};
