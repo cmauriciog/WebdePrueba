@@ -142,7 +142,7 @@
 			border: none;
 			cursor: pointer;
 			padding: 0;
-			z-index:1030;
+			z-index:999;
 		}
 		.botoncentrado img {
 			width: 35px;
@@ -159,7 +159,9 @@
 			top: 10px;
 			left: 50%;
 			transform: translateX(-50%);
-			background: "#d4edda";
+			width: 80%;
+			max-width: 600px;
+			background: #d4edda;
 			font-size: 16px;
 			padding: 8px 14px;
 			border-radius: 8px;
@@ -167,6 +169,7 @@
 			z-index: 999;
 			font-weight: bold;
 			transition: background 0.3s;
+			text-align: center;
 		}
 		
 		/*Modal Flash*/
@@ -436,7 +439,7 @@
 		/*Boton para desplegar detalles de rutas sugeridas*/
 		#BotonDetallesRuta {
 			position: fixed;
-			top: 28%;
+			top: 35%;
 			right: 3%;
 			z-index: 999;
 			background: #fff;
@@ -468,7 +471,7 @@
 		
 		#PanelRutas {
 			position:fixed;
-			top: 35%;
+			top: 42%;
 			right: 0;
 			z-index:1050;
 			display:none;           /* ← CLAVE */
@@ -1599,7 +1602,7 @@
 				if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 				if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 				cajadistancia.textContent = msg;
-				cajadistancia.style.background = "#d4edda";
+				//cajadistancia.style.background = "#d4edda";
 				cajadistancia.style.color = "#155724";
 			};
 			if (distancia <= 7 && orientarme=="si") {
@@ -1609,7 +1612,7 @@
 					cajadistancia.style.opacity = "0";
 					cajadistancia.style.visibility="visible";
 					cajadistancia.textContent = "¡Has llegado a tu destino!";
-					cajadistancia.style.background = "#d4edda";
+					//cajadistancia.style.background = "#d4edda";
 					cajadistancia.style.color = "#155724";
 					setTimeout(()=> elemento.style.display = "none", 1000); // espera al fade-out
 					//}
@@ -1771,7 +1774,7 @@
 			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 			cajadistancia.textContent = msg;
-			cajadistancia.style.background = "#d4edda";
+			//cajadistancia.style.background = "#d4edda";
 			cajadistancia.style.color = "#155724";
 			if (distancia<=2200 && lugar) {
 				if (ruta) {ruta.remove()};
