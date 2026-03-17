@@ -968,7 +968,7 @@
 		var capa_popups=null;
 		var infoterritorios=null;
 		var infoterritorio=null;
-		var orientarme="no";
+		//var orientarme="no";
 		var ruta="";
 		var actualizarruta="si";
 		var coordenadas_ubicacion_real="";
@@ -1064,7 +1064,6 @@
 			else {
 				document.getElementById("titulo_modalinicial").innerHTML=("<h1>"+"DATOS INCORRECTOS...!!!"+"</h1>");
 				document.getElementById("cuerpo_modalinicial").innerHTML=("<h4>"+"El usuario y/o la contraseñas NO son las correctas...!!!"+"</h4>");
-				//document.getElementById("modal_inicial").showModal();
 				modalinicial.showModal();
 			};
 		};
@@ -1146,7 +1145,6 @@
 				listaterritorios=sinRepetidos.sort((a, b) => a - b);
 				layer.bindPopup("<strong>Territorio Nº "+feature.properties.Numero+"</strong>"+"<br>Barrio: "+barrio+"<br><br><strong>NO VISITAR:</strong><br>"+novisitar);
 			};
-			//ArmarListaTerritorios();
 		};
 		
 		function NumerosTerritorios(feature, layer) {
@@ -1171,25 +1169,6 @@
 			};
 		};
 		
-		//function NumeroTerritorio(feature, layer) {
-		//	if (feature.properties && feature.properties.Numero) {
-		//		if (feature.properties.Barrio !==null) {
-		//			var barrio=feature.properties.Barrio}
-		//		else {
-		//			var barrio="Sin información"
-		//		};
-		//		if (feature.properties.No_Visitar !==null) {
-		//			var novisitar=feature.properties.No_Visitar}
-		//		else {
-		//			var novisitar="No hay casas 'NO VISITAR' en este territorio"
-		//		};
-		//		var centroide=layer.getBounds().getCenter();
-		//		var coord=[];
-		//		coord.push(centroide.lat,centroide.lng);
-		//		numeroterritorio=L.marker(coord,{icon:L.icon({iconUrl: 'images/'+feature.properties.Numero+'.jpg',iconSize: [50, 55],iconAnchor: [16, 37],popupAnchor: [0, -28]}),title:""+feature.properties.Numero})
-		//			.bindPopup("<strong>Territorio Nº "+feature.properties.Numero+"</strong>"+"<br>Barrio: "+barrio+"<br><br><strong>NO VISITAR:</strong><br>"+novisitar).addTo(mapa);
-		//	};
-		//};
 		function NumeroTerritorio(feature, layer) {
 			if (feature.properties && feature.properties.Numero) {
 				let barrio = feature.properties.Barrio ?? "Sin información";
@@ -1539,7 +1518,14 @@
 			VerificarConexion();
 			if (conexion==="si") {
 				VerificarGPS();
-				if ((dispositivo=="pc") && seguimiento=="no") {
+				if (dispositivo==="pc") {
+					titulomodalflash.innerText="TRAZAR RUTA";
+					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>Asegurate de tener activado el sonido y en un volumen cómodo.</b><br><br><span style="color:black">Recibirás alertas con voz cuando estés cerca y al llegar al destino.-<br></span>';
+					document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
+					tiempomodalflash=9000;
+					ModalFlash(tiempomodalflash);
+				};
+				if (dispositivo==="movil") {
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>Puede que la ubicación que te muestre NO SEA LA REAL.</b><br><br><span style="color:black">Parece que estás conectado desde una PC; por lo que la ubicación tal vez sea la de tu proveedor de internet; en vez del lugar donde estás.-<br></span>';
 					document.getElementById("btn-indicaciones-modal-flash").style.visibility='hidden';
@@ -1596,8 +1582,8 @@
 			//};
 			//if (orientarme=="si" && distancia>1100) {cajadistancia.style.visibility="visible"};
 			//if (orientarme=="si" && capa_territoriofiltradonumero) {cajadistancia.style.visibility="visible"};
-			if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
-			if (distancia > 7 && orientarme=="si") {
+			//if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
+			if (distancia > 7) {// && orientarme=="si") {
 				cajadistancia.style.visibility="visible";
 				if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 				if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
@@ -1605,7 +1591,7 @@
 				//cajadistancia.style.background = "#d4edda";
 				cajadistancia.style.color = "#155724";
 			};
-			if (distancia <= 7 && orientarme=="si") {
+			if (distancia <= 7) {// && orientarme=="si") {
 				setTimeout(() => {
 					//const elemento = document.getElementById("cajadistancia");
 					//if (elemento) {
@@ -1635,7 +1621,7 @@
 			const utterance = new SpeechSynthesisUtterance(msg);
 			speechSynthesis.speak(utterance);
 			avisollegada="no";
-			orientarme="no";
+			//orientarme="no";
 			clearTimeout(temporizadormodalflash);
 		};
 		
@@ -1690,7 +1676,7 @@
 		
 		// Función para detener geolocalización
 		function DetenerActualizarUbicacion() {
-			orientarme="no";
+			seguimiento="no";
 			clearInterval(actualizarruta);
 			actualizarruta="si";
 			titulomodalflash.innerText="SEGUIMIENTO DETENIDO";
@@ -1770,7 +1756,7 @@
 			if (!dentro || dentro==null) {
 				dentropredio=""} else {dentropredio="si"};
 			//if (dentropredio=="si") {alert("Estás dentro del teritorio")};
-			if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
+			//if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
 			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 			cajadistancia.textContent = msg;
@@ -1954,7 +1940,7 @@
 					console.warn('No se pudo guardar preferencia en localStorage', e);
 				}
 			};
-			orientarme="no";
+			//orientarme="no";
 			avisollegada="no";
 			clearTimeout(temporizadormodalflash);
 			tiempomodalflash=5000;
@@ -1962,7 +1948,7 @@
 		
 		btnindicacionesmodalflash.addEventListener("click",()=>{
 			clearTimeout(temporizadormodalflash);
-			orientarme="si";
+			//orientarme="si";
 			avisollegada="si";
 			activar_seguimiento();
 		});
@@ -1994,7 +1980,7 @@
 					console.warn('No se pudo guardar preferencia en localStorage', e);
 				}
 			};
-			orientarme="no";
+			//orientarme="no";
 			avisollegada="no";
 			clearTimeout(temporizadormodalflash);
 			tiempomodalflash=5000;
