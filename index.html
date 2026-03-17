@@ -1038,6 +1038,7 @@
 		var cartografiar="congregacion";
 		var listaterritorios=[];
 		var dispositivo="";
+		var alertavoz=null;
 		var url_script_territorios=driveterritorios;
 		var url_script_novisitar=drivenovisitar;
 		var url_script_contadorvisitas=drivecontadorvisitas;
@@ -1300,6 +1301,7 @@
 			familia=valor;
 			casas.push(familia);
 			buscar="casa";
+			alertavoz="Casa de la familia "+valor;
 			if (capa_coloresterritorios) {mapa.removeLayer(capa_coloresterritorios)};
 			if (capa_numerosterritorios) {mapa.removeLayer(capa_numerosterritorios)};
 			if (capa_infoterritorios) {mapa.removeLayer(capa_infoterritorios)};
@@ -1334,6 +1336,7 @@
 			valor=Number(numeroterritoriobuscado);
 			barralateral.close();
 			buscar="territorio";
+			if (tipo!=="salida") {alertavoz="Territorio Número "+numeroterritoriobuscado};
 			if (capa_coloresterritorios) {mapa.removeLayer(capa_coloresterritorios)};
 			if (capa_numerosterritorios) {mapa.removeLayer(capa_numerosterritorios)};
 			if (capa_infoterritorios) {mapa.removeLayer(capa_infoterritorios)};
@@ -1651,14 +1654,25 @@
 					//if (elemento) {
 					cajadistancia.style.opacity = "0";
 					cajadistancia.style.visibility="visible";
-					cajadistancia.textContent = "¡Has llegado a tu destino!";
+					cajadistancia.textContent = "¡Has llegado a tu destino!. "+alertavoz;
 					//cajadistancia.style.background = "#d4edda";
 					cajadistancia.style.color = "#155724";
 					setTimeout(()=> elemento.style.display = "none", 1000); // espera al fade-out
 					//}
 				}, 10000);
 			
-				if (avisollegada==="si") {AlertaLlegada("Has llegado a tu destino")};
+				//if (avisollegada==="si") {AlertaLlegada("Has llegado a tu destino")};
+			};
+			if (distancia>180) {avisollegada="si"};
+			if (distancia >80 && distancia <= 180 && dispositivo=="movil") {
+				msg="Avanza despacio y con atención. ¡Estás a pocos metros del destino!.";
+				if (avisollegada=="si") {AlertaLlegada(msg)};
+			};
+			if (distancia>10 && distancia<80) {avisollegada="si"};
+			if (distancia <= 10 && dispositivo=="movil") {
+				cajadistancia.textContent = "¡Has llegado a tu destino!. "+alertavoz;
+				mapa.setView(coordenadas_ubicacion_real, 19);
+				if (avisollegada=="si") {AlertaLlegada("Has llegado a tu destino "+alertavoz)};
 			};
 		};
 
@@ -1675,7 +1689,6 @@
 			const utterance = new SpeechSynthesisUtterance(msg);
 			speechSynthesis.speak(utterance);
 			avisollegada="no";
-			//orientarme="no";
 			clearTimeout(temporizadormodalflash);
 		};
 		
@@ -1737,7 +1750,6 @@
 			cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>Se cancelará la actualización del trazado de ruta.</b><br><br><span style="color:black">porque apagaste el GPS.-</span>';
 			tiempomodalflash=5000;
 			ModalFlash(tiempomodalflash);
-			//document.getElementById("dondestoy").style.visibility='hidden';
 			coordenadas_ubicacion_real="";
 			distancia="";
 			mapa.stopLocate();
@@ -1802,15 +1814,12 @@
 			btnindicacionesmodalflash.classList.add("ocultar");
 			document.getElementById("MiModalFlash").style.visibility='hidden';
 			distancia=DistanciaEnTiempoReal();
-			const dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
+			const dentro = ChequearPredio(coordenadas_ubicacion_real);
 			if (!dentro || dentro==null) {
 				dentropredio=""} else {dentropredio="si"};
-			//if (dentropredio=="si") {alert("Estás dentro del teritorio")};
-			//if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
 			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 			cajadistancia.textContent = msg;
-			//cajadistancia.style.background = "#d4edda";
 			cajadistancia.style.color = "#155724";
 			if (distancia<=2200 && lugar) {
 				if (ruta) {ruta.remove()};
@@ -1841,9 +1850,6 @@
 						});
 					}
 				}).addTo(mapa);
-				
-				
-				
 				ruta.on('routesfound', function (e) {
 						let infoRutas = "";
 						e.routes.forEach((route, index) => {
@@ -1860,12 +1866,7 @@
 						cajadistancia.innerHTML = msg + infoRutas;
 						botondetallesruta.style.display="block";
 					});
-				//panelrutas.replaceChildren(ruta.getContainer());
-				
-				
-				
 				panelrutas.replaceChildren(ruta.getContainer());
-				//botondetallesruta.style.display = "block";
 				panelrutas.style.display = "block";
 				//Centrar el mapa para que se vean ubicación en tiempo real y EEA ó Sector/Persona buscado **SOLO la primera vez**
 				if (actualizarruta=="si") {const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});};
@@ -2169,11 +2170,6 @@
 			};
 		};
 
-		//borrarfecha.addEventListener('click', () => {
-		//	fechaISO = null;
-		//	diasEl.querySelectorAll('.calendario-dia.selected').forEach(el=>el.classList.remove('selected'));
-		//});
-
 		// ==== 6) Inicializar calendario ====
 		ArmarSemanas();
 		ArmarCalendario();
@@ -2353,6 +2349,7 @@
 		function PuntoEncuentro(puntosalida,territorioapredicar,fecha,hora,tiposalida) {
 			CerrarModalCalendario('modal1');
 			CerrarModalCalendario('modal2');
+			alertavoz="Punto de encuentro";
 			if (capa_territoriofiltrado) mapa.removeLayer(capa_territoriofiltrado);
 			let resultado = puntosencuentro.find(p => p.Lugar === puntosalida);
 			coordsalida=resultado.Coordenadas.split(",");
@@ -2399,46 +2396,6 @@
 				};
 			};
 		};
-		
-		//function FiltrarVariosTerritorios(num_terr) {
-		//	if (numeroterritorio) {mapa.removeLayer(numeroterritorio)};
-		//	const idSet = AnalizarCadenaVariosTerritorios(num_terr);
-		//	capa_territoriofiltrado = L.geoJSON(territorios, {
-		//		filter: f => ConjuntoCoincidencias(f, idSet),
-		//		style: f => ConjuntoCoincidencias(f, idSet) ? highlightStyle : defaultStyle,
-		//		onEachFeature: (f, layer) => {
-		//			layer.bindPopup(`Numero: ${f.properties.Numero}<br>`);
-		//		}
-		//	}).addTo(mapa);
-		//	if (grupoNumeros) {grupoNumeros.clearLayers()};
-		//	capa_territoriofiltradonumero = L.geoJSON(territorios, {
-		//		filter: f => ConjuntoCoincidencias(f, idSet),
-		//		onEachFeature: NumeroTerritorio
-		//	}).addTo(mapa);
-		//};
-		
-		// --- Parser que soporta rangos ---
-		//function AnalizarCadenaVariosTerritorios(str) {
-		//	const result = new Set();
-		//	if (!str) return result;
-		//	str.split(',').forEach(part => {
-		//		const token = part.trim();
-		//		if (!token) return;
-		//		// Si es rango "x-y"
-		//		if (/^\d+\s*-\s*\d+$/.test(token)) {
-		//		let [start, end] = token.split('-').map(s => Number(s.trim()));
-		//		if (!isNaN(start) && !isNaN(end)) {
-		//			if (start > end) [start, end] = [end, start]; // soporta "7-3"
-		//			for (let i = start; i <= end; i++) result.add(i);
-		//		}
-		//		} else {
-		//			// Número suelto
-		//			const n = Number(token);
-		//			if (!isNaN(n)) result.add(n);
-		//		}
-		//	});
-		//	return result;
-		//};
 		
 		function FiltrarVariosTerritorios(num_terr) {
 			const idSet = AnalizarCadenaVariosTerritorios(num_terr);
