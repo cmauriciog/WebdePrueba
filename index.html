@@ -1060,6 +1060,10 @@
 		const botondetallesruta =document.getElementById("BotonDetallesRuta");
 		const panelrutas=document.getElementById("PanelRutas");
 		const botoncentrado=document.getElementById("botoncentrado");
+		const borrableinicial=document.getElementById("borrableinicial");
+		const borrablelonuevo=document.getElementById("borrablelonuevo");
+		const borrablecelular=document.getElementById("borrablecelular");
+		const mimodalflash=document.getElementById("MiModalFlash");
 		
 		// Crear grupo de puntos
 		var grupomanzanas = L.geoJSON(manzanas, {
@@ -1120,7 +1124,7 @@
 				document.getElementById("log_si").style.display='inline';
 				document.getElementById("log_no").style.display='none';}
 			else {
-				document.getElementById("borrableinicial").classList.add("ocultar");
+				borrableinicial.classList.add("ocultar");
 				document.getElementById("titulo_modalinicial").innerHTML=("<h1>"+"DATOS INCORRECTOS...!!!"+"</h1>");
 				document.getElementById("cuerpo_modalinicial").innerHTML=("<h4>"+"El usuario y/o la contraseñas NO son las correctas...!!!"+"</h4>");
 				modalinicial.showModal();
@@ -1326,13 +1330,6 @@
 			puntomascercano=L.latLng(nada.features[0].geometry.coordinates[0][1],nada.features[0].geometry.coordinates[0][0]);
 			cartografiar="casa";
 			if (seguimiento==="si") {
-				//titulomodalflash.innerText="TRAZAR RUTA";
-				//cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
-				//'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
-				//document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
-				//tiempomodalflash=5000;
-				//ModalFlash(tiempomodalflash);
-				//alert(seguimiento);
 				btnindicacionesmodalflash.click();
 			};
 		};
@@ -1374,13 +1371,6 @@
 			capa_territoriofiltradonumero=L.geoJSON(territorios,{filter:Filtrar_Territorios, onEachFeature: NumeroTerritorio}).addTo(mapa);
 			if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
 			if (seguimiento==="si") {
-				//titulomodalflash.innerText="TRAZAR RUTA";
-				//cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
-				//'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
-				//document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
-				//tiempomodalflash=5000;
-				//ModalFlash(tiempomodalflash);
-				//alert(seguimiento);
 				btnindicacionesmodalflash.click();
 			};
 		};
@@ -1821,7 +1811,7 @@
 			avisollegada="si";
 			if (ruta) {ruta.remove()};
 			btnindicacionesmodalflash.classList.add("ocultar");
-			document.getElementById("MiModalFlash").style.visibility='hidden';
+			mimodalflash.classList.add("ocultar");
 			distancia=DistanciaEnTiempoReal();
 			//const dentro = ChequearPredio(coordenadas_ubicacion_real);
 			//if (!dentro || dentro==null) {
@@ -1931,7 +1921,7 @@
 	
 		//Bloque Modal Flash
 		function ModalFlash(tiempo) {
-			document.getElementById("MiModalFlash").style.visibility='visible';
+			mimodalflash.classList.remove("ocultar");
 			let timeout;
 			let restante = tiempo/1000;
 			document.getElementById('contador').textContent = restante;
@@ -1942,10 +1932,10 @@
 				}, 1000);
 			temporizadormodalflash=setTimeout(() => {
 				btnindicacionesmodalflash.classList.add("ocultar");
-				document.getElementById("MiModalFlash").style.visibility='hidden';
+				mimodalflash.classList.add("ocultar");
 				clearInterval(intervalo);
 				modalinicial.close();
-				if (nomostrarinicial.checked) {localStorage.setItem('MOSTRAR_INICIAL', Version);document.getElementById("borrableinicial").style.display="none"};
+				if (nomostrarinicial.checked) {localStorage.setItem('MOSTRAR_INICIAL', Version);borrableinicial.classList.add("ocultar")};
 			}, tiempo);
 		};
 		
@@ -1963,13 +1953,13 @@
 		if (! navigator.userAgent.match(/Windows/i) && localStorage.getItem('MOSTRAR_CELULAR') !=="no") {
 			modalinicial.showModal();
 		} else {
-			if (conexion=="no") {document.getElementById("Conectividad").style.display="inline"; document.getElementById("Apaisado").style.display="none";modalinicial.showModal()};//document.getElementById("modal_inicial").showModal();}
+			if (conexion=="no") {document.getElementById("Conectividad").style.display="inline"; document.getElementById("Apaisado").style.display="none";modalinicial.showModal()};
 		};
 		
 		btncerrarmodalflash.addEventListener("click",()=>{
 			btnindicacionesmodalflash.classList.add("ocultar");
-			document.getElementById("MiModalFlash").style.visibility='hidden';
-			document.getElementById("borrableinicial").classList.add("ocultar");
+			mimodalflash.classList.add("ocultar");
+			borrableinicial.classList.add("ocultar");
 			clearTimeout(temporizadorpredicado);
 			clearTimeout(temporizadornovisitar);
 			clearInterval(temporizadorruta);
@@ -1979,7 +1969,7 @@
 			if (nomostrarinicial.checked) {
 				try {
 					localStorage.setItem('MOSTRAR_INICIAL', Version);
-					document.getElementById("borrableinicial").style.display="none";
+					borrableinicial.classList.add("ocultar");
 				} catch(e){
 					// ignore storage errors
 					console.warn('No se pudo guardar preferencia en localStorage', e);
@@ -1999,7 +1989,7 @@
 			if (nomostrarcelular.checked) {
 				try {
 					localStorage.setItem('MOSTRAR_CELULAR', 'no');
-					document.getElementById("borrablecelular").style.display="none";//visibility="hidden";
+					borrablecelular.classList.add("ocultar");
 				} catch(e){
 					// ignore storage errors
 					console.warn('No se pudo guardar preferencia en localStorage', e);
@@ -2010,12 +2000,12 @@
 		
 		nomostrarinicial.addEventListener("click",()=>{
 			btnindicacionesmodalflash.classList.add("ocultar");
-			document.getElementById("MiModalFlash").style.visibility='hidden';
+			mimodalflash.classList.add("ocultar");
 			modalinicial.close();
 			if (nomostrarinicial.checked) {
 				try {
 					localStorage.setItem('MOSTRAR_INICIAL', Version);
-					document.getElementById("borrableinicial").style.display="none";
+					borrableinicial.classList.add("ocultar");
 				} catch(e){
 					// ignore storage errors
 					console.warn('No se pudo guardar preferencia en localStorage', e);
@@ -2030,7 +2020,7 @@
 			if (nomostrarcelular.checked) {
 				try {
 					localStorage.setItem('MOSTRAR_CELULAR', 'no');
-					document.getElementById("borrablecelular").style.display="none";//visibility="hidden";
+					borrablecelular.classList.add("ocultar");
 				} catch(e){
 					// ignore storage errors
 					console.warn('No se pudo guardar preferencia en localStorage', e);
@@ -2377,13 +2367,6 @@
 					FiltrarVariosTerritorios(territorioapredicar);
 					if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
 					if (seguimiento==="si") {
-						//titulomodalflash.innerText="TRAZAR RUTA";
-						//cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
-						//'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
-						//document.getElementById("btn-indicaciones-modal-flash").style.visibility='visible';
-						//tiempomodalflash=5000;
-						//ModalFlash(tiempomodalflash);
-						//alert(seguimiento);
 						btnindicacionesmodalflash.click();
 					};
 				};
@@ -2758,8 +2741,8 @@
 		
 		//Función No Volver a mostrar sugerencia para girar el celular
 		function VerificarNoVolverAMostrar(){
-			if (Version !== (localStorage.getItem('MOSTRAR_INICIAL')|| null)) {ModalFlash(tiempomodalflash);document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrableinicial").style.display="none";document.getElementById("borrablelonuevo").display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
-			if (localStorage.getItem('MOSTRAR_CELULAR') !=="no" && dispositivo !=="pc") {modalinicial.showModal();document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrablecelular").display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
+			if (Version !== (localStorage.getItem('MOSTRAR_INICIAL')|| null)) {ModalFlash(tiempomodalflash);document.getElementById("restablecernomostrar").style.visibility="hidden"} else {borrableinicial.classList.add("ocultar");borrablelonuevo).classList.add("ocultar");document.getElementById("restablecernomostrar").style.visibility="visible"};
+			if (localStorage.getItem('MOSTRAR_CELULAR') !=="no" && dispositivo !=="pc") {modalinicial.showModal();document.getElementById("restablecernomostrar").style.visibility="hidden"} else {borrablecelular.classList.add("ocultar");document.getElementById("restablecernomostrar").style.visibility="visible"};
 			if (Version !== (localStorage.getItem('MOSTRAR_NUEVO') || null)) {document.getElementById("flecharoja").style.visibility='visible';abrirguia()} else {document.getElementById("flecharoja").style.visibility='hidden'};
 			if (dispositivo=="movil") {document.getElementById("flecharoja").style.visibility='hidden'};
 		};
@@ -2768,10 +2751,6 @@
 		document.getElementById("vermiubicacion").style.visibility='hidden';
 		document.getElementById("flecharoja").style.visibility='hidden';
 		document.getElementById("miubicacion").style.visibility='hidden';
-		btnindicacionesmodalflash.classList.add("ocultar");
-		document.getElementById("distancia").style.visibility='hidden';
-		botoncentrado.classList.add("ocultar");
-		btnindicacionesmodalflash.classList.add("ocultar");
 		document.getElementById("botonnorte").style.visibility='hidden';
 		document.getElementById("ModalReportePredicado").style.visibility='hidden';
 		document.getElementById("manzanaspredicadas").style.visibility='hidden';
@@ -2780,7 +2759,11 @@
 		document.getElementById("motivonovisitar").style.visibility='hidden';
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
-		document.getElementById("MiModalFlash").style.visibility='hidden';
+		mimodalflash.classList.add("ocultar");
+		btnindicacionesmodalflash.classList.add("ocultar");
+		cajadistancia.classList.add("ocultar");
+		botoncentrado.classList.add("ocultar");
+		btnindicacionesmodalflash.classList.add("ocultar");
 		const contenedorzoom = document.querySelector('.leaflet-top.leaflet-right');
 		contenedorzoom.style.setProperty('top', '10px', 'important');
 		contenedorzoom.style.setProperty('right', '10px', 'important');
