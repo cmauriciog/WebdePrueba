@@ -1613,6 +1613,7 @@
 			};
 			document.getElementById("vermiubicacion").style.visibility='visible';
 			distancia=DistanciaEnTiempoReal();
+			btnindicacionesmodalflash.click();
 			//const dentro = ChequearPredio(coordenadas_ubicacion_real);//{lat:"-32.92738990461459", lng:"-68.77720752661189"});//coordenadas_ubicacion_real);
 			//if (distancia>1100) {botondetallesruta.style.display="block"};
 			//if (!dentro || dentro==null) {
@@ -1858,7 +1859,7 @@
 							const minutos = Math.round((tiempoSeg % 3600) / 60);
 							const tiempoFormateado =
 								horas > 0 ? `${horas} h ${minutos} min` : `${minutos} min`;
-							infoRutas += `<br>Ruta ${index === 0 ? 'Recomendada (Rojo)' : 'Alternativa (Azul)'}:
+							infoRutas += `Ruta ${index === 0 ? 'Recomendada (Rojo)' : 'Alternativa (Azul)'}:
 										  Distancia: ${distanciaKm} km,
 										  Tiempo estimado: ${tiempoFormateado}.`;
 						});
@@ -1870,7 +1871,7 @@
 				//Centrar el mapa para que se vean ubicación en tiempo real y EEA ó Sector/Persona buscado **SOLO la primera vez**
 				if (actualizarruta=="si") {const centrar = L.latLngBounds(coordenadas_ubicacion_real, puntomascercano);mapa.fitBounds(centrar, {padding: [50, 50]});};
 				if (dispositivo==="movil") {
-					alert("Debería actualizar la ruta cada minuto, por estar en un dispositivo móvil");
+					//alert("Debería actualizar la ruta cada minuto, por estar en un dispositivo móvil");
 					temporizadorruta=setInterval(()=>{
 						if (ruta) {ruta.remove()};
 						ruta=L.Routing.control({
@@ -1905,7 +1906,7 @@
 								const minutos = Math.round((tiempoSeg % 3600) / 60);
 								const tiempoFormateado =
 									horas > 0 ? `${horas} h ${minutos} min` : `${minutos} min`;
-								infoRutas += `<br>Ruta ${index === 0 ? 'Recomendada (Rojo)' : 'Alternativa (Azul)'}:
+								infoRutas += `Ruta ${index === 0 ? 'Recomendada (Rojo)' : 'Alternativa (Azul)'}:
 											  Distancia: ${distanciaKm} km,
 											  Tiempo estimado: ${tiempoFormateado}.`;
 							});
