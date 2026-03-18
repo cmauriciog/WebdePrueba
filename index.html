@@ -1821,12 +1821,12 @@
 			//if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 			//cajadistancia.innerHTML = msg;
 			cajadistancia.style.color = "#155724";
-			//if (distancia<=2200 && lugar) {
-			//	if (ruta) {ruta.remove()};
-			//	clearInterval(temporizadorruta);
-			//	ActualizarUbicacion();
-			//};
-			//if (distancia>2200) {
+			if (distancia<=2200 && lugar) {
+				if (ruta) {ruta.remove()};
+				clearInterval(temporizadorruta);
+				ActualizarUbicacion();
+			};
+			if (distancia>2200) {
 				ruta=L.Routing.control({
 					waypoints: [coordenadas_ubicacion_real, puntomascercano],
 					router: L.Routing.osrmv1({
@@ -1917,7 +1917,7 @@
 						panelrutas.style.display = "block";
 					},60000);
 				};
-			//};
+			};
 		};
 	
 		//Bloque Modal Flash
