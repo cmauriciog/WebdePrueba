@@ -161,6 +161,7 @@
 			transform: translateX(-50%);
 			width: 80%;
 			max-width: 600px;
+			height: auto;
 			background: #d4edda;
 			font-size: 16px;
 			padding: 8px 14px;
@@ -180,6 +181,7 @@
 			transform: translate(-50%, -50%);
 			width: 95vw;
 			max-width: 700px;
+			height: auto;
 			max-height: 90vh;
 			background-color: yellow;
 			border: 2px solid black;
@@ -484,7 +486,7 @@
 		/*Boton para desplegar detalles de rutas sugeridas*/
 		#BotonDetallesRuta {
 			position: fixed;
-			top: 35%;
+			top: 33%;
 			right: 3%;
 			z-index: 999;
 			background: #fff;
@@ -516,7 +518,7 @@
 		
 		#PanelRutas {
 			position:fixed;
-			top: 42%;
+			top: 39%;
 			right: 0;
 			z-index:1050;
 			display:none;           /* ← CLAVE */
@@ -1577,7 +1579,7 @@
 			if (conexion==="si") {
 				VerificarGPS();
 				if (dispositivo==="movil") {
-					MiModalFlash.style.width = "30vw";
+					//MiModalFlash.style.width = "30vw";
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>Asegurate de tener activado el sonido y en un volumen cómodo.</b><br><br><span style="color:black">Recibirás alertas con voz cuando estés cerca y al llegar al destino.-<br></span>';
 					btnindicacionesmodalflash.classList.add("ocultar");
@@ -1585,7 +1587,7 @@
 					ModalFlash(tiempomodalflash);
 				};
 				if (dispositivo==="pc") {
-					MiModalFlash.style.width = "30vw";
+					//MiModalFlash.style.width = "30vw";
 					titulomodalflash.innerText="TRAZAR RUTA";
 					cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>Puede que la ubicación que te muestre NO SEA LA REAL.</b><br><br><span style="color:black">Parece que estás conectado desde una PC; por lo que la ubicación tal vez sea la de tu proveedor de internet; en vez del lugar donde estás.-<br></span>';
 					btnindicacionesmodalflash.classList.add("ocultar");
