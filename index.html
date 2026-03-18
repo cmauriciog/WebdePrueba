@@ -171,6 +171,8 @@
 			font-weight: bold;
 			transition: background 0.3s;
 			text-align: center;
+			white-space: normal;
+			word-break: break-word;
 		}
 		
 		/*Modal Flash*/
@@ -1025,6 +1027,7 @@
 		var intervalo=null;
 		var ruta="";
 		var actualizarruta="si";
+		var temporizadorruta=null;
 		var coordenadas_ubicacion_real="";
 		var icono_posicion = L.icon({iconUrl: './images/posicion.png',iconSize: [35, 40],});
 		var tiempomodalflash=20000;
@@ -1646,10 +1649,10 @@
 			//if (orientarme=="si" && capa_territoriofiltradonumero) {cajadistancia.style.visibility="visible"};
 			//if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
 			if (distancia > 7) {// && orientarme=="si") {
-				cajadistancia.style.visibility="visible";
-				if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
-				if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
-				cajadistancia.textContent = msg;
+				cajadistancia.classList.remove("ocultar");
+				if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros<br>del destino! (En línea recta).-"};
+				if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros<br>del destino! (En línea recta).-"};
+				cajadistancia.innerHTML = msg;
 				//cajadistancia.style.background = "#d4edda";
 				cajadistancia.style.color = "#155724";
 			};
@@ -1657,9 +1660,9 @@
 				setTimeout(() => {
 					//const elemento = document.getElementById("cajadistancia");
 					//if (elemento) {
-					cajadistancia.style.opacity = "0";
-					cajadistancia.style.visibility="visible";
-					cajadistancia.textContent = "¡Has llegado a tu destino!. "+alertavoz;
+					//cajadistancia.style.opacity = "0";
+					cajadistancia.classList.remove("ocultar");
+					cajadistancia.innerHTML = "¡Has llegado a tu destino!.<br>"+alertavoz;
 					//cajadistancia.style.background = "#d4edda";
 					cajadistancia.style.color = "#155724";
 					setTimeout(()=> elemento.style.display = "none", 1000); // espera al fade-out
@@ -1675,7 +1678,7 @@
 			};
 			if (distancia>10 && distancia<80) {avisollegada="si"};
 			if (distancia <= 10 && dispositivo=="movil") {
-				cajadistancia.textContent = "¡Has llegado a tu destino!. "+alertavoz;
+				cajadistancia.innerHTML = "¡Has llegado a tu destino!.<br>"+alertavoz;
 				mapa.setView(coordenadas_ubicacion_real, 19);
 				if (avisollegada=="si") {AlertaLlegada("Has llegado a tu destino "+alertavoz)};
 			};
@@ -1684,7 +1687,7 @@
 		// Evento en caso de error
 		function ErrorGPS(e) {
 			if (!dispositivo=="pc") {
-				cajadistancia.textContent = "No se pudo obtener la ubicación: " + e.message;
+				cajadistancia.innerHTML = "No se pudo obtener la ubicación: <br>" + e.message;
 				cajadistancia.style.color = "red";
 			};
 		};
@@ -1749,7 +1752,7 @@
 		// Función para detener geolocalización
 		function DetenerActualizarUbicacion() {
 			seguimiento="no";
-			clearInterval(actualizarruta);
+			clearInterval(temporizadorruta);
 			actualizarruta="si";
 			titulomodalflash.innerText="SEGUIMIENTO DETENIDO";
 			cuerpomodalflash.innerHTML = '<span style="color:red"><br><b>Se cancelará la actualización del trazado de ruta.</b><br><br><span style="color:black">porque apagaste el GPS.-</span>';
@@ -1796,7 +1799,7 @@
 			document.getElementById("miubicacion").style.visibility='hidden';
 			botoncentrado.classList.add("ocultar");
 			document.getElementById("activargps").style.visibility='visible';
-			cajadistancia.style.visibility="hidden";
+			cajadistancia.classList.add("ocultar");
 			document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento()";
 			DetenerActualizarUbicacion();
 			if (marca_ubicacion_real) {mapa.removeLayer(marca_ubicacion_real)};
@@ -1809,7 +1812,7 @@
 
 		<!--Función para Trazar Ruta Sugerida con OSRM-->
 		function TrazarRuta() {
-			cajadistancia.style.visibility="visible";
+			cajadistancia.classList.remove("ocultar");
 			VerificarConexion();
 			if (conexion==="si") {
 				VerificarGPS();
@@ -1824,11 +1827,11 @@
 			//	dentropredio=""} else {dentropredio="si"};
 			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
 			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
-			cajadistancia.textContent = msg;
+			cajadistancia.innerHTML = msg;
 			cajadistancia.style.color = "#155724";
 			if (distancia<=2200 && lugar) {
 				if (ruta) {ruta.remove()};
-				clearInterval(actualizarruta);
+				clearInterval(temporizadorruta);
 				ActualizarUbicacion();
 			};
 			if (distancia>2200) {
@@ -1893,50 +1896,51 @@
 				//		ModalFlash(tiempomodalflash);
 				//	});
 				if (dispositivo==="movil") {
-				actualizarruta=setInterval(()=>{
-					if (ruta) {ruta.remove()};
-					ruta=L.Routing.control({
-					waypoints: [coordenadas_ubicacion_real, puntomascercano],
-					router: L.Routing.osrmv1({
-						serviceUrl: 'https://router.project-osrm.org/route/v1',
-						language: 'es',
-					}),
-					showAlternatives: true,
-					routeWhileDragging: true,
-					draggableWaypoints: false,
-					collapsible: true,
-					waypointMode: 'snap',
-					lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]},
-					altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]},
-					createMarker: function(i, wp) {
-						return L.marker(wp.latLng, {
-							draggable: false,
-							icon: L.icon({
-								iconUrl: './images/posicion.png',
-								iconSize: [0, 0]
-							})
+					alert("Debería actualizar la ruta cada minuto, por estar en un dispositivo móvil");
+					temporizadorruta=setInterval(()=>{
+						if (ruta) {ruta.remove()};
+						ruta=L.Routing.control({
+						waypoints: [coordenadas_ubicacion_real, puntomascercano],
+						router: L.Routing.osrmv1({
+							serviceUrl: 'https://router.project-osrm.org/route/v1',
+							language: 'es',
+						}),
+						showAlternatives: true,
+						routeWhileDragging: true,
+						draggableWaypoints: false,
+						collapsible: true,
+						waypointMode: 'snap',
+						lineOptions: {styles: [{color: 'red', opacity: 0.6, weight: 6}]},
+						altLineOptions: {styles: [{color: 'blue', opacity: 0.5, weight: 4}]},
+						createMarker: function(i, wp) {
+							return L.marker(wp.latLng, {
+								draggable: false,
+								icon: L.icon({
+									iconUrl: './images/posicion.png',
+									iconSize: [0, 0]
+								})
+							});
+						}
+						}).addTo(mapa);
+						ruta.on('routesfound', function (e) {
+							let infoRutas = "";
+							e.routes.forEach((route, index) => {
+								const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+								const tiempoSeg = route.summary.totalTime;
+								const horas = Math.floor(tiempoSeg / 3600);
+								const minutos = Math.round((tiempoSeg % 3600) / 60);
+								const tiempoFormateado =
+									horas > 0 ? `${horas} h ${minutos} min` : `${minutos} min`;
+								infoRutas += `<br>Ruta ${index === 0 ? 'Recomendada (Rojo)' : 'Alternativa (Azul)'}:
+											  Distancia: ${distanciaKm} km,
+											  Tiempo estimado: ${tiempoFormateado}.`;
+							});
+							cajadistancia.innerHTML = msg + infoRutas;
+							botondetallesruta.style.display = "block";
 						});
-					}
-					}).addTo(mapa);
-					ruta.on('routesfound', function (e) {
-						let infoRutas = "";
-						e.routes.forEach((route, index) => {
-							const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
-							const tiempoSeg = route.summary.totalTime;
-							const horas = Math.floor(tiempoSeg / 3600);
-							const minutos = Math.round((tiempoSeg % 3600) / 60);
-							const tiempoFormateado =
-								horas > 0 ? `${horas} h ${minutos} min` : `${minutos} min`;
-							infoRutas += `<br>Ruta ${index === 0 ? 'Recomendada (Rojo)' : 'Alternativa (Azul)'}:
-										  Distancia: ${distanciaKm} km,
-										  Tiempo estimado: ${tiempoFormateado}.`;
-						});
-						cajadistancia.innerHTML = msg + infoRutas;
-						botondetallesruta.style.display = "block";
-					});
-					panelrutas.replaceChildren(ruta.getContainer());
-					panelrutas.style.display = "block";
-				},60000);
+						panelrutas.replaceChildren(ruta.getContainer());
+						panelrutas.style.display = "block";
+					},60000);
 				};
 			};
 		};
@@ -1984,7 +1988,7 @@
 			document.getElementById("borrableinicial").classList.add("ocultar");
 			clearTimeout(temporizadorpredicado);
 			clearTimeout(temporizadornovisitar);
-			clearInterval(actualizarruta);
+			clearInterval(temporizadorruta);
 			clearInterval(intervalo);
 			clearTimeout(temporizadormodalflash);
 			modalinicial.close();
