@@ -1641,8 +1641,8 @@
 			//if (orientarme=="si" && (dentropredio=="" || capa_territoriofiltrado)) {cajadistancia.style.visibility="visible"};
 			if (distancia > 7) {// && orientarme=="si") {
 				cajadistancia.classList.remove("ocultar");
-				if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros<br>del destino! (En línea recta).-"};
-				if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros<br>del destino! (En línea recta).-"};
+				//if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros<br>del destino! (En línea recta).-"};
+				//if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros<br>del destino! (En línea recta).-"};
 				cajadistancia.innerHTML = msg;
 				//cajadistancia.style.background = "#d4edda";
 				cajadistancia.style.color = "#155724";
@@ -1816,8 +1816,8 @@
 			//const dentro = ChequearPredio(coordenadas_ubicacion_real);
 			//if (!dentro || dentro==null) {
 			//	dentropredio=""} else {dentropredio="si"};
-			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
-			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
+			//if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino! (En línea recta).-"};
+			//if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino! (En línea recta).-"};
 			cajadistancia.innerHTML = msg;
 			cajadistancia.style.color = "#155724";
 			if (distancia<=2200 && lugar) {
@@ -2738,6 +2738,52 @@
 			barralateral.close();
 			document.getElementById("restablecernomostrar").style.visibility="hidden";
 		};
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//######BORRAR.....!!!!
+		
+		function formatearFecha(fechaStr) {
+		  let fecha = new Date(fechaStr);
+		  if (isNaN(fecha)) return "No disponible";
+		  let dia = String(fecha.getDate()).padStart(2, '0');
+		  let mes = String(fecha.getMonth() + 1).padStart(2, '0');
+		  let anio = fecha.getFullYear();
+		  let horas = String(fecha.getHours()).padStart(2, '0');
+		  let minutos = String(fecha.getMinutes()).padStart(2, '0');
+		  let segundos = String(fecha.getSeconds()).padStart(2, '0');
+		  return `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+		}
+
+		function mostrarFecha() {
+		  try {
+			let fechaMod = document.lastModified;
+			let fechaFormateada = formatearFecha(fechaMod);
+			//document.getElementById("fecha").innerText = fechaFormateada;
+			alert("Ultima actualización: "+fechaFormateada);
+		  } catch (e) {
+			alert("Error al obtener la fecha");
+			//console.error(e);
+		  }
+		}
+
+		// Ejecutar al cargar
+		mostrarFecha();
+			
+		//HASTA ACA...
+		
+		
+		
+		
+		
+		
+		
 		
 		//Función No Volver a mostrar sugerencia para girar el celular
 		function VerificarNoVolverAMostrar(){
