@@ -1862,7 +1862,7 @@
 										  Distancia: ${distanciaKm} km,
 										  Tiempo estimado: ${tiempoFormateado}.`;
 						});
-						cajadistancia.innerHTML = msg + infoRutas;
+						cajadistancia.innerHTML = infoRutas;//msg + infoRutas;
 						botondetallesruta.style.display="block";
 					});
 				panelrutas.replaceChildren(ruta.getContainer());
@@ -1909,7 +1909,7 @@
 											  Distancia: ${distanciaKm} km,
 											  Tiempo estimado: ${tiempoFormateado}.`;
 							});
-							cajadistancia.innerHTML = msg + infoRutas;
+							cajadistancia.innerHTML = infoRutas;//msg + infoRutas;
 							botondetallesruta.style.display = "block";
 						});
 						panelrutas.replaceChildren(ruta.getContainer());
