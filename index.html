@@ -493,14 +493,15 @@
 			top: 31%;
 			right: 3%;
 			z-index: 999;
-			background: #fff;
-			color: white;
+			/*background: #fff;*/
+			background-color: #001a33;
+			color: rgba(0,255,255,1);
 			border: 1px solid #777;
 			border-radius: 6px;
 			cursor: pointer;
 			font-weight: bold;
 			box-shadow: 0 2px 4px rgba(0,0,0,.3);
-			animation: pulsobotonlimpiar 2s infinite ease-in-out;
+			//animation: pulsobotonlimpiar 2s infinite ease-in-out;
 		}
 		@keyframes pulsobotonlimpiar {
 			0% {
@@ -817,7 +818,7 @@
 		</button>
 	</div>
 	
-	<div class="modalflash" id="MiModalFlash" style="font-size:14px;">
+	<div class="modalflash ocultar" id="MiModalFlash" style="font-size:14px;">
 		<div class="modalflash-cabecera" id="titulomodalflash">¡¡¡ BIENVENIDO AL MAPA WEB DE LA CONGREGACION SUR VILLA NUEVA...!!!</div>
 		<p class="modalflash-cuerpo" id="cuerpomodalflash"><img src="./images/presentacion.jpg" style="display: block; margin: auto; height:80px" id="imagenmodalflash"/><br><strong>Si sos un publicador, este mapa en línea te permitirá:</strong>
 			<br>Ubicar un territorio con la opción de hacerlo a partir de tu ubicación en tiempo real.
@@ -848,7 +849,7 @@
 	</div>
 	
 	<!--Modal para reportar lo que se predicó en una salida-->
-	<div class="modalflash" id="ModalReportePredicado" style="font-size:15px;">
+	<div class="modalflash ocultar" id="ModalReportePredicado" style="font-size:15px;">
 		<div class="modalflash-cabecera" id="titulomodalpredicado">¡¡¡ MUCHAS GRACIAS POR TOMARTE ESTE TIEMPITO...!!!</div>
 		<div class="modalflash-cuerpo" id="cuerpomodalpredicado">
 			<strong>Estos registros ayudan a predicar a conciencia nuestro territorio</strong>
@@ -874,7 +875,7 @@
 	</div>
 	
 	<!--Modal para reportar una nueva casa NO VISITAR-->
-	<div class="modalflash" id="ModalReporteNoVisitar" style="font-size:15px;">
+	<div class="modalflash ocultar" id="ModalReporteNoVisitar" style="font-size:15px;">
 		<div class="modalflash-cabecera" id="titulomodalnovisitar">¡¡¡ MUCHAS GRACIAS POR TOMARTE ESTE TIEMPITO...!!!</div>
 		<div class="modalflash-cuerpo" id="cuerpomodalnovisitar"><strong>Informar de una casa donde han pedido que no los volvamos a visitar, ayuda a resguardar la seguridad de nuestros hermanos y también puede ser una manera indirecta de dar testimonio.-</strong>
 			<br><br>
@@ -1561,7 +1562,7 @@
 					'Debido a: '+msg1+'.-</span>';
 					tiempomodalflash=5000;
 					ModalFlash(tiempomodalflash);
-					botondetallesruta.style.display="none";
+					botondetallesruta.classList.add("ocultar");
 				},
 				{
 					enableHighAccuracy: true,
@@ -1833,13 +1834,11 @@
 			cajadistancia.style.color = "#155724";
 			// 🔹 Si está cerca, no trazamos ruta
 			if (distancia <= 2200 && lugar) {
-				if (ruta) {
-					ruta.setWaypoints([]); // en vez de remove()
-				}
+				if (ruta) {ruta.setWaypoints([])};
 				clearInterval(temporizadorruta);
 				ActualizarUbicacion();
 				return;
-			}
+			};
 			// 🔴 Evitar múltiples cálculos simultáneos
 			if (calculandoRuta) return;
 			calculandoRuta = true;
@@ -1883,54 +1882,46 @@
 				ruta.on('routesfound', function (e) {
 					calculandoRuta = false;
 					let route = e.routes[0];
-					const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+				//	const distanciaKm = (route.summary.totalDistance / 1000).toFixed(2);
+				//	const distanciaKm = (route.summary.totalDistance / 1000).toLocaleString('es-AR', {minimumFractionDigits: 2,maximumFractionDigits: 2});
+					let distancia;
+					if (route.summary.totalDistance < 1000) {distancia = route.summary.totalDistance.toLocaleString('es-AR', {maximumFractionDigits: 0}) + " m";
+					} else {distancia = (route.summary.totalDistance / 1000).toLocaleString('es-AR', {minimumFractionDigits: 2,maximumFractionDigits: 2}) + " km";
+					};
 					const tiempoSeg = route.summary.totalTime;
 					const horas = Math.floor(tiempoSeg / 3600);
 					const minutos = Math.round((tiempoSeg % 3600) / 60);
-					const tiempoFormateado =
-						horas > 0 ? `${horas} h ${minutos} min` : `${minutos} min`;
-					cajadistancia.innerHTML =
-						`Distancia: ${distanciaKm} km<br>Tiempo estimado: ${tiempoFormateado}`;
-
-					botondetallesruta.style.display = "block";
+					const tiempoFormateado = horas > 0 ? `${horas} horas ${minutos} min.` : `${minutos} min.`;
+					cajadistancia.innerHTML = `Siguiendo la ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado}`;
+					botondetallesruta.classList.remove("ocultar");
+					panelrutas.replaceChildren(ruta.getContainer());
+					panelrutas.style.display = "block";
 				});
 				// ❌ Evento error (ANTES NO TENÍAS ESTO)
 				ruta.on('routingerror', function () {
 					calculandoRuta = false;
 					cajadistancia.innerHTML = "⚠️ Error al calcular la ruta";
 				});
-			}
+			};
 			let recalcular = false;
-
 			// 🔵 Detectar cambio de ubicación
 			if (!ultimaUbicacion) {
 				recalcular = true;
 			} else {
 				let dif = mapa.distance(ultimaUbicacion, coordenadas_ubicacion_real);
 				if (dif > 30) recalcular = true;
-			}
-
-			// 🟣 Detectar cambio de destino (CLAVE)
-			//if (!ultimoDestino) {
-			//	recalcular = true;
-			//} else {
-			//	let difDestino = mapa.distance(ultimoDestino, puntomascercano);
-			//	if (difDestino > 10) recalcular = true; // podés ajustar este valor
-			//}
-
+			};
 			if (!ultimaUbicacion) {
 				recalcular = true;
 			} else {
 				let dif = mapa.distance(ultimaUbicacion, coordenadas_ubicacion_real);
 				if (dif > 30) recalcular = true;
-			}
-
+			};
 			// ❌ Si no te moviste → no recalcula
 			if (!recalcular) {
 				calculandoRuta = false;
 				return;
-			}
-
+			};
 			// ✅ Guardar ubicación
 			ultimaUbicacion = coordenadas_ubicacion_real;
 			
@@ -1938,8 +1929,7 @@
 			if (!recalcular) {
 				calculandoRuta = false;
 				return;
-			}
-
+			};
 			// ✅ Guardar valores actuales
 			ultimaUbicacion = coordenadas_ubicacion_real;
 			ultimoDestino = puntomascercano;
@@ -1956,7 +1946,7 @@
 						TrazarRuta(); // reutiliza la misma lógica
 					}
 				}, 60000);
-			}
+			};
 			// 🔵 Centrar solo una vez
 			if (actualizarruta === "si") {
 				const bounds = L.latLngBounds(
@@ -1965,7 +1955,7 @@
 				);
 				mapa.fitBounds(bounds, { padding: [50, 50] });
 				actualizarruta = "no";
-			}
+			};
 		};
 		
 		
@@ -2717,7 +2707,7 @@
 		<!--Función para enviar reporte de lo que se abarcó en cada salida-->
 		function ReportarPredicado() {
 			barralateral.close();
-			document.getElementById("ModalReportePredicado").style.visibility='visible';
+			document.getElementById("ModalReportePredicado").classList.remove("ocultar");
 			document.getElementById("btn-cerrar-reporte").style.visibility='visible';
 			document.getElementById("btn-enviar-reporte").style.visibility='visible';
 		};
@@ -2729,7 +2719,7 @@
 			document.getElementById('nombrepredicado').value="";document.getElementById('fechapredicado').value="";
 			document.getElementById('territoriopredicado').value="";document.getElementById('abarcadopredicado').value="";
 			document.getElementById("enviandoreporte").textContent ="";
-			document.getElementById("ModalReportePredicado").style.visibility='hidden';
+			document.getElementById("ModalReportePredicado").classList.add("ocultar");
 			document.getElementById("manzanaspredicadas").style.visibility='hidden';
 			document.getElementById("leyendamanzanaspredicadas").style.visibility='hidden';
 			document.getElementById("btn-cerrar-reporte").style.visibility="hidden";
@@ -2808,7 +2798,7 @@
 		<!--Función para enviar reporte de una nueva casa NO VISITAR-->
 		function ReportarNoVisitar() {
 			barralateral.close();
-			document.getElementById("ModalReporteNoVisitar").style.visibility='visible';
+			document.getElementById("ModalReporteNoVisitar").classList.remove("ocultar");
 			document.getElementById("btn-cerrar-reportenovisitar").style.visibility='visible';
 			document.getElementById("btn-enviar-reportenovisitar").style.visibility='visible';
 		};
@@ -2820,7 +2810,7 @@
 			document.getElementById('nombrenovisitar').value="";document.getElementById('fechanovisitar').value="";
 			document.getElementById('territorionovisitar').value="";document.getElementById('detallemotivonovisitar').value="";document.getElementById('direccionnovisitar').value="";
 			document.getElementById("enviandoreportenovisitar").textContent ="";
-			document.getElementById("ModalReporteNoVisitar").style.visibility='hidden';
+			document.getElementById("ModalReporteNoVisitar").classList.add("ocultar");
 			document.getElementById("motivonovisitar").style.visibility='hidden';
 			document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 			document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
@@ -3093,14 +3083,14 @@
 		document.getElementById("flecharoja").style.visibility='hidden';
 		document.getElementById("miubicacion").style.visibility='hidden';
 		document.getElementById("botonnorte").style.visibility='hidden';
-		document.getElementById("ModalReportePredicado").style.visibility='hidden';
+		//document.getElementById("ModalReportePredicado").classList.add("ocultar");
 		document.getElementById("manzanaspredicadas").style.visibility='hidden';
 		document.getElementById("leyendamanzanaspredicadas").style.visibility='hidden';
-		document.getElementById("ModalReporteNoVisitar").style.visibility='hidden';
+		//document.getElementById("ModalReporteNoVisitar").classList.add("ocultar");
 		document.getElementById("motivonovisitar").style.visibility='hidden';
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
-		mimodalflash.classList.add("ocultar");
+		//mimodalflash.classList.add("ocultar");
 		btnindicacionesmodalflash.classList.add("ocultar");
 		cajadistancia.classList.add("ocultar");
 		botoncentrado.classList.add("ocultar");
@@ -3108,7 +3098,7 @@
 		const contenedorzoom = document.querySelector('.leaflet-top.leaflet-right');
 		contenedorzoom.style.setProperty('top', '10px', 'important');
 		contenedorzoom.style.setProperty('right', '10px', 'important');
-		botondetallesruta.style.display="none";
+		botondetallesruta.classList.add("ocultar");
 		VerificarConexion();
 		VerificarVersion();
 		VerificarNoVolverAMostrar();
