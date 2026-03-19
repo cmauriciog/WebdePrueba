@@ -1013,6 +1013,7 @@
 		//var dentropredio="";
 		var nada=L.layerGroup();
 		var grupoNumeros = L.layerGroup().addTo(mapa);
+		let capa_territoriofiltradonumero = L.layerGroup().addTo(mapa);
 		var barrio=null;
 		var no_visitar=null;
 		var poligono="";
@@ -1020,7 +1021,7 @@
 		var capa_coloresterritorios={};
 		var capa_numerosterritorios={};
 		var capa_territoriofiltrado=null;
-		var capa_territoriofiltradonumero=null;
+		//var capa_territoriofiltradonumero=null;
 		var puntomascercano=L.latLng[-32.9280586817747, -68.77360525273423];
 		var numeroterritorio="";
 		var capa_popups=null;
@@ -1333,7 +1334,6 @@
 			cartografiar="casa";
 			if (seguimiento==="si") {
 				//btnindicacionesmodalflash.click();
-				console.log("...");
 				ruta.setWaypoints([
 					coordenadas_ubicacion_real,
 					puntomascercano
@@ -1358,7 +1358,6 @@
 			if (capa_casas) {mapa.removeLayer(capa_casas)};
 			if (casa) {casa.remove()};
 			if (casitas) {casitas.remove()};
-			//if (ruta) {ruta.remove()};
 			capa_territoriofiltrado=L.geoJSON(territorios,{filter:Filtrar_Territorios, style:PersonalizarTerritorioBuscado}).addTo(mapa);
 			poligono = {
 				"type": "FeatureCollection",
@@ -1370,16 +1369,16 @@
 				coord.push(centroide.lat,centroide.lng);
 				mapa.flyTo(coord,16);
 				cartografiar="territorio";
-				puntomascercano = [centroide.lat, centroide.lng];
 			};
 			if (tipo==="salida") {
 				cartografiar="salida";
 			};
 			capa_territoriofiltradonumero=L.geoJSON(territorios,{filter:Filtrar_Territorios, onEachFeature: NumeroTerritorio}).addTo(mapa);
+			if (capa_territoriofiltradonumero) {capa_territoriofiltradonumero.clearLayers()};
 			if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
 			if (seguimiento==="si") {
 				//btnindicacionesmodalflash.click();
-				console.log("...");
+				DistanciaEnTiempoReal();
 				ruta.setWaypoints([
 					coordenadas_ubicacion_real,
 					puntomascercano
@@ -1863,13 +1862,18 @@
 							weight: 7           // 🔥 gruesa
 						}]
 					},
-
 					altLineOptions: {
 						styles: [{
-							color: '#4da6ff',   // azul tenue
-							opacity: 0.5,
-							weight: 4,
-							dashArray: '8, 10'  // 🔥 entrecortada
+							color: '#ff00aa',  // fucsia (base)
+							opacity: 0.6,
+							weight: 6,
+							dashArray: '8, 10'
+						},
+						{
+							color: '#4da6ff',  // azul encima
+							opacity: 0.8,
+							weight: 3,
+							dashArray: '8, 10'
 						}]
 					},
 					showAlternatives: true,
@@ -2645,7 +2649,6 @@
 					if (capa_infoterritorios) {capa_infoterritorios.addTo(mapa)};
 					if (seguimiento==="si") {
 						//btnindicacionesmodalflash.click();
-						console.log("...");
 						ruta.setWaypoints([
 							coordenadas_ubicacion_real,
 							puntomascercano
@@ -2665,10 +2668,20 @@
 				}
 			}).addTo(mapa);
 			if (capa_territoriofiltradonumero) {mapa.removeLayer(capa_territoriofiltradonumero)};
-			capa_territoriofiltradonumero = L.geoJSON(territorios, {
+			if (capa_territoriofiltradonumero) {capa_territoriofiltradonumero.clearLayers()};
+			L.geoJSON(territorios, {
 				filter: f => ConjuntoCoincidencias(f, idSet),
-				onEachFeature: NumeroTerritorio
-			}).addTo(mapa);
+				onEachFeature: function (f, layer) {
+					const centro = layer.getBounds().getCenter();
+					const etiqueta = L.marker(centro, {
+						icon: L.divIcon({
+							className: 'label-territorio',
+							html: f.properties.Numero
+						})
+					});
+					capa_territoriofiltradonumero.addLayer(etiqueta);
+				}
+			});
 		};
 		
 		// --- Parser que soporta rangos ---
@@ -3048,9 +3061,9 @@
 			let fechaMod = document.lastModified;
 			let fechaFormateada = formatearFecha(fechaMod);
 			//document.getElementById("fecha").innerText = fechaFormateada;
-			//alert("Ultima actualización: "+fechaFormateada);
+			alert("Ultima actualización: "+fechaFormateada);
 		  } catch (e) {
-			//alert("Error al obtener la fecha");
+			alert("Error al obtener la fecha");
 			//console.error(e);
 		  }
 		}
