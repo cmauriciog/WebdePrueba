@@ -490,7 +490,7 @@
 		/*Boton para desplegar detalles de rutas sugeridas*/
 		#BotonDetallesRuta {
 			position: fixed;
-			top: 31%;
+			top: 33%;
 			right: 7%;
 			z-index: 999;
 			/*background: #fff;*/
@@ -523,7 +523,7 @@
 		
 		#PanelRutas {
 			position:fixed;
-			top: 37%;
+			top: 39%;
 			right: 0;
 			z-index:1000;
 			display:none;           /* ← CLAVE */
@@ -1892,7 +1892,7 @@
 					const horas = Math.floor(tiempoSeg / 3600);
 					const minutos = Math.round((tiempoSeg % 3600) / 60);
 					const tiempoFormateado = horas > 0 ? `${horas} horas ${minutos} min.` : `${minutos} min.`;
-					cajadistancia.innerHTML = `Siguiendo la ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado}`;
+					cajadistancia.innerHTML = `Ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado}`;
 					botondetallesruta.classList.remove("ocultar");
 					panelrutas.replaceChildren(ruta.getContainer());
 					//panelrutas.style.display = "block";
