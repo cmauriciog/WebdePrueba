@@ -105,7 +105,7 @@
 			border: none;
 			cursor: pointer;
 			padding: 0;
-			z-index:1030;
+			z-index:1001;
 		}
 		.botonnorte img {
 			width: 40px;
@@ -126,7 +126,7 @@
 			border: none;
 			cursor: pointer;
 			padding: 0;
-			z-index:1030;
+			z-index:1001
 		}
 		.flechaizquierdaroja img {
 			width: 40px;
@@ -347,7 +347,7 @@
 			top: 10%;
 			bottom: 10%;
 			overflow-y: auto;
-			z-index: 1000;
+			z-index: 1001;
 		}
 		.capaoscura.active {
 			display: flex;
@@ -525,7 +525,7 @@
 			position:fixed;
 			top: 37%;
 			right: 0;
-			z-index:1050;
+			z-index:1000;
 			display:none;           /* ← CLAVE */
 			background:white;
 			border-radius:6px;
@@ -1677,16 +1677,16 @@
 			
 				//if (avisollegada==="si") {AlertaLlegada("Has llegado a tu destino")};
 			};
-			if (distancia>180) {avisollegada="si"};
-			if (distancia >80 && distancia <= 180 && dispositivo==="movil") {
+			if (distancia>180 && seguimiento=="si") {avisollegada="si"};
+			if (distancia >80 && distancia <= 180 && dispositivo=="movil") {
 				msg="Avanza despacio y con atención. ¡Estás a pocos metros del destino!.";
-				if (avisollegada==="si") {AlertaLlegada(msg)};
+				if (avisollegada=="si") {AlertaLlegada(msg)};
 			};
 			if (distancia>10 && distancia<80) {avisollegada="si"};
 			if (distancia <= 10 && dispositivo=="movil") {
 				cajadistancia.innerHTML = "¡Has llegado a tu destino!.<br>"+alertavoz;
 				mapa.setView(coordenadas_ubicacion_real, 19);
-				if (avisollegada==="si") {AlertaLlegada("Has llegado a tu destino "+alertavoz)};
+				if (avisollegada=="si") {AlertaLlegada("Has llegado a tu destino "+alertavoz)};
 			};
 		};
 
@@ -1895,7 +1895,7 @@
 					cajadistancia.innerHTML = `Siguiendo la ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado}`;
 					botondetallesruta.classList.remove("ocultar");
 					panelrutas.replaceChildren(ruta.getContainer());
-					panelrutas.style.display = "block";
+					//panelrutas.style.display = "block";
 				});
 				// ❌ Evento error (ANTES NO TENÍAS ESTO)
 				ruta.on('routingerror', function () {
@@ -3043,23 +3043,21 @@
 		  let horas = String(fecha.getHours()).padStart(2, '0');
 		  let minutos = String(fecha.getMinutes()).padStart(2, '0');
 		  let segundos = String(fecha.getSeconds()).padStart(2, '0');
-		  return `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+		  return `${dia}/${mes}/${anio} a las ${horas}:${minutos}:${segundos}`;
 		}
 
-		function mostrarFecha() {
+		function mostrarFechaActualizacion() {
 		  try {
 			let fechaMod = document.lastModified;
 			let fechaFormateada = formatearFecha(fechaMod);
-			//document.getElementById("fecha").innerText = fechaFormateada;
 			alert("Ultima actualización: "+fechaFormateada);
 		  } catch (e) {
-			alert("Error al obtener la fecha");
-			//console.error(e);
+			alert("Error al obtener la fecha"+error(e));
 		  }
 		}
 
 		// Ejecutar al cargar
-		mostrarFecha();
+		//mostrarFechaActualizacion();
 			
 		//HASTA ACA...
 		
