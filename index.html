@@ -139,7 +139,7 @@
 		.botoncentrado {
 			position: absolute;
 			top: 70px;
-			right: 10px;
+			right: 1px;
 			background: none;
 			border: none;
 			cursor: pointer;
@@ -165,7 +165,7 @@
 			max-width: 600px;
 			height: auto;
 			background: #d4edda;
-			font-size: 14px;
+			font-size: 15px;
 			padding: 8px 14px;
 			border-radius: 8px;
 			box-shadow: 0 0 6px rgba(0,0,0,0.2);
@@ -674,6 +674,7 @@
 	<div id="texto_ayuda" class="contenedoralineado">
 		<!--<p style="font-size:12px; color:blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="images/flecha_izquierda.png" width="20" height="20"></img>Para Ayuda, tocá ☰ </p>-->
 		<p id="vermiubicacion"><a style="font-size:12px; color:blue;" href="javascript:CentrarMiUbicacion()"><img src="images/posicion.png" width="20" height="20"></img>Ver mi ubicación</a></p>
+		<p id="ruteando"><a style="font-size:12px; color:blue;"></a></p>
 	</div>
 </header>
 <body>
@@ -1316,6 +1317,7 @@
 			casas.push(familia);
 			buscar="casa";
 			alertavoz="Casa de la familia "+valor;
+			document.getElementById("ruteando").textContent = "Ruta trazada hacia: " + alertavoz;
 			if (capa_coloresterritorios) {mapa.removeLayer(capa_coloresterritorios)};
 			if (capa_numerosterritorios) {mapa.removeLayer(capa_numerosterritorios)};
 			if (capa_infoterritorios) {mapa.removeLayer(capa_infoterritorios)};
@@ -1347,7 +1349,7 @@
 			valor=Number(numeroterritoriobuscado);
 			barralateral.close();
 			buscar="territorio";
-			if (tipo!=="salida") {alertavoz="Territorio Número "+numeroterritoriobuscado};
+			if (tipo!=="salida") {alertavoz="Territorio Número "+numeroterritoriobuscado;document.getElementById("ruteando").textContent = "Ruta trazada hacia: " + alertavoz};
 			if (capa_coloresterritorios) {mapa.removeLayer(capa_coloresterritorios)};
 			if (capa_numerosterritorios) {mapa.removeLayer(capa_numerosterritorios)};
 			if (capa_infoterritorios) {mapa.removeLayer(capa_infoterritorios)};
@@ -1601,6 +1603,7 @@
 					};
 				};
 				seguimiento="si";
+				document.getElementById("ruteando").classList.remove("ocultar");
 				document.getElementById("miubicacion").style.visibility='visible';
 				mapa.locate({setView: false, watch: true, enableHighAccuracy: true});
 				mapa.on('locationfound', ActualizarUbicacion);
@@ -1799,7 +1802,7 @@
 			barralateral.close();
 			seguimiento="no";
 			avisollegada="";
-			//dentropredio="";
+			document.getElementById("ruteando").classList.add("ocultar");
 			document.getElementById("vermiubicacion").style.visibility='hidden';
 			document.getElementById("gps").src="./images/slide_off.jpg";
 			document.getElementById("miubicacion").style.visibility='hidden';
@@ -2604,6 +2607,7 @@
 			CerrarModalCalendario('modal1');
 			CerrarModalCalendario('modal2');
 			alertavoz="Punto de encuentro";
+			document.getElementById("ruteando").textContent = "Ruta trazada hacia: " + alertavoz;
 			if (capa_territoriofiltrado) mapa.removeLayer(capa_territoriofiltrado);
 			let resultado = puntosencuentro.find(p => p.Lugar === puntosalida);
 			coordsalida=resultado.Coordenadas.split(",");
@@ -3081,14 +3085,11 @@
 		document.getElementById("flecharoja").style.visibility='hidden';
 		document.getElementById("miubicacion").style.visibility='hidden';
 		document.getElementById("botonnorte").style.visibility='hidden';
-		//document.getElementById("ModalReportePredicado").classList.add("ocultar");
 		document.getElementById("manzanaspredicadas").style.visibility='hidden';
 		document.getElementById("leyendamanzanaspredicadas").style.visibility='hidden';
-		//document.getElementById("ModalReporteNoVisitar").classList.add("ocultar");
 		document.getElementById("motivonovisitar").style.visibility='hidden';
 		document.getElementById("detallemotivonovisitar").style.visibility='hidden';
 		document.getElementById("leyendadetallemotivonovisitar").style.visibility='hidden';
-		//mimodalflash.classList.add("ocultar");
 		btnindicacionesmodalflash.classList.add("ocultar");
 		cajadistancia.classList.add("ocultar");
 		botoncentrado.classList.add("ocultar");
