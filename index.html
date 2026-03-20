@@ -1880,7 +1880,7 @@
 		//	botondetallesruta.style.display="none";
 		//};
 		seguimiento="si";
-		if (dispositivo=="movil") {AlertaLlegada("Estás dentro de la EEA Mendoza. La velocidad máxima recomendada para circular aqui es de 30 kilometros por hora");avisollegada="no"};
+		if (dispositivo=="movil") {AlertaLlegada("Estás dentro del INTA Mendoza. La velocidad máxima recomendada para circular aqui es de 30 kilometros por hora");avisollegada="no"};
 		if (distancia>180) {avisollegada="si"};
 		if (distancia >80 && distancia <= 180 && dispositivo=="movil") {
 			msg="Avanza despacio y con atención. ¡Estás a pocos metros del destino!. Recorda que la velocidad maxima recomendada dentro del inta es de 30 kilometros por hora";
@@ -1905,8 +1905,10 @@
 	
 	//Anuncio en voz alta de cercanía/llegada a destino
 	function AlertaLlegada(leerdistancia) {
-		const utterance = new SpeechSynthesisUtterance(leerdistancia);
-		speechSynthesis.speak(utterance);
+		if (avisollegada=="si") {
+			const utterance = new SpeechSynthesisUtterance(leerdistancia);
+			speechSynthesis.speak(utterance)
+		};
 		if (distancia>10) {avisollegada="no"};
 		if (distancia<=10) {avisollegada="no"};
 		clearTimeout(temporizadormodalflash);
