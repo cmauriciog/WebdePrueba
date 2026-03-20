@@ -1905,6 +1905,7 @@
 	
 	//Anuncio en voz alta de cercanía/llegada a destino
 	function AlertaLlegada(leerdistancia) {
+		alert("Aviso: ",avisollegada," Distancia: ",distancia," Dispositivo: ",dispositivo);
 		if (avisollegada==="si") {
 			const utterance = new SpeechSynthesisUtterance(leerdistancia);
 			speechSynthesis.speak(utterance)
