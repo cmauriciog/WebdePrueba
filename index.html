@@ -616,6 +616,28 @@
 		.ocultar {
 			display: none !important;
 		}
+		/*Cuadro animado*/
+		.colorful-div {
+			width: 300px;
+			height: auto;
+			border-radius: 20px;
+			background: linear-gradient(270deg, #ff5f6d, #ffc371, #24c6dc, #514a9d);
+			background-size: 800% 800%;
+			animation: gradientShift 10s ease infinite;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: white;
+			font-size: 1rem;
+			box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+			text-align: center;
+		}
+
+		@keyframes gradientShift {
+			0% { background-position: 0% 50%; }
+			50% { background-position: 100% 50%; }
+			100% { background-position: 0% 50%; }
+		}
     </style>
 	<!--Icono para la pestaña del navegador-->
 	<link rel="shortcut icon" href="./images/inta.ico" type="image/x-icon"/>
@@ -636,7 +658,8 @@
 		<div id="sugerenciasbusqueda" class="sugerencias"></div>
 	</div>
 	<div class="col-imagen">
-		<div id="ubicacion_texto" style="font-size:10px; text-align:right; background-color:lightblue; color:blue;width:80px"><strong>Mi ubicación</strong><a id="ubicacion_estado" href="javascript:activar_seguimiento(seguimiento)"><img id="gps" src="./images/slide_off.jpg" width="50" height="30"></img></a></div>
+		<!--<div id="ubicacion_texto" class="colorful-div" style="font-size:10px; text-align:right; background-color:lightblue; color:blue;width:80px"><strong>Mi ubicación</strong><a id="ubicacion_estado" href="javascript:activar_seguimiento(seguimiento)"><img id="gps" src="./images/slide_off.jpg" width="50" height="30"></img></a></div>-->
+		<div id="ubicacion_texto" class="colorful-div" style="text-align:right;"><strong>Mi ubicación</strong><a id="ubicacion_estado" href="javascript:activar_seguimiento(seguimiento)"><img id="gps" src="./images/slide_off.jpg" width="50" height="30"></img></a></div>
 	</div>
 </div>
 <body>
@@ -1905,7 +1928,7 @@
 	
 	//Anuncio en voz alta de cercanía/llegada a destino
 	function AlertaLlegada(leerdistancia) {
-		alert("Aviso: ",avisollegada," Distancia: ",distancia," Dispositivo: ",dispositivo);
+		alert("Aviso: "+avisollegada+" Distancia: "+distancia+" Dispositivo: "+dispositivo);
 		if (avisollegada==="si") {
 			const utterance = new SpeechSynthesisUtterance(leerdistancia);
 			speechSynthesis.speak(utterance)
