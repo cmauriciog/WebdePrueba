@@ -2039,12 +2039,6 @@
 				}
 			}
 		}
-		mapa.removeLayer(osm);
-		mapa.addLayer(googlesatelite);
-		capa=googlesatelite;
-		mapa.removeLayer(predioeeamza);
-		marcadoreeamzaeste.remove();
-		marcadoreeamzaoeste.remove();
 		return found;
 	};
 	
@@ -2227,6 +2221,12 @@
 	
 	//---------------- TRAZAR RUTA DENTRO DEL PREDIO
 	function TrazarRutaDentroEEA(){
+		mapa.removeLayer(osm);
+		mapa.addLayer(googlesatelite);
+		capa=googlesatelite;
+		mapa.removeLayer(predioeeamza);
+		marcadoreeamzaeste.remove();
+		marcadoreeamzaoeste.remove();
 		let coord_ubic_real = [coordenadas_ubicacion_real.lng, coordenadas_ubicacion_real.lat];
 		let sentroide = [centroide.lng, centroide.lat];
 		var s1 = snapSegment(coord_ubic_real);
