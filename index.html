@@ -2343,7 +2343,7 @@
     // 🚨 validar snap
     if (!s1 || !s2 || !s1.p || !s2.p) {
         cajadistancia.innerHTML = "⚠️ Error al ubicar los puntos en la red";
-		alert("ERROR DE SNAP");
+		//alert("ERROR DE SNAP");
         return;
     }
 
@@ -2354,7 +2354,7 @@
     // 🚨 validar nodos
     if (!start || !end || !graph[start] || !graph[end]) {
         cajadistancia.innerHTML = "⚠️ Puntos fuera de la red";
-		alert("ERROR DE NODOS");
+		//alert("ERROR DE NODOS");
         return;
     }
 
@@ -2364,7 +2364,7 @@
     // 🚨 SIN RUTA
     if (!path || path.length < 2) {
         cajadistancia.innerHTML = "⚠️ No existe camino entre los puntos";
-		alert("ERROR DE RUTA");
+		//alert("ERROR DE RUTA");
         return;
     }
 
@@ -2406,7 +2406,7 @@ for (let i = 0; i < coords.length - 1; i++) {
     // 🚨 validar coords finales
     if (coords.length < 2) {
         cajadistancia.innerHTML = "⚠️ Ruta inválida";
-		alert("ERROR DE RUTA");
+		//alert("ERROR DE RUTA");
         return;
     }
 
@@ -2435,7 +2435,7 @@ for (let i = 0; i < coords.length - 1; i++) {
     var tiempoAuto = (distancia / velAuto) * 60;
 
     // 📊 resultado
-	alert("Distancia: ",distancia,tiempoAuto,tiempoPie);
+	//alert("Distancia: ",distancia,tiempoAuto,tiempoPie);
     cajadistancia.innerHTML =
     "Distancia: " + (distancia * 1000).toFixed(0) + " m<br>" +
     "Tiempo a pie: " + tiempoPie.toFixed(0) + " min<br>" +
