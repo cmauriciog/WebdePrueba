@@ -20,6 +20,9 @@
 	crossorigin=""></script>
 	<!-- Turf.js para cálculos geométricos -->
 	<script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+	<!--Agregamos la conexion al servidor de Valhalla-->
+	<!--<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+	<script src="https://unpkg.com/lrm-mapzen/dist/lrm-mapzen.min.js"></script>-->
 	<!-- CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
@@ -2121,14 +2124,6 @@
 		mail="";
 	};
 	
-	//function DondeEstoy() {
-	//	dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
-	//	distancia=DistanciaEnTiempoReal();
-	//	ultimoDestino=null;
-	//	if (dentroeeamza && coord.length !== 0) {TrazarRutaDentroEEA()};
-	//	if (!dentroeeamza && aviso===0) {TrazarRutaFueraEEA()};
-	//};
-	
 	//###########################################################
 	//##### NUEVO BLOQUE DENTRO DEL PREDIO DE LA EEA MENDOZA ####
 	//###########################################################
@@ -2227,224 +2222,86 @@
 	
 	//---------------- TRAZAR RUTA DENTRO DEL PREDIO
 	function TrazarRutaDentroEEA(){
-		//mapa.removeLayer(osm);
-		//mapa.addLayer(googlesatelite);
-		//capa=googlesatelite;
-		//mapa.removeLayer(predioeeamza);
-		//marcadoreeamzaeste.remove();
-		//marcadoreeamzaoeste.remove();
-		//let coord_ubic_real = [coordenadas_ubicacion_real.lng, coordenadas_ubicacion_real.lat];
-		//let sentroide = [centroide.lng, centroide.lat];
-		//var s1 = snapSegment(coord_ubic_real);
-		//var s2 = snapSegment(sentroide);
-		//var start = insertarNodo(s1);
-		//var end = insertarNodo(s2);
-		
-		
-		//alert("start: ", start,"end: ", end,"s1: ", s1,"s2: ", s2);
-		
-		
-		//var path = dijkstra(start, end);
-		//var coords = [];
-		//var distancia = 0;
+		mapa.removeLayer(osm);
+		mapa.addLayer(googlesatelite);
+		capa=googlesatelite;
+		mapa.removeLayer(predioeeamza);
+		marcadoreeamzaeste.remove();
+		marcadoreeamzaoeste.remove();
+		let coord_ubic_real = [coordenadas_ubicacion_real.lng, coordenadas_ubicacion_real.lat];
+		let sentroide = [centroide.lng, centroide.lat];
+		var s1 = snapSegment(coord_ubic_real);
+		var s2 = snapSegment(sentroide);
+		var start = insertarNodo(s1);
+		var end = insertarNodo(s2);
+		var path = dijkstra(start, end);
+		var coords = [];
+		var distancia = 0;
 		// 🔥 armar coords correctamente
-		//for (var i = 0; i < path.length; i++) {
-		//	var c = path[i].split(",");
-		//	let lat = Number(c[1]);
-		//	let lng = Number(c[0]);
-		//	coords.push([lat, lng]);
-		//	if (i > 0) {
-		//		var a = path[i - 1].split(",");
-		//		var b = path[i].split(",");
-		//		distancia += turf.distance(
-		//			turf.point([Number(a[0]), Number(a[1])]),
-		//			turf.point([Number(b[0]), Number(b[1])]),
-		//			{units: "kilometers"}
-		//		);
-		//	}
-		//};
+		for (var i = 0; i < path.length; i++) {
+			var c = path[i].split(",");
+			let lat = Number(c[1]);
+			let lng = Number(c[0]);
+			coords.push([lat, lng]);
+			if (i > 0) {
+				var a = path[i - 1].split(",");
+				var b = path[i].split(",");
+				distancia += turf.distance(
+					turf.point([Number(a[0]), Number(a[1])]),
+					turf.point([Number(b[0]), Number(b[1])]),
+					{units: "kilometers"}
+				);
+			}
+		};
 		// 🔴 limpiar coords (ANTI BUG)
-		//coords = coords
-		//	.filter(c =>
-		//		Array.isArray(c) &&
-		//		c.length === 2 &&
-		//		typeof c[0] === "number" &&
-		//		typeof c[1] === "number" &&
-		//		!isNaN(c[0]) &&
-		//		!isNaN(c[1]) &&
-		//		Math.abs(c[0]) <= 90 &&
-		//		Math.abs(c[1]) <= 180
-		//	)
-		//	.map(c => [
-		//		parseFloat(c[0].toFixed(6)),
-		//		parseFloat(c[1].toFixed(6))
-		//	]);
+		coords = coords
+			.filter(c =>
+				Array.isArray(c) &&
+				c.length === 2 &&
+				typeof c[0] === "number" &&
+				typeof c[1] === "number" &&
+				!isNaN(c[0]) &&
+				!isNaN(c[1]) &&
+				Math.abs(c[0]) <= 90 &&
+				Math.abs(c[1]) <= 180
+			)
+			.map(c => [
+				parseFloat(c[0].toFixed(6)),
+				parseFloat(c[1].toFixed(6))
+			]);
 		// 🔥 agregar puntos SNAP reales (NO los originales)
-		//coords.unshift([s1.p[1], s1.p[0]]);
-		//coords.push([s2.p[1], s2.p[0]]);
+		coords.unshift([s1.p[1], s1.p[0]]);
+		coords.push([s2.p[1], s2.p[0]]);
 		// 🚨 evitar error si no hay ruta
-		//if (coords.length < 2) {
-		//	console.error("Ruta inválida");
-		//	return;
-		//};
+		if (coords.length < 2) {
+			console.error("Ruta inválida");
+			return;
+		};
 		// ✅ DIBUJO SEGURO (segmento por segmento)
-		//if (ruta) {mapa.removeLayer(ruta)};
+		if (ruta) {mapa.removeLayer(ruta)};
 		// crear grupo nuevo
-		//ruta = L.layerGroup().addTo(mapa);
+		ruta = L.layerGroup().addTo(mapa);
 		// agregar segmentos al grupo
-		//for (let i = 0; i < coords.length - 1; i++) {
-		//	L.polyline([coords[i], coords[i + 1]], {
-		//		color: "red",
-		//		weight: 8
-		//	}).addTo(ruta);
-		//};
+		for (let i = 0; i < coords.length - 1; i++) {
+			L.polyline([coords[i], coords[i + 1]], {
+				color: "red",
+				weight: 8
+			}).addTo(ruta);
+		};
 		// 🔥 centrar mapa SOLO UNA VEZ
-		//if (!mapaCentrado) {
-		//	mapa.fitBounds(coords);
-		//	mapaCentrado = true;
-		//};
+		if (!mapaCentrado) {
+			mapa.fitBounds(coords);
+			mapaCentrado = true;
+		};
 		// ⏱️ tiempos
-		//var velPie = 5;   // km/h
-		//var velAuto = 30; // km/h
-		//var tiempoPie = (distancia / velPie) * 60;
-		//var tiempoAuto = (distancia / velAuto) * 60;
-		//alert("DISTANCIA:", distancia);
-		//if (!cajadistancia) {console.error("cajadistancia NO existe")};
-		//cajadistancia.innerHTML =
-		//	"Distancia: " + (distancia * 1000).toFixed(0) + " m<br>" +
-		//	"Tiempo a pie: " + tiempoPie.toFixed(0) + " min<br>" +
-		//	"Tiempo en auto: " + tiempoAuto.toFixed(0) + " min";
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		//function TrazarRutaDentroEEA(){
-
-    // 🔄 capas
-    mapa.removeLayer(osm);
-    mapa.addLayer(googlesatelite);
-    capa = googlesatelite;
-    mapa.removeLayer(predioeeamza);
-    if (marcadoreeamzaeste) marcadoreeamzaeste.remove();
-	if (marcadoreeamzaoeste) marcadoreeamzaoeste.remove();
-
-    let coord_ubic_real = [coordenadas_ubicacion_real.lng, coordenadas_ubicacion_real.lat];
-    let sentroide = [centroide.lng, centroide.lat];
-
-    // 🔍 SNAP
-    var s1 = snapSegment(coord_ubic_real);
-    var s2 = snapSegment(sentroide);
-
-    // 🚨 validar snap
-    if (!s1 || !s2 || !s1.p || !s2.p) {
-        cajadistancia.innerHTML = "⚠️ Error al ubicar los puntos en la red";
-		//alert("ERROR DE SNAP");
-        return;
-    }
-
-    // 🔗 insertar nodos
-    var start = insertarNodo(s1);
-    var end = insertarNodo(s2);
-
-    // 🚨 validar nodos
-    if (!start || !end || !graph[start] || !graph[end]) {
-        cajadistancia.innerHTML = "⚠️ Puntos fuera de la red";
-		//alert("ERROR DE NODOS");
-        return;
-    }
-
-    // 🧠 DIJKSTRA
-    var path = dijkstra(start, end);
-
-    // 🚨 SIN RUTA
-    if (!path || path.length < 2) {
-        cajadistancia.innerHTML = "⚠️ No existe camino entre los puntos";
-		//alert("ERROR DE RUTA");
-        return;
-    }
-
-    var coords = [];
-var distancia = 0;
-
-var coords = [];
-var distancia = 0;
-
-for (let i = 0; i < coords.length - 1; i++) {
-
-    let p1 = coords[i];
-    let p2 = coords[i + 1];
-
-    let tramo = turf.distance(
-        turf.point([p1[1], p1[0]]), // ojo: [lng, lat]
-        turf.point([p2[1], p2[0]]),
-        {units: "kilometers"}
-    );
-
-    if (!isNaN(tramo)) {
-        distancia += tramo;
-    }
-}
-
-    // 🧹 limpiar coords
-    coords = coords
-        .filter(c =>
-            Array.isArray(c) &&
-            c.length === 2 &&
-            !isNaN(c[0]) &&
-            !isNaN(c[1])
-        )
-        .map(c => [
-            parseFloat(c[0].toFixed(6)),
-            parseFloat(c[1].toFixed(6))
-        ]);
-
-    // 🚨 validar coords finales
-    if (coords.length < 2) {
-        cajadistancia.innerHTML = "⚠️ Ruta inválida";
-		//alert("ERROR DE RUTA");
-        return;
-    }
-
-    // 🗺️ dibujar
-    if (ruta) mapa.removeLayer(ruta);
-    ruta = L.layerGroup().addTo(mapa);
-
-    for (let i = 0; i < coords.length - 1; i++) {
-        L.polyline([coords[i], coords[i + 1]], {
-            color: "red",
-            weight: 8
-        }).addTo(ruta);
-    }
-
-    // 🎯 centrar una sola vez
-    if (!mapaCentrado) {
-        mapa.fitBounds(coords);
-        mapaCentrado = true;
-    }
-
-    // ⏱️ tiempos
-    var velPie = 5;
-    var velAuto = 30;
-
-    var tiempoPie = (distancia / velPie) * 60;
-    var tiempoAuto = (distancia / velAuto) * 60;
-
-    // 📊 resultado
-	//alert("Distancia: ",distancia,tiempoAuto,tiempoPie);
-    cajadistancia.innerHTML =
-    "Distancia: " + (distancia * 1000).toFixed(0) + " m<br>" +
-    "Tiempo a pie: " + tiempoPie.toFixed(0) + " min<br>" +
-    "Tiempo en auto: " + tiempoAuto.toFixed(0) + " min";
-		
-		
-		
-		
-		
+		var velPie = 5;   // km/h
+		var velAuto = 30; // km/h
+		var tiempoPie = (distancia / velPie) * 60;
+		var tiempoAuto = (distancia / velAuto) * 60;
+		cajadistancia.innerHTML =
+			"Distancia: " + (distancia * 1000).toFixed(0) + " m<br>" +
+			"Tiempo a pie: " + tiempoPie.toFixed(0) + " min<br>" +
+			"Tiempo en auto: " + tiempoAuto.toFixed(0) + " min";
 	};
 
 	//###########################################################
@@ -2522,11 +2379,16 @@ for (let i = 0; i < coords.length - 1; i++) {
 				cajadistancia.innerHTML = `Ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado}`;
 				botondetallesruta.style.display="block";
 				panelrutas.replaceChildren(ruta.getContainer());
+				if (!e.routes || e.routes.length === 0) {
+					//TrazarRutaValhalla();
+					return;
+				};
 			});
 			// ❌ Evento error (ANTES NO TENÍAS ESTO)
-			ruta.on('routingerror', function () {
+			ruta.on('routingerror', function (e) {
 				calculandoRuta = false;
 				cajadistancia.innerHTML =  "⚠️  No puede trazar la ruta ...  <img src='images/todomal.jpg' width='20' style='vertical-align:middle;'>";
+				//TrazarRutaValhalla(e);
 			});
 		};
 		let recalcular = false;
