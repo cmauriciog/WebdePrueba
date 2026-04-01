@@ -20,9 +20,6 @@
 	crossorigin=""></script>
 	<!-- Turf.js para cálculos geométricos -->
 	<script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
-	<!--Agregamos la conexion al servidor de Valhalla-->
-	<!--<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
-	<script src="https://unpkg.com/lrm-mapzen/dist/lrm-mapzen.min.js"></script>-->
 	<!-- CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
@@ -1914,31 +1911,8 @@
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
 		distancia=DistanciaEnTiempoReal();
 		ultimoDestino=null;
-		//if (!dentroeeamza) {TrazarRutaFueraEEA()} else {alert("Añadir la función para trazar la ruta por caminos internos.-")};
 		if (dentroeeamza && coord.length !== 0) {TrazarRutaDentroEEA()};
 		if (!dentroeeamza && aviso===0) {TrazarRutaFueraEEA()};
-		//if (orientarme=="") {
-			//if (distancia>1100) {
-			//	titulomodalflash.innerText="TRAZAR RUTA";
-			//	cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo trazarte una ruta '+
-			//	'a partir de tu ubicación actual y brindarte algunas indicaciones.-<br></span>';
-			//	btnindicacionesmodalflash.style.display='flex';
-			//	btncerrarmodalflash.style.display='flex';
-			//	btncerrarmodalflash.innerHTML = "No";
-			//	tiempomodalflash=5000;
-			//	ModalFlash(tiempomodalflash);
-			//};
-			//if (distancia<=1100 && distancia>10) {
-			//	titulomodalflash.innerText="TRAZAR RUTA";
-			//	cuerpomodalflash.innerHTML = '<span style="color:green"><br><b>¿Necesitás ayuda para llegar?.</b><br><br><span style="color:black">Puedo mostrarte en tiempo real por dónde vas '+
-			//	'y el destino con vista de ambos puntos en el mapa.-<br></span>';
-			//	btnindicacionesmodalflash.style.display='flex';
-			//	btncerrarmodalflash.style.display='flex';
-			//	btncerrarmodalflash.innerHTML = "No";
-			//	tiempomodalflash=5000;
-			//	ModalFlash(tiempomodalflash);
-			//};
-		//};
 		if (orientarme=="si") {
 			if (distancia<=1100) {
 				botondetallesruta.style.display="none";
@@ -2380,7 +2354,7 @@
 				botondetallesruta.style.display="block";
 				panelrutas.replaceChildren(ruta.getContainer());
 				if (!e.routes || e.routes.length === 0) {
-					//TrazarRutaValhalla();
+					TrazarRutaGraphHopper();
 					return;
 				};
 			});
@@ -2388,7 +2362,7 @@
 			ruta.on('routingerror', function (e) {
 				calculandoRuta = false;
 				cajadistancia.innerHTML =  "⚠️  No puede trazar la ruta ...  <img src='images/todomal.jpg' width='20' style='vertical-align:middle;'>";
-				//TrazarRutaValhalla(e);
+				TrazarRutaGraphHopper();
 			});
 		};
 		let recalcular = false;
@@ -2422,6 +2396,111 @@
 			}, 60000);
 		};
 		// 🔵 Centrar solo una vez
+		if (actualizarruta === "si") {
+			const bounds = L.latLngBounds(
+				coordenadas_ubicacion_real,
+				puntomascercano
+			);
+			mapa.fitBounds(bounds, { padding: [50, 50] });
+			actualizarruta = "no";
+		};
+	};
+	
+	function TrazarRutaGraphHopper() {
+		cajadistancia.classList.remove("ocultar");
+		VerificarConexion();
+		if (conexion !== "si") return;
+		VerificarGPS();
+		avisollegada = "si";
+		btnindicacionesmodalflash.style.display = "none";
+		mimodalflash.classList.add("ocultar");
+		let distancia = DistanciaEnTiempoReal();
+		cajadistancia.style.color = "#155724";
+		// 🔹 Si está cerca, no trazamos ruta
+		if (distancia <= 2200 && lugar) {
+			if (ruta) mapa.removeLayer(ruta);
+			clearInterval(temporizadorruta);
+			ActualizarUbicacion();
+			return;
+		};
+		// 🔴 Evitar múltiples cálculos
+		if (calculandoRuta) return;
+		calculandoRuta = true;
+		let recalcular = false;
+		if (!ultimaUbicacion) {
+			recalcular = true;
+		} else {
+			let dif = mapa.distance(ultimaUbicacion, coordenadas_ubicacion_real);
+			if (dif > 30) recalcular = true;
+		};
+		if (!recalcular) {
+			calculandoRuta = false;
+			return;
+		};
+		// ✅ Guardar ubicación
+		ultimaUbicacion = coordenadas_ubicacion_real;
+		if (!puntomascercano) puntomascercano = centroide;
+		ultimoDestino = puntomascercano;
+		// 🔥 GRAPHOPPER API
+		let url = `https://graphhopper.com/api/1/route?point=${coordenadas_ubicacion_real.lat},${coordenadas_ubicacion_real.lng}&point=${puntomascercano.lat},${puntomascercano.lng}&vehicle=car&locale=es&points_encoded=false&key=33491870-874e-4387-a016-4b04185ce4a3`;
+		fetch(url)
+		.then(res => res.json())
+		.then(data => {
+			calculandoRuta = false;
+			if (!data.paths || data.paths.length === 0) {
+				throw new Error("Sin ruta");
+			};
+			let path = data.paths[0];
+			// 🔴 borrar ruta anterior
+			if (ruta) mapa.removeLayer(ruta);
+			// 🔵 convertir coords
+			let coords = path.points.coordinates;
+			let latlngs = coords.map(c => [c[1], c[0]]);
+			// 🔴 dibujar ruta (igual estilo)
+			ruta = L.polyline(latlngs, {
+				color: '#ff0000',
+				opacity: 0.9,
+				weight: 7
+			}).addTo(mapa);
+			// 📏 distancia
+			let distanciaTxt;
+			if (path.distance < 1000) {
+				distanciaTxt = path.distance.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + " m";
+			} else {
+				distanciaTxt = (path.distance / 1000).toLocaleString('es-AR', {
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 2
+				}) + " km";
+			};
+			// ⏱ tiempo
+			let tiempoSeg = path.time / 1000;
+			const horas = Math.floor(tiempoSeg / 3600);
+			const minutos = Math.round((tiempoSeg % 3600) / 60);
+			const tiempoFormateado = horas > 0
+				? `${horas} horas ${minutos} min.`
+				: `${minutos} min.`;
+			cajadistancia.innerHTML = `Ruta recomendada (en rojo):<br>Distancia: ${distanciaTxt} <br>Tiempo estimado: ${tiempoFormateado}`;
+			botondetallesruta.style.display = "block";
+		})
+		.catch(err => {
+			calculandoRuta = false;
+
+			cajadistancia.innerHTML = "⚠️ No puede trazar la ruta ... <img src='images/todomal.jpg' width='20' style='vertical-align:middle;'>";
+
+			console.log("Error GraphHopper:", err);
+
+			// 🔥 fallback si querés
+			// TrazarRutaValhalla();
+		});
+		// 📱 refresco móvil
+		if (dispositivo === "movil" && !temporizadorruta) {
+			temporizadorruta = setInterval(() => {
+				if (!calculandoRuta) {
+					TrazarRutaFueraEEA();
+				}
+			}, 60000);
+		};
+		// 🔵 centrar una vez
 		if (actualizarruta === "si") {
 			const bounds = L.latLngBounds(
 				coordenadas_ubicacion_real,
