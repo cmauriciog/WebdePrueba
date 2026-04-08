@@ -186,20 +186,36 @@
 		
 		/*Modal Flash*/
 		.modalflash {
+			/*position: fixed;*/
+			/*top: 50%;*/
+			/*left: 50%;*/
+			/*transform: translate(-50%, -50%);*/
+			/*width: 95vw;*/
+			/*max-width: 700px;*/
+			/*max-height: 93vh;*/
+			/*background-color: yellow;*/
+			/*border: 2px solid black;*/
+			/*border-radius: 10px;*/
+			/*display: flex;*/
+			/*flex-direction: column;*/
+			/*overflow-y: auto;*/
+			/*z-index: 99999;   /* MUY IMPORTANTE */*/
 			position: fixed;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
 			width: 95vw;
 			max-width: 700px;
-			max-height: 93vh;
+			/* 🔥 CLAVE */
+			height: auto;          /* se ajusta al contenido */
+			max-height: 93vh;      /* límite máximo */
 			background-color: yellow;
 			border: 2px solid black;
 			border-radius: 10px;
 			display: flex;
 			flex-direction: column;
-			overflow-y: auto;
-			z-index: 99999;   /* MUY IMPORTANTE */
+			overflow: hidden;      /* evita espacio raro */
+			z-index: 9999999;
 		}
 		.modalflash-cabecera {
 			background: red;
@@ -210,9 +226,13 @@
 			flex-shrink: 0;
 		}
 		.modalflash-cuerpo {
+			/*padding: 10px;*/
+			/*flex: 1;                /* OCUPA TODA LA ALTURA RESTANTE */*/
+			/*overflow-y: auto;       /* SCROLL SI SE LLENA */*/
 			padding: 10px;
-			flex: 1;                /* OCUPA TODA LA ALTURA RESTANTE */
-			overflow-y: auto;       /* SCROLL SI SE LLENA */
+			/* 🔥 IMPORTANTE */
+			flex: 0;              /* NO expandirse */
+			overflow-y: auto;
 		}
 		.modalflash-botones {
 			display: flex;              /* CLAVE */
@@ -1072,7 +1092,8 @@
 	</div>
 </body>
 
-<div class="modalflash" id="MiModalFlash">
+<!--Ventana modal flash para desaparecer después de cierto tiempo-->
+<dialog class="modalflash" id="MiModalFlash">
 	<div class="modalflash-cabecera" id="titulomodalflash">¡¡¡ BIENVENIDO AL VISOR WEB DEL INTA EEA MENDOZA...!!!</div>
 	<p class="modalflash-cuerpo" id="cuerpomodalflash"><img src="./images/presentacion.jpg" style="display: block; margin: auto; height:80px" id="imagenmodalflash"/><br><strong>Si sos un visitante, este mapa en línea te permitirá:</strong>
 		<br>* Ubicar una persona, servicio, especialidad o lugar
@@ -1097,7 +1118,7 @@
 			<span style="font-weight: bold; color:red; text-align: center;">Me cierro en: <span id="contador"> </span> segundos</span>
 		</div>
 	</p>
-</div>
+</dialog>
 
 <!--Ventana modal inicial-->
 <dialog id="modal_inicial" style="text-align: center; background-color:yellow; font-size:13px;">
@@ -2667,8 +2688,6 @@
 				datosRutas.alternativa.tiempo = tiempoAlternativo;
 				datosRutas.alternativa.distancia = distanciaAlternativa;
 				let instrucciones = rutaPrincipal.instructions || [];
-				console.log(datosRutas);
-				console.log(data.paths[0].points);
 				resolve({
 					principal: rutaPrincipal,
 					alternativa: rutaAlternativa,
@@ -3989,6 +4008,7 @@
 	VerificarNoVolverAMostrar();
 	if (dispositivo=="pc") {modalinicial.close()};
 	if (!dispositivo=="pc" && !dispositivo=="movil") {dispositivo="desconocido"};
+	//window.onload = () => {document.body.appendChild(mimodalflash)};
 	window.addEventListener("load", async () => {
 		const fd = new FormData();
 		fd.append('dispositivo', dispositivo);
