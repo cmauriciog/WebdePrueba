@@ -1488,24 +1488,24 @@
 		encontrar_abis.placeholder = "¿Buscás algo o alguien?...";
 		cobertura_vid.value="";
 		criterio=valor;
-		document.getElementById("responsable").style.visibility='hidden';
-		document.getElementById("conduccion").style.visibility='hidden';
-		document.getElementById("riego").style.visibility='hidden';
-		document.getElementById("clon").style.visibility='hidden';
-		document.getElementById("superficie").style.visibility='hidden';
-		document.getElementById("plantacion").style.visibility='hidden';
-		document.getElementById("cobertura").style.visibility='hidden';
-		document.getElementById("especie").style.visibility='hidden';
-		document.getElementById("quitartodo").style.visibility='hidden';
-		document.getElementById("mostrartodo").style.visibility='hidden';
-		document.getElementById("sel_clon").style.visibility='hidden';
-		document.getElementById("sel_cobertura").style.visibility='hidden';
-		document.getElementById("sel_conduccion").style.visibility='hidden';
-		document.getElementById("sel_especie").style.visibility='hidden';
-		document.getElementById("sel_plantacion").style.visibility='hidden';
-		document.getElementById("sel_responsable").style.visibility='hidden';
-		document.getElementById("sel_riego").style.visibility='hidden';
-		document.getElementById("sel_superficie").style.visibility='hidden';
+		document.getElementById("responsable").classList.add("ocultar");
+		document.getElementById("conduccion").classList.add("ocultar");
+		document.getElementById("riego").classList.add("ocultar");
+		document.getElementById("clon").classList.add("ocultar");
+		document.getElementById("superficie").classList.add("ocultar");
+		document.getElementById("plantacion").classList.add("ocultar");
+		document.getElementById("cobertura").classList.add("ocultar");
+		document.getElementById("especie").classList.add("ocultar");
+		document.getElementById("quitartodo").classList.add("ocultar");
+		document.getElementById("mostrartodo").classList.add("ocultar");
+		document.getElementById("sel_clon").classList.add("ocultar");
+		document.getElementById("sel_cobertura").classList.add("ocultar");
+		document.getElementById("sel_conduccion").classList.add("ocultar");
+		document.getElementById("sel_especie").classList.add("ocultar");
+		document.getElementById("sel_plantacion").classList.add("ocultar");
+		document.getElementById("sel_responsable").classList.add("ocultar");
+		document.getElementById("sel_riego").classList.add("ocultar");
+		document.getElementById("sel_superficie").classList.add("ocultar");
 		document.getElementById("sel_clon").value="";
 		document.getElementById("sel_cobertura").value="";
 		document.getElementById("sel_conduccion").value="";
@@ -1515,31 +1515,31 @@
 		document.getElementById("sel_riego").value="";
 		document.getElementById("sel_superficie").value="";
 		if (otro_criterio.value=="Responsable") {
-			document.getElementById("responsable").style.visibility='visible';
-			document.getElementById("sel_responsable").style.visibility='visible'};
+			document.getElementById("responsable").classList.remove("ocultar");
+			document.getElementById("sel_responsable").classList.remove("ocultar")};
 		if (otro_criterio.value=="Clon") {
-			document.getElementById("clon").style.visibility='visible';
-			document.getElementById("sel_clon").style.visibility='visible'};
+			document.getElementById("clon").classList.remove("ocultar");
+			document.getElementById("sel_clon").classList.remove("ocultar")};
 		if (otro_criterio.value=="Superficie") {
-			document.getElementById("superficie").style.visibility='visible';
-			document.getElementById("sel_superficie").style.visibility='visible'};
+			document.getElementById("superficie").classList.remove("ocultar");
+			document.getElementById("sel_superficie").classList.remove("ocultar")};
 		if (otro_criterio.value=="Riego") {
-			document.getElementById("riego").style.visibility='visible';
-			document.getElementById("sel_riego").style.visibility='visible'};
+			document.getElementById("riego").classList.remove("ocultar");
+			document.getElementById("sel_riego").classList.remove("ocultar")};
 		if (otro_criterio.value=="Plantacion") {
-			document.getElementById("plantacion").style.visibility='visible';
-			document.getElementById("sel_plantacion").style.visibility='visible'};
+			document.getElementById("plantacion").classList.remove("ocultar");
+			document.getElementById("sel_plantacion").classList.remove("ocultar")};
 		if (otro_criterio.value=="Conduccion") {
-			document.getElementById("conduccion").style.visibility='visible';
-			document.getElementById("sel_conduccion").style.visibility='visible'};
+			document.getElementById("conduccion").classList.remove("ocultar");
+			document.getElementById("sel_conduccion").classList.remove("ocultar")};
 		if (otro_criterio.value=="Cobertura") {
-			document.getElementById("cobertura").style.visibility='visible';
-			document.getElementById("sel_cobertura").style.visibility='visible'};
+			document.getElementById("cobertura").classList.remove("ocultar");
+			document.getElementById("sel_cobertura").classList.remove("ocultar")};
 		if (otro_criterio.value=="Especie") {
-			document.getElementById("especie").style.visibility='visible';
-			document.getElementById("sel_especie").style.visibility='visible'};
-		document.getElementById("quitartodo").style.visibility='visible';
-		document.getElementById("mostrartodo").style.visibility='visible';
+			document.getElementById("especie").classList.remove("ocultar");
+			document.getElementById("sel_especie").classList.remove("ocultar")};
+		document.getElementById("quitartodo").classList.remove("ocultar");
+		document.getElementById("mostrartodo").classList.remove("ocultar");
 	};
 
 	<!--Funcion para filtrar con otro criterio distinto a vid-->
@@ -1552,15 +1552,15 @@
 		tot_parc=0;
 		prom_prod=0;
 		anios_prod=0;
-		document.getElementById("responsable").style.visibility='hidden';
-		document.getElementById("conduccion").style.visibility='hidden';
-		document.getElementById("riego").style.visibility='hidden';
-		document.getElementById("clon").style.visibility='hidden';
-		document.getElementById("superficie").style.visibility='hidden';
-		document.getElementById("plantacion").style.visibility='hidden';
-		document.getElementById("cobertura").style.visibility='hidden';
-		document.getElementById("especie").style.visibility='hidden';
-		modal.style.visibility='hidden';
+		document.getElementById("responsable").classList.add("ocultar");
+		document.getElementById("conduccion").classList.add("ocultar");
+		document.getElementById("riego").classList.add("ocultar");
+		document.getElementById("clon").classList.add("ocultar");
+		document.getElementById("superficie").classList.add("ocultar");
+		document.getElementById("plantacion").classList.add("ocultar");
+		document.getElementById("cobertura").classList.add("ocultar");
+		document.getElementById("especie").classList.add("ocultar");
+		modal.classList.add("ocultar");
 		document.getElementById("otro_criterio").value="";
 		if (Object.keys(capa_filtrada).length !== 0) {capa_filtrada.remove()};
 		if (Object.keys(capa_buscar).length !==0) {capa_buscar.remove()};
@@ -1568,8 +1568,8 @@
 		if (lugar !==""){lugar.remove()};
 		if (grupoeeamza) {mapa.removeLayer(grupoeeamza)};
 		capa_filtrada=L.geoJSON(parcelas,{filter:Filtrar_Vid, style: PersonalizarPerimetro, onEachFeature}).addTo(mapa);
-		document.getElementById("quitartodo").style.visibility='visible';
-		document.getElementById("mostrartodo").style.visibility='visible';
+		document.getElementById("quitartodo").classList.remove("ocultar");
+		document.getElementById("mostrartodo").classList.remove("ocultar");
 	};
 
 	<!--Funcion para filtrar parcelas con valores distintos a vid-->
@@ -1590,15 +1590,15 @@
 		var resumen='<span>Criterio de filtro: <span style=color:blue><strong>'+criterio+" - "+valor+'</strong>.</span><br><span>Cantidad de parcelas: <span style=color:blue><strong>'+tot_parc+
 			'</strong>.</span></span><br><span>Superficie: <span style=color:blue><strong>'+sup_total.toFixed(2)+'</strong>.</span></span><br><span>Promedio de Producción Anual: <span style=color:blue><strong>'+
 			(prom_prod/anios_prod/sup_total).toFixed(2)+" qq/ha"+'</strong>.</span></span>';
-		document.getElementById("cuadroestadisticasbarralateral").style.visibility='visible';
-		modal.style.visibility='visible';
+		document.getElementById("cuadroestadisticasbarralateral").classList.remove("ocultar");
+		modal.classList.remove("ocultar");
 		document.getElementById("estadisticasbarralateral").innerHTML=resumen;
 		if (anios_prod !==0) {document.getElementById("titulomodalestadistico").innerText=("Resumen Estadístico"); document.getElementById("cuerpomodalestadistico").innerHTML=resumen;AbrirModalEstadistico()};
 		if (anios_prod ==0) {document.getElementById("titulomodalestadistico").innerText=("Resumen Estadístico"); document.getElementById("cuerpomodalestadistico").innerText="Criterios de filtro: "+criterio+
 			" - "+valor+"\nCantidad de parcelas: "+tot_parc+"\nSuperficie: "+sup_total.toFixed(2)+" ha"};
 		cobertura_vid.value="";
-		document.getElementById("quitartodo").style.visibility='visible';
-		document.getElementById("mostrartodo").style.visibility='visible';
+		document.getElementById("quitartodo").classList.remove("ocultar");
+		document.getElementById("mostrartodo").classList.remove("ocultar");
 		barralateral.close();
 	};
 
@@ -1616,8 +1616,8 @@
 		var resumen='<span>Criterio de filtro: <span style=color:blue><strong>Vid</strong>.</span><br><span>Variedad: <span style=color:blue><strong>'+busqueda+
 			'</strong>.</span></span><br><span>Cantidad de Parcelas: <span style=color:blue><strong>'+tot_parc+'</strong>.</span></span><br><span>Superficie: <span style=color:blue><strong>'+
 			sup_total.toFixed(2)+'</strong>.</span></span><br><span>Promedio de Producción Anual: <span style=color:blue><strong>'+prom_gral_prod.toFixed(2)+" qq/ha"+'</strong>.</span></span>';
-		document.getElementById("cuadroestadisticasbarralateral").style.visibility='visible';
-		modal.style.visibility='visible';
+		document.getElementById("cuadroestadisticasbarralateral").classList.remove("ocultar");
+		modal.classList.remove("ocultar");
 		document.getElementById("estadisticasbarralateral").innerHTML=resumen;
 		if (cobertura_vid.value !="") {if (criterio.test(feature.properties.Variedad)) return true; document.getElementById("titulomodalestadistico").innerText=("Resumen estadístico");
 			document.getElementById("cuerpomodalestadistico").innerHTML=resumen;AbrirModalEstadistico()};
@@ -1674,7 +1674,7 @@
 			if (sel_superficie.value=="Mayor a 3 ha") {if (feature.properties.Sup_Croqui>='3' && feature.properties.Sup_Croqui!=null) return true};
 			resumen=otro_criterio.value+": "+sel_superficie.value;
 		};
-		modal.style.visibility='visible';
+		modal.classList.remove("ocultar");
 	};
 
 	<!--Funcion para buscar sector/actividad-->
@@ -1736,7 +1736,7 @@
 
 	<!--Funcion para resetear todo-->
 	function ResetearTodo() {
-		document.getElementById("volvereea").style.visibility='hidden';
+		document.getElementById("volvereea").classList.add("ocultar");
 		if (lugar){lugar.remove()};
 		if (aer){aer.remove()};
 		if (ruta) {ruta.remove()};
@@ -1792,8 +1792,8 @@
 	function MostrarTodo() {
 		ResetearTodo();
 		capa_parcelas=L.geoJson(parcelas,{style: PersonalizarPerimetro, onEachFeature}).addTo(mapa);
-		document.getElementById("quitartodo").style.visibility='visible';
-		document.getElementById("mostrartodo").style.visibility='hidden';
+		document.getElementById("quitartodo").classList.remove("ocultar");
+		document.getElementById("mostrartodo").classList.add("ocultar");
 	};
 
 	<!--Verificar Sistema Operativo-->
@@ -1849,7 +1849,6 @@
 				'Debido a: '+msg1+'.-</span>';
 				tiempomodalflash=5000;
 				ModalFlash(tiempomodalflash);
-				//botondetallesruta.style.display="none";
 				botondetallesruta.classList.add("ocultar");
 			},
 			{
@@ -1865,9 +1864,9 @@
 		sondeo_posicion=0;
 		barralateral.close();
 		document.getElementById("gps").src="./images/slide_on.jpg";
-		document.getElementById("gpson").style.visibility='visible';
-		document.getElementById("gpsoff").style.visibility='hidden';
-		document.getElementById("dondestoy").style.visibility='visible';
+		document.getElementById("gpson").classList.remove("ocultar");
+		document.getElementById("gpsoff").classList.add("ocultar");
+		document.getElementById("dondestoy").classList.remove("ocultar");
 		document.getElementById("ubicacion_estado").href="javascript:desactivar_seguimiento(seguimiento)";
 		VerificarConexion();
 		if (conexion==="si") {
@@ -1937,7 +1936,7 @@
 		if (orientarme=="si") {
 			if (distancia<=1100) {
 				botondetallesruta.classList.add("ocultar");
-				panelrutas.style.display="none";
+				panelrutas.classList.add("ocultar");
 				if (ruta) {
 					ruta.remove();
 				};
@@ -1973,7 +1972,7 @@
 		let timeoutLlegada = null;
 		if (distancia <= 7 && !timeoutLlegada) {
 			timeoutLlegada = setTimeout(() => {
-				cajadistancia.classList.remove("ocultar");
+				cajadistancia.classList.add("visible");
 				cajadistancia.textContent = "¡Has llegado a tu destino!.";
 				cajadistancia.style.color = "#155724";
 				timeoutLlegada = null;
@@ -2053,7 +2052,7 @@
 		//clearTimeout(tiempo);
 		clearTimeout(temporizadormodalflash);
 		actualizarruta="si";
-		document.getElementById("dondestoy").style.visibility='hidden';
+		document.getElementById("dondestoy").classList.add("ocultar");
 		if (ruta) {ruta.remove()};
 		botondetallesruta.classList.add("ocultar");
 		coordenadas_ubicacion_real="";
@@ -2089,11 +2088,11 @@
 		seguimiento="";
 		orientarme="";
 		document.getElementById("gps").src="./images/slide_off.jpg";
-		document.getElementById("gpson").style.visibility='hidden';
-		document.getElementById("gpsoff").style.visibility='visible';
+		document.getElementById("gpson").classList.add("ocultar");
+		document.getElementById("gpsoff").classList.remove("ocultar");
 		botoncentrado.classList.add("ocultar");
 		cajadistancia.classList.remove("visible");
-		document.getElementById("dondestoy").style.visibility='hidden';
+		document.getElementById("dondestoy").classList.add("ocultar");
 		document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento(seguimiento)";
 		clearInterval(intervalo);
 		clearTimeout(temporizadormodalflash);
@@ -2304,12 +2303,12 @@
 	//###########################################################
 
 	function TrazarRutaFueraEEA() {
-		cajadistancia.classList.remove("ocultar");
+		cajadistancia.classList.add("visible");
 		VerificarConexion();
 		if (conexion !== "si") return;
 		VerificarGPS();
 		avisollegada = "si";
-		btnindicacionesmodalflash.style.display="none";
+		btnindicacionesmodalflash.classList.add("ocultar");
 		mimodalflash.classList.add("ocultar");
 		let distancia = DistanciaEnTiempoReal();
 		cajadistancia.style.color = "#155724";
@@ -2615,7 +2614,7 @@
 				points_encoded=false&
 				algorithm=alternative_route&
 				alternative_route.max_paths=2&
-				key=${apikeygraphhopper1234}`.replace(/\s+/g, '');
+				key=${apikeygraphhopper}`.replace(/\s+/g, '');
 
 			// ✅ 2. AbortController para timeout REAL
 			const controller = new AbortController();
@@ -3038,7 +3037,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Agencia de Extensión Luján de Cuyo") {
 			var formatoPopup = {
@@ -3051,7 +3050,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Agencia de Extensión Maipú") {
 			var formatoPopup = {
@@ -3064,7 +3063,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Oficina de Información Uspallata") {
 			var formatoPopup = {
@@ -3077,7 +3076,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Experimental San Juan") {
 			var formatoPopup = {
@@ -3090,7 +3089,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Experimental Junín") {
 			var formatoPopup = {
@@ -3103,7 +3102,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Agencia de Extensión Junín") {
 			var formatoPopup = {
@@ -3116,7 +3115,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Experimental La Consulta") {
 			var formatoPopup = {
@@ -3129,7 +3128,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Agencia de Extensión La Consulta") {
 			var formatoPopup = {
@@ -3142,7 +3141,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (agencia=="Experimental Rama Caída") {
 			var formatoPopup = {
@@ -3155,7 +3154,7 @@
 			aer=L.marker(coord).addTo(mapa)
 				.bindPopup(contenidoPopup, formatoPopup)
 				.openPopup();
-			document.getElementById("volvereea").style.visibility='visible';
+			document.getElementById("volvereea").classList.remove("ocultar");
 		};
 		if (seguimiento==="si") {if (seguimiento==="si") {dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
 		if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
@@ -3165,7 +3164,7 @@
 	function VolverEEA () {
 		if (aer !="") {aer.remove(),document.getElementById("buscarunidad").value=""};
 		let coord="-33.00598405638592, -68.85600484779212".split(",");
-		document.getElementById("volvereea").style.visibility='hidden';
+		document.getElementById("volvereea").classList.add("ocultar");
 		barralateral.close();
 		mapa.flyTo(coord,16);
 		grupoeeamza.addTo(mapa);
@@ -3180,10 +3179,10 @@
 	inputbusquedabisunidad.addEventListener('input', () => {
 		if (inputbusquedabisunidad.value.trim() === '') {
 			inputbusquedabisunidad.classList.remove('filled');
-			sugerencia.style.visibility='hidden';
+			sugerencia.classList.add("ocultar");
 		  };
 		if (inputbusquedabisunidad.value.trim() !=="") {
-			sugerencia.style.visibility='visible';
+			sugerencia.classList.remove("ocultar");
 			inputbusquedabisunidad.classList.add('filled');
 			const query = inputbusquedabisunidad.value.toLowerCase();
 			sugerencia.innerHTML = '';
@@ -3217,12 +3216,11 @@
 	inputbusqueda.addEventListener('input', () => {
 		if (inputbusqueda.value.trim() === '') {
 			inputbusqueda.classList.remove('filled');
-			sugerenciaz.style.visibility='hidden';
-			//document.getElementById("ventanaSugerencias").style.display = "none";
+			sugerenciaz.classList.add("ocultar");
 			document.getElementById("ventanaSugerencias").classList.add("ocultar");
 		  };
 		if (inputbusqueda.value.trim() !=="") {
-			sugerenciaz.style.visibility='visible';
+			sugerenciaz.classList.remove("ocultar");
 			document.getElementById("ventanaSugerencias").style.display = "block";
 			if (!inputbusqueda.classList.contains('filled')) {
 				inputbusqueda.classList.add('filled');
@@ -3263,10 +3261,10 @@
 	inputbusquedabis.addEventListener('input', () => {
 		if (inputbusquedabis.value.trim() === '') {
 			inputbusquedabis.classList.remove('filled');
-			sugerenciasbiz.style.visibility='hidden';
+			sugerenciasbiz.classList.add("ocultar");
 		  };
 		if (inputbusquedabis.value.trim() !=="") {
-			sugerenciasbiz.style.visibility='visible';
+			sugerenciasbiz.classList.remove("ocultar");
 			inputbusquedabis.classList.add('filled');
 			const query = inputbusquedabis.value.toLowerCase();
 			sugerenciasbiz.innerHTML = '';
@@ -3316,7 +3314,7 @@
 	};
 	
 	function CerrarModalEstadistico() {
-		modal.style.visibility='hidden';
+		modal.classList.add("ocultar");
 	};
 	
 	function MinimizarModalEstadistico() {
@@ -3464,11 +3462,11 @@
 		const valor = document.getElementById("username").value.trim().toLowerCase();
 		const contra=document.getElementById("password").value.trim();
 		if (usuarios.includes(valor) && contrasenias==contra) {
-			document.getElementById("cerrarsesion").style.visibility='visible';
-			document.getElementById("username").style.visibility='hidden';
-			document.getElementById("password").style.visibility='hidden';
-			document.getElementById("botonmostrarocultar").style.visibility='hidden';
-			document.getElementById("botoningresar").style.visibility='hidden';
+			document.getElementById("cerrarsesion").classList.remove("ocultar");
+			document.getElementById("username").classList.add("ocultar");
+			document.getElementById("password").classList.add("ocultar");
+			document.getElementById("botonmostrarocultar").classList.add("ocultar");
+			document.getElementById("botoningresar").classList.add("ocultar");
 			tiempomodalflash=6000;
 			titulomodalflash.innerText="INICIO DE SESION";
 			cuerpomodalflash.innerHTML = '<span style="display: block; text-align: center; width: 100%; color:green;"><br><b>Te has validado correctamente.</b><br><br><span style="color:black">'+
@@ -3509,11 +3507,11 @@
 	
 	//Función para cerrar sesión
 	function CerrarSesion() {
-		document.getElementById("username").style.visibility='visible';
-		document.getElementById("password").style.visibility='visible';
-		document.getElementById("botonmostrarocultar").style.visibility='visible';
-		document.getElementById("botoningresar").style.visibility='visible';
-		document.getElementById("cerrarsesion").style.visibility='hidden';
+		document.getElementById("cerrarsesion").classList.add("ocultar");
+		document.getElementById("username").classList.remove("ocultar");
+		document.getElementById("password").classList.remove("ocultar");
+		document.getElementById("botonmostrarocultar").classList.remove("ocultar");
+		document.getElementById("botoningresar").classList.remove("ocultar");
 		barralateral.close();
 		cuerpomodalflash.innerHTML = '<span style="display: block; text-align: center; width: 100%; color:red;"><br><b>Has cerrado sesión correctamente.</b><br><br><span style="color:black">Sólo tendrás acceso a la información<br>básica de la EEA Mendoza.</span>';
 		version="publica";
@@ -3558,36 +3556,36 @@
 	<!--Función Mostrar/Habilitar u Ocultar/Deshabilitar elementos según la versión de trabajo-->
 	function VerificarVersion() {
 		if (version=="publica") {
-			document.getElementById("cerrarsesion").style.visibility='hidden';
+			document.getElementById("cerrarsesion").classList.add("ocultar");
 			mimodalflash.classList.add("ocultar");
-			document.getElementById("titulo_vid").style.visibility='hidden';
-			document.getElementById("titulo_otro_criterio").style.visibility='hidden';
-			document.getElementById("cobertura_vid").style.visibility='hidden';
-			document.getElementById("opciones_otr").style.visibility='hidden';
-			document.getElementById("sel_cobertura").style.visibility='hidden';
-			document.getElementById("sel_clon").style.visibility='hidden';
-			document.getElementById("sel_conduccion").style.visibility='hidden';
-			document.getElementById("sel_especie").style.visibility='hidden';
-			document.getElementById("sel_plantacion").style.visibility='hidden';
-			document.getElementById("sel_responsable").style.visibility='hidden';
-			document.getElementById("sel_riego").style.visibility='hidden';
-			document.getElementById("sel_superficie").style.visibility='hidden';
-			document.getElementById("mostrartodo").style.visibility='hidden';
-			document.getElementById("quitartodo").style.visibility='hidden';
-			document.getElementById("titulousuario").style.visibility='visible';
-			document.getElementById("titulocontrasenia").style.visibility='visible';
+			document.getElementById("titulo_vid").classList.add("ocultar");
+			document.getElementById("titulo_otro_criterio").classList.add("ocultar");
+			document.getElementById("cobertura_vid").classList.add("ocultar");
+			document.getElementById("opciones_otr").classList.add("ocultar");
+			document.getElementById("sel_cobertura").classList.add("ocultar");
+			document.getElementById("sel_clon").classList.add("ocultar");
+			document.getElementById("sel_conduccion").classList.add("ocultar");
+			document.getElementById("sel_especie").classList.add("ocultar");
+			document.getElementById("sel_plantacion").classList.add("ocultar");
+			document.getElementById("sel_responsable").classList.add("ocultar");
+			document.getElementById("sel_riego").classList.add("ocultar");
+			document.getElementById("sel_superficie").classList.add("ocultar");
+			document.getElementById("mostrartodo").classList.add("ocultar");
+			document.getElementById("quitartodo").classList.add("ocultar");
+			document.getElementById("titulousuario").classList.remove("ocultar");
+			document.getElementById("titulocontrasenia").classList.remove("ocultar");
 		};
 		if (version=="completa") {
-			document.getElementById("cerrarsesion").style.visibility='visible';
+			document.getElementById("cerrarsesion").classList.remove("ocultar");
 			mimodalflash.classList.remove("ocultar");
-			document.getElementById("titulo_vid").style.visibility='visible';
-			document.getElementById("titulo_otro_criterio").style.visibility='visible';
-			document.getElementById("cobertura_vid").style.visibility='visible';
-			document.getElementById("opciones_otr").style.visibility='visible';
-			document.getElementById("mostrartodo").style.visibility='visible';
-			document.getElementById("quitartodo").style.visibility='visible';
-			document.getElementById("titulousuario").style.visibility='hidden';
-			document.getElementById("titulocontrasenia").style.visibility='hidden';
+			document.getElementById("titulo_vid").classList.remove("ocultar");
+			document.getElementById("titulo_otro_criterio").classList.remove("ocultar");
+			document.getElementById("cobertura_vid").classList.remove("ocultar");
+			document.getElementById("opciones_otr").classList.remove("ocultar");
+			document.getElementById("mostrartodo").classList.remove("ocultar");
+			document.getElementById("quitartodo").classList.remove("ocultar");
+			document.getElementById("titulousuario").classList.add("ocultar");
+			document.getElementById("titulocontrasenia").classList.add("ocultar");
 		};
 	};
 	
@@ -3702,16 +3700,16 @@
 	document.getElementById("medir").addEventListener("click", function() {
 		barralateral.close();
 		cant_mediciones=1;
-		document.getElementById("contenedorMediciones").style.visibility='visible';
-		document.getElementById("BotonLimpiarPantalla").style.visibility='visible';
+		document.getElementById("contenedorMediciones").classList.remove("ocultar");
+		document.getElementById("BotonLimpiarPantalla").classList.remove("ocultar");
 		capturaActiva = !capturaActiva;
 		const icono=document.getElementById("imagenmediciones");
 		if (capturaActiva) {
 			mapa.on('click', AgregarPunto);
-			document.getElementById("contenedorMediciones").style.visibility='visible';
+			document.getElementById("contenedorMediciones").classList.remove("ocultar");
 		} else {
 			mapa.off('click', AgregarPunto);
-			document.getElementById("contenedorMediciones").style.visibility='hidden';
+			document.getElementById("contenedorMediciones").classList.add("ocultar");
 			ResetearMediciones();
 		};
 	});
@@ -3720,8 +3718,8 @@
 	function LimpiarPantalla() {
 		// Opción 1: vaciar todo el body (excepto el botón)
 		document.getElementById("medir").click();
-		document.getElementById("contenedorMediciones").style.visibility='hidden';
-		document.getElementById("BotonLimpiarPantalla").style.visibility='hidden';
+		document.getElementById("contenedorMediciones").classList.add("ocultar");
+		document.getElementById("BotonLimpiarPantalla").classList.add("ocultar");
 		ResetearMediciones();
 	};
 	
@@ -3829,7 +3827,7 @@
 			cartelnuevo.style.display = 'block';
 			//posicionar la guía apuntando al botón
 			//Cancelamos temporalmente las flechas rojas apuntando a la barra lateral
-			//if (dispositivo !=="movil") {document.getElementById("flecharoja").style.visibility='visible'};
+			//if (dispositivo !=="movil") {document.getElementById("flecharoja").classList.remove"ocultar"};
 			posicionnovedad();
 			// animación de aparición
 			requestAnimationFrame(()=> cartelnuevo.classList.add('show'));
@@ -3839,7 +3837,7 @@
 			cartelnuevo.classList.remove('show');
 			// después de la transición, ocultamos
 			setTimeout(()=> cartelnuevo.style.display = 'none', 160);
-			document.getElementById("flecharoja").style.visibility='hidden';
+			document.getElementById("flecharoja").classList.add("ocultar");
 			if (nomostrarlonuevo.checked) {
 				try {
 					localStorage.setItem('MOSTRAR_NUEVO', Version);
@@ -3958,7 +3956,7 @@
 			cartelnuevo.classList.remove('show');
 			// después de la transición, ocultamos
 			setTimeout(()=> cartelnuevo.style.display = 'none', 160);
-			document.getElementById("flecharoja").style.visibility='hidden';
+			document.getElementById("flecharoja").classList.add("ocultar");
 			if (nomostrarlonuevo.checked) {
 				try {
 					localStorage.setItem('MOSTRAR_NUEVO', Version);
@@ -3984,10 +3982,10 @@
 	
 	//Función No Volver a mostrar sugerencia para girar el celular
 	function VerificarNoVolverAMostrar(){
-		if (Version !== (localStorage.getItem('MOSTRAR_INICIAL') || null)) {ModalFlash(tiempomodalflash);document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrableinicial").style.display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
-		if (localStorage.getItem('MOSTRAR_CELULAR') !=="no" && dispositivo !=="pc") {modalinicial.showModal();document.getElementById("restablecernomostrar").style.visibility="hidden"} else {document.getElementById("borrablecelular").style.display="none";document.getElementById("restablecernomostrar").style.visibility="visible"};
-		//if (Version !== (localStorage.getItem('MOSTRAR_NUEVO') || null)) {document.getElementById("flecharoja").style.visibility='visible';console.log(Version+localStorage.getItem('MOSTRAR_NUEVO'))} else {document.getElementById("flecharoja").style.visibility='hidden'};
-		if (dispositivo=="movil") {document.getElementById("flecharoja").style.visibility='hidden'};
+		if (Version !== (localStorage.getItem('MOSTRAR_INICIAL') || null)) {ModalFlash(tiempomodalflash);document.getElementById("restablecernomostrar").style.visibility="hidden"} else {borrableinicial.classList.add("ocultar");document.getElementById("restablecernomostrar").classList.remove("ocultar")};
+		if (localStorage.getItem('MOSTRAR_CELULAR') !=="no" && dispositivo !=="pc") {modalinicial.showModal();document.getElementById("restablecernomostrar").style.visibility="hidden"} else {borrablecelular.classList.add("ocultar");document.getElementById("restablecernomostrar").classList.remove("ocultar")};
+		//if (Version !== (localStorage.getItem('MOSTRAR_NUEVO') || null)) {document.getElementById("flecharoja").classList.remove("ocultar");console.log(Version+localStorage.getItem('MOSTRAR_NUEVO'))} else {document.getElementById("flecharoja").style.visibility='hidden'};
+		if (dispositivo=="movil") {document.getElementById("flecharoja").classList.add("ocultar")};
 	};
 	
 	//######BORRAR.....!!!!
@@ -4017,16 +4015,16 @@
 	//HASTA ACA...
 
 	//Activar/Desactivar/Mostrar/Ocultar/Ejecutar lo que corresponda al iniciar
-	document.getElementById("gpson").style.visibility='hidden';
-	document.getElementById("cuadroestadisticasbarralateral").style.visibility='hidden';
+	document.getElementById("gpson").classList.add("ocultar");
+	document.getElementById("cuadroestadisticasbarralateral").classList.add("ocultar");
 	btnindicacionesmodalflash.classList.add("ocultar");
-	cajadistancia.style.visibility='hidden';
+	cajadistancia.classList.remove("visible");
 	botoncentrado.classList.add("ocultar");
-	document.getElementById("dondestoy").style.visibility='hidden';
-	document.getElementById("botonnorte").style.visibility='hidden';
-	document.getElementById("contenedorMediciones").style.visibility='hidden';
-	document.getElementById("Conectividad").style.visibility='hidden';
-	document.getElementById("BotonLimpiarPantalla").style.visibility='hidden';
+	document.getElementById("dondestoy").classList.add("ocultar");
+	document.getElementById("botonnorte").classList.add("ocultar");
+	document.getElementById("contenedorMediciones").classList.add("ocultar");
+	document.getElementById("Conectividad").classList.add("ocultar");
+	document.getElementById("BotonLimpiarPantalla").classList.add("ocultar");
 	botondetallesruta.classList.add("ocultar");
 	mimodalflash.classList.add("ocultar");
 	const contenedorzoom = document.querySelector('.leaflet-top.leaflet-right');
