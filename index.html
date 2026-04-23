@@ -25,13 +25,13 @@
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
 	integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
 	crossorigin=""/>
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"/>
+	<!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"/>-->
 	<!-- Repositorios en línea y locales -->
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+	<!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>-->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"/>
 	<!--<link rel="stylesheet" href="libs/leaflet-measure-path.css"/>-->
 	<link rel="stylesheet" href="./css/leaflet-sidebar.css"/>
-	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+	<!--<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>-->
 	<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
 	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 	<!-- Leaflet Routing Machine -->
@@ -1730,7 +1730,7 @@
 		if (seguimiento==="si") {
 			dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
 			if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
-			if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)}//TrazarRutaFueraEEA()}
+			if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,capa_buscar1)}//puntomascercano)}//TrazarRutaFueraEEA()}
 		};
 	};
 
@@ -1949,21 +1949,21 @@
 			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino!"};
 			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino!"};
 		};
-		if (!dentroeeamza || aer || lugar) {
-			cajadistancia.textContent = msg+" (En línea recta).-";
-			cajadistancia.style.background = "#d4edda";
-			cajadistancia.style.color = "#155724"
-		} else {
-			if (dispositivo=="movil") {cajadistancia.innerHTML = "Estás dentro de la EEA Mendoza.<br>La velocidad máxima recomendada para circular aqui es de 30 km/h.-"};
-			if (dispositivo=="pc") {cajadistancia.innerHTML = "Estás dentro de la EEA Mendoza.-"};
-			cajadistancia.style.background = "#d4edda";
-			cajadistancia.style.color = "#155724";
-			botondetallesruta.classList.add("ocultar");
-		};
+		//if (!dentroeeamza || aer || lugar) {
+		//	cajadistancia.textContent = msg+" (En línea recta).-";
+		//	cajadistancia.style.background = "#d4edda";
+		//	cajadistancia.style.color = "#155724"
+		//} else {
+		//	if (dispositivo=="movil") {cajadistancia.innerHTML = "Estás dentro de la EEA Mendoza.<br>La velocidad máxima recomendada para circular aquí es de 30 km/h.-"};
+		//	if (dispositivo=="pc") {cajadistancia.innerHTML = "Estás dentro de la EEA Mendoza.-"};
+		//	cajadistancia.style.background = "#d4edda";
+		//	cajadistancia.style.color = "#155724";
+		//	botondetallesruta.classList.add("ocultar");
+		//};
 		if (distancia>180) {alertaZonaMedia=false;avisollegada="si"};
 		if (distancia >80 && distancia <= 180 && dispositivo=="movil") {
 			if (!alertaZonaMedia) {
-				msg="Avanza despacio y con atención. ¡Estás a pocos metros del destino!. Recorda que la velocidad maxima recomendada dentro del inta es de 30 kilometros por hora";
+				msg="Avanza despacio y con atención. ¡Estás a pocos metros del destino!. Recordá que la velocidad maxima recomendada dentro del inta es de 30 kilometros por hora";
 				if (avisollegada=="si") {AlertaLlegada(msg)};
 				alertaZonaMedia=true;
 			};
@@ -2220,6 +2220,8 @@
 		mapa.addLayer(googlesatelite);
 		capa=googlesatelite;
 		mapa.removeLayer(predioeeamza);
+		if (capaRutaPrincipal) {mapa.removeLayer(capaRutaPrincipal)};
+		if (capaRutaAlternativa) {mapa.removeLayer(capaRutaAlternativa)};
 		marcadoreeamzaeste.remove();
 		marcadoreeamzaoeste.remove();
 		let coord_ubic_real = [coordenadas_ubicacion_real.lng, coordenadas_ubicacion_real.lat];
@@ -2383,6 +2385,7 @@
 				const tiempoFormateado = horas > 0 ? `${horas} horas ${minutos} min.` : `${minutos} min.`;
 				cajadistancia.innerHTML = `Ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado} <br> Servicio de ruta: OSRM`;
 				botondetallesruta.classList.remove("ocultar");
+				panelrutas.classList.remove("ocultar");
 				panelrutas.replaceChildren(ruta.getContainer());
 				console.log("Ruteo con OSRM");
 				if (!e.routes || e.routes.length === 0) {
@@ -2858,6 +2861,7 @@
 			//let panel = document.getElementById("panelrutas");
 			//botondetallesruta.style.display="block";
 			botondetallesruta.classList.remove("ocultar");
+			panelrutas.classList.remove("ocultar");
 			//panelrutas.innerHTML = "Hola";
 			//panelrutas.style.display = "block";
 			
@@ -3158,7 +3162,7 @@
 		};
 		if (seguimiento==="si") {if (seguimiento==="si") {dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
 		if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
-		if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)}}};//TrazarRutaFueraEEA()}}};
+		if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,centroide)}}};//puntomascercano)}}};//TrazarRutaFueraEEA()}}};
 	};
 
 	function VolverEEA () {
@@ -3216,11 +3220,11 @@
 	inputbusqueda.addEventListener('input', () => {
 		if (inputbusqueda.value.trim() === '') {
 			inputbusqueda.classList.remove('filled');
-			sugerenciaz.classList.add("ocultar");
-			document.getElementById("ventanaSugerencias").classList.add("ocultar");
+			sugerenciaz.style.visibility='hidden';
+			document.getElementById("ventanaSugerencias").style.display = "none";
 		  };
 		if (inputbusqueda.value.trim() !=="") {
-			sugerenciaz.classList.remove("ocultar");
+			sugerenciaz.style.visibility='visible';
 			document.getElementById("ventanaSugerencias").style.display = "block";
 			if (!inputbusqueda.classList.contains('filled')) {
 				inputbusqueda.classList.add('filled');
@@ -3251,7 +3255,7 @@
 	document.addEventListener('click', function(e) {
 		if (!sugerenciaz.contains(e.target) && e.target !== inputbusqueda) {
 			sugerenciaz.innerHTML = '';
-			document.getElementById("ventanaSugerencias").classList.add("ocultar");
+			document.getElementById("ventanaSugerencias").style.display = "none";
 		};
 	});
 	
@@ -3261,10 +3265,10 @@
 	inputbusquedabis.addEventListener('input', () => {
 		if (inputbusquedabis.value.trim() === '') {
 			inputbusquedabis.classList.remove('filled');
-			sugerenciasbiz.classList.add("ocultar");
+			sugerenciasbiz.style.visibility='hidden';
 		  };
 		if (inputbusquedabis.value.trim() !=="") {
-			sugerenciasbiz.classList.remove("ocultar");
+			sugerenciasbiz.style.visibility='visible';
 			inputbusquedabis.classList.add('filled');
 			const query = inputbusquedabis.value.toLowerCase();
 			sugerenciasbiz.innerHTML = '';
@@ -3293,7 +3297,7 @@
 			sugerenciasbiz.innerHTML = '';
 		};
 	});
-
+	
 	// Bloque de la ventana modal
 	const modal = document.getElementById("modalestadistico");
 	const resizer = document.getElementById("resizeHandle");
