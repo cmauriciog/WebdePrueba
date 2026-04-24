@@ -1287,6 +1287,8 @@
 	var recalcular = false;
 	var ultimaUbicacion = null;
 	var ultimoDestino = null;
+	var ultimaActualizacionRuta = 0;
+	var ultimaUbicacionRuta = null;
 	var mapaCentrado=false;
 	var alertaInicial = false;
 	var alertaZonaMedia = false;
@@ -1360,15 +1362,16 @@
 		location.reload();
 	};
 	
-	<!--Función para preparar todos los Pop-ups-->
+	//Función para preparar todos los Pop-ups
 	function onEachFeature(feature, layer) {
 		if (encontrar_a.value=="") {
+		let logo = './images/Edificios.jpg';
 		//if (encontrar_abis.value=="") {
 		sup_total=sup_total+feature.properties.Sup_Croqui;
 		tot_parc=tot_parc+1;
-		<!--Calcular el promedio general-->
+		//Calcular el promedio general
 		prom_prod=prom_prod+feature.properties.Prod_2017+feature.properties.Prod_2018+feature.properties.Prod_2019+feature.properties.Prod_2020+feature.properties.Prod_2021+feature.properties.Prod_2022+feature.properties.Prod_2023+feature.properties.Prod_2024+feature.properties.Prod_2025;
-		<!--Calcular los años con producción (se excluyen los que no tienen datos)-->
+		//Calcular los años con producción (se excluyen los que no tienen datos)
 		if (feature.properties.Prod_2017 !=null) {anios_prod=anios_prod+1};
 		if (feature.properties.Prod_2018 !=null) {anios_prod=anios_prod+1};
 		if (feature.properties.Prod_2019 !=null) {anios_prod=anios_prod+1};
@@ -1378,7 +1381,7 @@
 		if (feature.properties.Prod_2023 !=null) {anios_prod=anios_prod+1};
 		if (feature.properties.Prod_2024 !=null) {anios_prod=anios_prod+1};
 		if (feature.properties.Prod_2025 !=null) {anios_prod=anios_prod+1};
-		<!--Establecer el mini-logo del PopUp de acuerdo al cultivo/uso de la parcela-->
+		//Establecer el mini-logo del PopUp de acuerdo al cultivo/uso de la parcela
 		if (feature.properties.Variedad=="Ancelotta" || feature.properties.Variedad=="Barbera Dasty" || feature.properties.Variedad=="Bonarda" || feature.properties.Variedad=="Cabernet"
 			|| feature.properties.Variedad=="Malbec" || feature.properties.Variedad=="Merlot" || feature.properties.Variedad=="Pinot" || feature.properties.Variedad=="Syrah"
 			|| feature.properties.Variedad=="Cabernet Sauvignon") {logo='./images/Uvas_Tintas.jpg'};
@@ -1402,7 +1405,7 @@
 		var formatoPopup = {
 			'maxWidth': '200',
 			'className' : 'popups'}
-		<!--Reconocer las parcelas que tienen o no información sobre producción-->
+		//Reconocer las parcelas que tienen o no información sobre producción
 		if (feature.properties.id==2 || feature.properties.id==4 || feature.properties.id==8 || feature.properties.id==11 
 			|| feature.properties.id==19 || feature.properties.id==27 || feature.properties.id==28 || feature.properties.id==29 || feature.properties.id==31 || feature.properties.id==33
 			|| feature.properties.id==37 || feature.properties.id==38 || feature.properties.id==42 || feature.properties.id==46 || feature.properties.id>58 && feature.properties.id<95
@@ -1423,7 +1426,7 @@
 			var variedad_parcela=feature.properties.Variedad;
 			if (feature.properties.Responsabl !=null) {var responsable_parcela=feature.properties.Responsabl};
 			if (feature.properties.Responsabl ==null) {var responsable_parcela="Sin Información"};
-			<!--PopUp a mostrar SI: La parcela tiene un cultivo y tiene datos de producción-->
+			//PopUp a mostrar SI: La parcela tiene un cultivo y tiene datos de producción
 			var contenidoPopup="<b><h4>Especie: "+feature.properties.Especie+"   "+"<img src="+logo+" width='35' height='35' /img>"+"</b></h4><br/>Variedad: "+varied+"<br/>Conducción: "+conduc+
 				"<br/>Año de plantación: "+planta+"<br/>Hileras: "+feature.properties.Hileras+"<br/>Superficie: "+feature.properties.Sup_Croqui+" ha"+"<br/>Responsable: "+respon+
 				"<br/><p style='cursor: pointer; color:#0000ff' onclick='return Funcion_Modal(\""+id_parcela+"\", \""+variedad_parcela+"\", \""+responsable_parcela+
@@ -1441,13 +1444,14 @@
 			if (feature.properties.Plantacion !=null) {planta=feature.properties.Plantacion};
 			if (feature.properties.Conduccion !=null) {conduc=feature.properties.Conduccion};
 			if (feature.properties.Variedad !=null) {varied=feature.properties.Variedad};
-			<!--PopUp a mostrar SI: La parcela tiene un cultivo y no tiene datos de producción-->
+			//PopUp a mostrar SI: La parcela tiene un cultivo y no tiene datos de producción
 			var contenidoPopup="<b><h4>Especie: "+feature.properties.Especie+"   "+"<img src="+logo+" width='35' height='35' /img>"+"</b></h4><br/>Variedad: "+varied+"<br/>Conducción: "+conduc+
 				"<br/>Año de plantación: "+planta+"<br/>Hileras: "+hileras+"<br/>Superficie: "+superficie+"<br/>Responsable: "+respon};
 		if (feature.properties.Cobertura !="Cultivo") {
-			<!--PopUp a mostrar SI: La parcela no tiene cultivo-->
+			//PopUp a mostrar SI: La parcela no tiene cultivo
 			var contenidoPopup="Cobertura: "+feature.properties.Cobertura+"   "+"<img src="+logo+" width='35' height='35' /img>"+"<br/>Descripción: "+feature.properties.Descripcio+
-				"<br/>Superficie: "+feature.properties.Sup_Croqui+" ha"};
+				"<br/>Superficie: "+feature.properties.Sup_Croqui+" ha"
+		};
 		layer.bindPopup(contenidoPopup, formatoPopup);
 		mapa.flyTo(coordenadas, zum)}
 		else {if (feature.properties.Descripcio==sector) {
@@ -1473,11 +1477,12 @@
 						.bindPopup(contenidoPopup, formatoPopup)
 						.openPopup()};
 		};
-		if (seguimiento==="si") {
-			dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
-			if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
-			if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)}//;TrazarRutaFueraEEA()}
-		};
+		//if (seguimiento==="si") {
+		//	dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
+		//	if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
+		//	if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)}//;TrazarRutaFueraEEA()}
+		//};
+		//console.log("Elegiste OnEachFeature");
 	};
 
 	<!--Funcion para filtrar con criterio distinto a vid. Es insensible al uso de mayúsculas/minúsculas y busca con criterio tipo "*...*" -->
@@ -1727,11 +1732,15 @@
 		capa_buscar.remove();
 		};
 		mapa.flyToBounds(capa_buscar.getBounds(),18);
-		if (seguimiento==="si") {
+		if (seguimiento==="si" || marca_ubicacion_real) {
 			dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
-			if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
-			if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,capa_buscar1)}//puntomascercano)}//TrazarRutaFueraEEA()}
+			if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;capaRutaPrincipal.setWaypoints([coordenadas_ubicacion_real,capa_buscar])};//TrazarRutaDentroEEA()};
+			if (!dentroeeamza && aviso===0) {
+				let destino = capa_buscar.getBounds().getCenter();
+				actualizarRutaForzada(destino);
+			}//trazarRutaInteligente(coordenadas_ubicacion_real,capa_buscar1)}//puntomascercano)}//TrazarRutaFueraEEA()}
 		};
+		console.log("Elegiste Encontrar A");
 	};
 
 	<!--Funcion para resetear todo-->
@@ -1739,8 +1748,17 @@
 		document.getElementById("volvereea").classList.add("ocultar");
 		if (lugar){lugar.remove()};
 		if (aer){aer.remove()};
-		if (ruta) {ruta.remove()};
-		if (marca_ubicacion_real) {marca_ubicacion_real.remove()};
+		//if (ruta) {ruta.remove()};
+		if (ruta){ruta.off(); // elimina listeners
+			ruta.remove();
+			ruta = null;
+		};
+		if (marca_ubicacion_real){
+		   marca_ubicacion_real.off();
+		   mapa.removeLayer(marca_ubicacion_real);
+		   marca_ubicacion_real=null;
+		};
+		//if (marca_ubicacion_real) {marca_ubicacion_real.remove()};
 		if (grupoeeamza) {mapa.removeLayer(grupoeeamza)};
 		if (perimetro) {mapa.removeLayer(perimetro)};
 		//if (superficie) {mapa.removeLayer(superficie)};
@@ -1890,8 +1908,9 @@
 				};
 			};
 			seguimiento="si";
+			console.log("Seguimiento: "+seguimiento);
 			botoncentrado.classList.remove("ocultar");
-			cajadistancia.classList.add("visible");
+			//cajadistancia.classList.add("visible");
 			mapa.locate({setView: false, watch: true, enableHighAccuracy: true});
 			mapa.on('locationfound', ActualizarUbicacion);
 			mapa.on('locationerror', ErrorGPS);
@@ -1907,11 +1926,54 @@
 		botondetallesruta.classList.add("ocultar");
 	};
 
+	//Probando....
+	function debeActualizarRuta() {
+		let ahora = Date.now();
+		// si nunca calculó
+		if (!ultimaUbicacionRuta) {
+			ultimaUbicacionRuta = coordenadas_ubicacion_real;
+			ultimaActualizacionRuta = ahora;
+			return true;
+		}
+		// tiempo transcurrido
+		let pasaron2Min = (ahora - ultimaActualizacionRuta) >= 120000;
+		// cambio GPS
+		let movioDistancia =
+			mapa.distance(ultimaUbicacionRuta,coordenadas_ubicacion_real) > 200;
+		if (pasaron2Min && movioDistancia) {
+			ultimaActualizacionRuta = ahora;
+			ultimaUbicacionRuta = coordenadas_ubicacion_real;
+			return true;
+		}
+		return false;
+	};
+	
+	function actualizarRutaForzada(destino){
+		if (!coordenadas_ubicacion_real || !destino) return;
+		// cancelar consulta previa si hubiera una en curso
+		calculandoRuta = false;
+		// si existe ruta dibujada vieja, opcional limpiar
+		if (ruta){
+			ruta.setWaypoints([]);
+		}
+		// resetear control temporal para nuevo destino
+		ultimaActualizacionRuta = Date.now();
+		ultimaUbicacionRuta = coordenadas_ubicacion_real;
+		ultimoDestino = destino;
+		trazarRutaInteligente(coordenadas_ubicacion_real,destino);
+		console.log(destino);
+	};
+
 	// Evento al encontrar la ubicación
 	function ActualizarUbicacion(e) {
 		if (!puntomascercano) {puntomascercano=centroide};
 		if (coordenadas_ubicacion_real) {
-			marca_ubicacion_real.remove();
+			//marca_ubicacion_real.remove();
+			if (marca_ubicacion_real){
+			   marca_ubicacion_real.off();
+			   mapa.removeLayer(marca_ubicacion_real);
+			   marca_ubicacion_real=null;
+			};
 			//LA PROXIMA LINEA ES PARA MANIPULAR LA UBICACION
 			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
 			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
@@ -1920,25 +1982,34 @@
 		};
 		if (!coordenadas_ubicacion_real) {
 			//LAS DOS PROXIMAS LINEAS SON PARA MANIPULAR LA UBICACION
-			//coordenadas_ubicacion_real=L.latLng(-33.196691901572414, -68.44088744239326);
-			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
-			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
+			coordenadas_ubicacion_real=L.latLng(-33.196691901572414, -68.44088744239326);
+			marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
+			//marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
 				.bindPopup("Estás por aquí")
 				.openPopup();
-			coordenadas_ubicacion_real=e.latlng;
+			//coordenadas_ubicacion_real=e.latlng;
 			mapa.setView(coordenadas_ubicacion_real, 17);
 		};
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
 		distancia=DistanciaEnTiempoReal();
 		ultimoDestino=null;
 		if (dentroeeamza && coord.length !== 0) {TrazarRutaDentroEEA()};
-		if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)};//TrazarRutaFueraEEA()};
+		if (!dentroeeamza && aviso===0) {
+			if (!dentroeeamza && aviso===0 && debeActualizarRuta()) {
+				trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano);
+			}
+		};//trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)};//TrazarRutaFueraEEA()};
 		if (orientarme=="si") {
 			if (distancia<=1100) {
 				botondetallesruta.classList.add("ocultar");
 				panelrutas.classList.add("ocultar");
-				if (ruta) {
-					ruta.remove();
+				//if (ruta) {
+				//	ruta.remove();
+				//};
+				if (ruta){
+				   ruta.off(); // elimina listeners
+				   ruta.remove();
+				   ruta = null;
 				};
 			};
 			if (distancia>1100) {
@@ -1981,6 +2052,7 @@
 		if (distancia <= 10 && dispositivo=="movil" && !yaLlegue) {
 			yaLlegue = true;
 			avisollegada = "no";
+			cajadistancia.classList.add("visible");
 			cajadistancia.textContent = "¡Has llegado a tu destino!.";
 			mapa.setView(coordenadas_ubicacion_real, 19);
 			AlertaLlegada("Has llegado a tu destino " + msgencontrado);
@@ -2053,17 +2125,28 @@
 		clearTimeout(temporizadormodalflash);
 		actualizarruta="si";
 		document.getElementById("dondestoy").classList.add("ocultar");
-		if (ruta) {ruta.remove()};
+		//if (ruta) {ruta.remove()};
+		if (ruta){
+		   ruta.off(); // elimina listeners
+		   ruta.remove();
+		   ruta = null;
+		};
 		botondetallesruta.classList.add("ocultar");
 		coordenadas_ubicacion_real="";
 		distancia="";
 		mapa.stopLocate();
 		mapa.off('locationfound', ActualizarUbicacion);
 		mapa.off('locationerror', ErrorGPS);
-		if (marca_ubicacion_real) {
-			marca_ubicacion_real.remove();
-			coordenadas_ubicacion_real = "";
-			marca_ubicacion_real = "";
+		//if (marca_ubicacion_real) {
+		//	marca_ubicacion_real.remove();
+		//	coordenadas_ubicacion_real = "";
+		//	marca_ubicacion_real = "";
+		//};
+		if (marca_ubicacion_real){
+		   marca_ubicacion_real.off();
+		   mapa.removeLayer(marca_ubicacion_real);
+		   marca_ubicacion_real=null;
+		   coordenadas_ubicacion_real = "";
 		};
 		titulomodalflash.innerText="SEGUIMIENTO DETENIDO";
 		cuerpomodalflash.innerHTML = '<span style="display: block; text-align: center; width: 100%; color:green;"><br><b>Servicio de seguimiento en tiempo real detenido.</b><br><br><span style="color:black">'+
@@ -2096,14 +2179,25 @@
 		document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento(seguimiento)";
 		clearInterval(intervalo);
 		clearTimeout(temporizadormodalflash);
-		if (ruta) {ruta.remove()};
+		//if (ruta) {ruta.remove()};
+		if (ruta){
+		   ruta.off(); // elimina listeners
+		   ruta.remove();
+		   ruta = null;
+		};
 		coordenadas_ubicacion_real="";
 		distancia="";
 		mapa.stopLocate();
-		if (marca_ubicacion_real) {
-			marca_ubicacion_real.remove();
-			coordenadas_ubicacion_real = "";
-			marca_ubicacion_real = "";
+		//if (marca_ubicacion_real) {
+		//	marca_ubicacion_real.remove();
+		//	coordenadas_ubicacion_real = "";
+		//	marca_ubicacion_real = "";
+		//};
+		if (marca_ubicacion_real){
+		   marca_ubicacion_real.off();
+		   mapa.removeLayer(marca_ubicacion_real);
+		   marca_ubicacion_real=null;
+		   coordenadas_ubicacion_real = "";
 		};
 		titulomodalflash.innerText="SEGUIMIENTO DETENIDO";
 		cuerpomodalflash.innerHTML = '<span style="display: block; text-align: center; width: 100%; color:green;"><br><b>Servicio de seguimiento en tiempo real detenido.</b><br><br><span style="color:black">'+
@@ -2112,7 +2206,12 @@
 		btncerrarmodalflash.textContent = "Cerrar";
 		tiempomodalflash=5000;
 		ModalFlash(tiempomodalflash);
-		if (ruta) {ruta.remove()};
+		//if (ruta) {ruta.remove()};
+		if (ruta){
+		   ruta.off(); // elimina listeners
+		   ruta.remove();
+		   ruta = null;
+		};
 		iraaer="";
 		mail="";
 	};
@@ -2294,6 +2393,7 @@
 		var velAuto = 30; // km/h
 		var tiempoPie = (distancia / velPie) * 60;
 		var tiempoAuto = (distancia / velAuto) * 60;
+		cajadistancia.classList.add("visible");
 		cajadistancia.innerHTML =
 			"Distancia: " + (distancia * 1000).toFixed(0) + " m<br>" +
 			"Tiempo a pie: " + tiempoPie.toFixed(0) + " min<br>" +
@@ -2304,147 +2404,149 @@
 	//##### NUEVO BLOQUE FUERA DEL PREDIO DE LA EEA MENDOZA ####
 	//###########################################################
 
-	function TrazarRutaFueraEEA() {
-		cajadistancia.classList.add("visible");
-		VerificarConexion();
-		if (conexion !== "si") return;
-		VerificarGPS();
-		avisollegada = "si";
-		btnindicacionesmodalflash.classList.add("ocultar");
-		mimodalflash.classList.add("ocultar");
-		let distancia = DistanciaEnTiempoReal();
-		cajadistancia.style.color = "#155724";
-		// 🔹 Si está cerca, no trazamos ruta
-		if (distancia <= 2200 && lugar) {
-			if (ruta) {ruta.setWaypoints([])};
-			clearInterval(temporizadorruta);
-			ActualizarUbicacion();
-			return;
-		};
-		// 🔴 Evitar múltiples cálculos simultáneos
-		//if (calculandoRuta) return;
-		let timeoutRuta = setTimeout(() => {
-			if (calculandoRuta) {
-				console.warn("Timeout OSRM");
-				calculandoRuta = false;
-				//TrazarRutaGraphHopper();
-				trazarRutaInteligente();
-			}
-		}, 3000); // 8 segundos
-		calculandoRuta = true;
-		// 🔴 Crear ruta SOLO una vez
-		if (!ruta) {
-			ruta = L.Routing.control({
-				waypoints: [],
-				router: L.Routing.osrmv1({
-					serviceUrl: 'https://router.project-osrm.org/route/v1',
-					language: 'es',
-				}),
-				showAlternatives: true, // 🔥 menos carga
-				routeWhileDragging: false, // 🔥 clave para móviles
-				draggableWaypoints: false,
-				collapsible: true,
-				lineOptions: {
-					styles: [{
-						color: '#ff0000',   // rojo fuerte
-						opacity: 0.9,       // bien visible
-						weight: 7           // 🔥 gruesa
-					}]
-				},
-				altLineOptions: {
-					styles: [{
-						color: '#ff00aa',  // fucsia (base)
-						opacity: 0.6,
-						weight: 6,
-						dashArray: '8, 10'
-					},
-					{
-						color: '#4da6ff',  // azul encima
-						opacity: 0.8,
-						weight: 3,
-						dashArray: '8, 10'
-					}]
-				},
-				showAlternatives: true,
-				createMarker: () => null // 🔥 evita render innecesario
-			}).addTo(mapa);
-			// ✅ Evento OK
-			ruta.on('routesfound', function (e) {
-				clearTimeout(timeoutRuta);
-				//calculandoRuta = false;
-				botoncentrado.classList.remove("ocultar");
-				calculandoRuta = false;
-				let route = e.routes[0];
-				let distancia;
-				if (route.summary.totalDistance < 1000) {distancia = route.summary.totalDistance.toLocaleString('es-AR', {maximumFractionDigits: 0}) + " m";
-				} else {distancia = (route.summary.totalDistance / 1000).toLocaleString('es-AR', {minimumFractionDigits: 2,maximumFractionDigits: 2}) + " km";
-				};
-				const tiempoSeg = route.summary.totalTime;
-				const horas = Math.floor(tiempoSeg / 3600);
-				const minutos = Math.round((tiempoSeg % 3600) / 60);
-				const tiempoFormateado = horas > 0 ? `${horas} horas ${minutos} min.` : `${minutos} min.`;
-				cajadistancia.innerHTML = `Ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado} <br> Servicio de ruta: OSRM`;
-				botondetallesruta.classList.remove("ocultar");
-				panelrutas.classList.remove("ocultar");
-				panelrutas.replaceChildren(ruta.getContainer());
-				console.log("Ruteo con OSRM");
-				if (!e.routes || e.routes.length === 0) {
-					//TrazarRutaGraphHopper();
-					trazarRutaInteligente();
-					return;
-				};
-			});
-			// ❌ Evento error (ANTES NO TENÍAS ESTO)
-			ruta.on('routingerror', function (e) {
-				clearTimeout(timeoutRuta);
-				//calculandoRuta = false;
-				calculandoRuta = false;
-				cajadistancia.innerHTML =  "⚠️  No pude trazar la ruta ...  <img src='images/todomal.jpg' width='20' style='vertical-align:middle;'>";
-				//TrazarRutaGraphHopper();
-				trazarRutaInteligente();
-			});
-		};
-		let recalcular = false;
-		// 🔵 Detectar cambio de ubicación
-		if (!ultimaUbicacion) {
-			recalcular = true;
-		} else {
-			let dif = mapa.distance(ultimaUbicacion, coordenadas_ubicacion_real);
-			if (dif > 30) recalcular = true;
-		};
-		// ❌ Si no te moviste → no recalcula
-		if (!recalcular) {
-			calculandoRuta = false;
-			return;
-		};
-		// ✅ Guardar ubicación
-		ultimaUbicacion = coordenadas_ubicacion_real;
-		if (!puntomascercano) {puntomascercano=centroide};
-		ultimoDestino = puntomascercano;
-		// ✅ Actualizar ruta SIN recrearla
-		ruta.setWaypoints([
-			coordenadas_ubicacion_real,
-			puntomascercano
-		]);
-		// 📱 Solo móvil → actualizar cada 60s PERO sin duplicar
-		if (dispositivo === "movil" && !temporizadorruta) {
-			temporizadorruta = setInterval(() => {
-				if (!calculandoRuta) {
-				trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano);
-				//TrazarRutaFueraEEA(); // reutiliza la misma lógica
-				}
-			}, 60000);
-		};
-		// 🔵 Centrar solo una vez
-		if (actualizarruta === "si") {
-			const bounds = L.latLngBounds(
-				coordenadas_ubicacion_real,
-				puntomascercano
-			);
-			mapa.fitBounds(bounds, { padding: [50, 50] });
-			actualizarruta = "no";
-		};
-	};
+	//function TrazarRutaFueraEEA() {
+	//	cajadistancia.classList.add("visible");
+	//	VerificarConexion();
+	//	if (conexion !== "si") return;
+	//	VerificarGPS();
+	//	avisollegada = "si";
+	//	btnindicacionesmodalflash.classList.add("ocultar");
+	//	mimodalflash.classList.add("ocultar");
+	//	let distancia = DistanciaEnTiempoReal();
+	//	cajadistancia.style.color = "#155724";
+	//	// 🔹 Si está cerca, no trazamos ruta
+	//	if (distancia <= 2200 && lugar) {
+	//		if (ruta) {ruta.setWaypoints([])};
+	//		clearInterval(temporizadorruta);
+	//		ActualizarUbicacion();
+	//		return;
+	//	};
+	//	// 🔴 Evitar múltiples cálculos simultáneos
+	//	//if (calculandoRuta) return;
+	//	let timeoutRuta = setTimeout(() => {
+	//		if (calculandoRuta) {
+	//			console.warn("Timeout OSRM");
+	//			calculandoRuta = false;
+	//			//TrazarRutaGraphHopper();
+	//			trazarRutaInteligente();
+	//		}
+	//	}, 3000); // 8 segundos
+	//	calculandoRuta = true;
+	//	// 🔴 Crear ruta SOLO una vez
+	//	if (!ruta) {
+	//		ruta = L.Routing.control({
+	//			waypoints: [],
+	//			router: L.Routing.osrmv1({
+	//				serviceUrl: 'https://router.project-osrm.org/route/v1',
+	//				language: 'es',
+	//			}),
+	//			showAlternatives: true, // 🔥 menos carga
+	//			routeWhileDragging: false, // 🔥 clave para móviles
+	//			draggableWaypoints: false,
+	//			collapsible: true,
+	//			lineOptions: {
+	//				styles: [{
+	//					color: '#ff0000',   // rojo fuerte
+	//					opacity: 0.9,       // bien visible
+	//					weight: 7           // 🔥 gruesa
+	//				}]
+	//			},
+	//			altLineOptions: {
+	//				styles: [{
+	//					color: '#ff00aa',  // fucsia (base)
+	//					opacity: 0.6,
+	//					weight: 6,
+	//					dashArray: '8, 10'
+	//				},
+	//				{
+	//					color: '#4da6ff',  // azul encima
+	//					opacity: 0.8,
+	//					weight: 3,
+	//					dashArray: '8, 10'
+	//				}]
+	//			},
+	//			showAlternatives: true,
+	//			createMarker: () => null // 🔥 evita render innecesario
+	//		}).addTo(mapa);
+	//		// ✅ Evento OK
+	//		ruta.on('routesfound', function (e) {
+	//			clearTimeout(timeoutRuta);
+	//			//calculandoRuta = false;
+	//			botoncentrado.classList.remove("ocultar");
+	//			calculandoRuta = false;
+	//			let route = e.routes[0];
+	//			let distancia;
+	//			if (route.summary.totalDistance < 1000) {distancia = route.summary.totalDistance.toLocaleString('es-AR', {maximumFractionDigits: 0}) + " m";
+	//			} else {distancia = (route.summary.totalDistance / 1000).toLocaleString('es-AR', {minimumFractionDigits: 2,maximumFractionDigits: 2}) + " km";
+	//			};
+	//			const tiempoSeg = route.summary.totalTime;
+	//			const horas = Math.floor(tiempoSeg / 3600);
+	//			const minutos = Math.round((tiempoSeg % 3600) / 60);
+	//			const tiempoFormateado = horas > 0 ? `${horas} horas ${minutos} min.` : `${minutos} min.`;
+	//			cajadistancia.classList.add("visible");
+	//			cajadistancia.innerHTML = `Ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado} <br> Servicio de ruta: OSRM`;
+	//			botondetallesruta.classList.remove("ocultar");
+	//			panelrutas.classList.remove("ocultar");
+	//			panelrutas.replaceChildren(ruta.getContainer());
+	//			console.log("Ruteo con OSRM");
+	//			if (!e.routes || e.routes.length === 0) {
+	//				//TrazarRutaGraphHopper();
+	//				trazarRutaInteligente();
+	//				return;
+	//			};
+	//		});
+	//		// ❌ Evento error (ANTES NO TENÍAS ESTO)
+	//		ruta.on('routingerror', function (e) {
+	//			clearTimeout(timeoutRuta);
+	//			//calculandoRuta = false;
+	//			calculandoRuta = false;
+	//			cajadistancia.classList.add("visible");
+	//			cajadistancia.innerHTML =  "⚠️  No pude trazar la ruta ...  <img src='images/todomal.jpg' width='20' style='vertical-align:middle;'>";
+	//			//TrazarRutaGraphHopper();
+	//			trazarRutaInteligente();
+	//		});
+	//	};
+	//	let recalcular = false;
+	//	// 🔵 Detectar cambio de ubicación
+	//	if (!ultimaUbicacion) {
+	//		recalcular = true;
+	//	} else {
+	//		let dif = mapa.distance(ultimaUbicacion, coordenadas_ubicacion_real);
+	//		if (dif > 30) recalcular = true;
+	//	};
+	//	// ❌ Si no te moviste → no recalcula
+	//	if (!recalcular) {
+	//		calculandoRuta = false;
+	//		return;
+	//	};
+	//	// ✅ Guardar ubicación
+	//	ultimaUbicacion = coordenadas_ubicacion_real;
+	//	if (!puntomascercano) {puntomascercano=centroide};
+	//	ultimoDestino = puntomascercano;
+	//	// ✅ Actualizar ruta SIN recrearla
+	//	ruta.setWaypoints([
+	//		coordenadas_ubicacion_real,
+	//		puntomascercano
+	//	]);
+	//	// 📱 Solo móvil → actualizar cada 60s PERO sin duplicar
+	//	if (dispositivo === "movil" && !temporizadorruta) {
+	//		temporizadorruta = setInterval(() => {
+	//			if (!calculandoRuta) {
+	//			trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano);
+	//			//TrazarRutaFueraEEA(); // reutiliza la misma lógica
+	//			}
+	//		}, 60000);
+	//	};
+	//	// 🔵 Centrar solo una vez
+	//	if (actualizarruta === "si") {
+	//		const bounds = L.latLngBounds(
+	//			coordenadas_ubicacion_real,
+	//			puntomascercano
+	//		);
+	//		mapa.fitBounds(bounds, { padding: [50, 50] });
+	//		actualizarruta = "no";
+	//	};
+	//};
 	
 	//function TrazarRutaGraphHopper() {
 	//	cajadistancia.classList.remove("ocultar");
@@ -2554,6 +2656,7 @@
 	//};
 
 	function trazarRutaInteligente(origen, destino) {
+		console.log("Ruteando hacia", destino);
 		if (calculandoRuta) return;
 		calculandoRuta = true;
 		let intentos = 0;
@@ -2565,6 +2668,7 @@
 		function intentarSiguiente() {
 			if (intentos >= proveedores.length) {
 				calculandoRuta = false;
+				cajadistancia.classList.add("visible");
 				cajadistancia.innerHTML = "❌ No se pudo obtener ruta con ningún servicio";
 				return;
 			}
@@ -2815,6 +2919,7 @@
 		let minutos=Math.round(datosRutas.principal.tiempo);
 		if (minutos>60) {minutos=Math.round(minutos-horas*60)};
 		let distancia = datosRutas.principal.distancia.replace(".", ",");
+		cajadistancia.classList.add("visible");
 		cajadistancia.innerHTML = "✅ Ruta Recomendada (en rojo): "+distancia+" km."+"<br> Tiempo estimado: "+horas+" hs. y "+minutos+" min.";
 		// Limpiar rutas anteriores
 		//if (capaRutaPrincipal) mapa.removeLayer(capaRutaPrincipal);
@@ -3026,7 +3131,12 @@
 		if (aer !=="") {aer.remove()};
 		clearInterval(intervalo);
 		clearTimeout(temporizadormodalflash);
-		if (ruta) {ruta.remove()};
+		//if (ruta) {ruta.remove()};
+		if (ruta){
+		   ruta.off(); // elimina listeners
+		   ruta.remove();
+		   ruta = null;
+		};
 		if (lugar) {lugar.remove()};
 		lugar="";
 		if (agencia=="Agencia de Extensión Lavalle") {
@@ -3160,9 +3270,11 @@
 				.openPopup();
 			document.getElementById("volvereea").classList.remove("ocultar");
 		};
-		if (seguimiento==="si") {if (seguimiento==="si") {dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
-		if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
-		if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,centroide)}}};//puntomascercano)}}};//TrazarRutaFueraEEA()}}};
+		if (seguimiento==="si" || marca_ubicacion_real) {
+			dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
+			if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;capaRutaPrincipal.setWaypoints([coordenadas_ubicacion_real,centroide])};//TrazarRutaDentroEEA()};
+			if (!dentroeeamza && aviso===0) {actualizarRutaForzada(centroide)}//trazarRutaInteligente(coordenadas_ubicacion_real,centroide)}
+		};
 	};
 
 	function VolverEEA () {
@@ -3198,19 +3310,24 @@
 				const div = document.createElement('div');
 				div.textContent = item;
 				div.classList.add('sugerencia-item');
-				div.addEventListener('click', () => {
-					inputbusquedabisunidad.value = item;
-					sugerencia.innerHTML = '';
-					IrUnidad(item);
-					barralateral.close();
+				//div.addEventListener('click', () => {
+				//	inputbusquedabisunidad.value = item;
+				//	sugerencia.innerHTML = '';
+				//	IrUnidad(item);
+				//	barralateral.close();
+				//});
+				div.addEventListener('click', function(e){
+				   e.preventDefault();
+				   e.stopPropagation();
+				   inputbusquedabisunidad.value=item;
+				   sugerencia.innerHTML='';
+				   setTimeout(()=>{
+					  IrUnidad(item);
+					  barralateral.close();
+				   },0);
 				});
 				sugerencia.appendChild(div);
 			});
-		};
-	});
-	document.addEventListener('click', function(e) {
-		if (!sugerencia.contains(e.target) && e.target !== inputbusquedabisunidad) {
-			sugerencia.innerHTML = '';
 		};
 	});
 	
@@ -3239,24 +3356,28 @@
 				const div = document.createElement('div');
 				div.textContent = item;
 				div.classList.add('sugerencia-item');
-				div.addEventListener('click', () => {
-					inputbusqueda.value = item;
-					sugerenciaz.innerHTML = '';
-					barralateral.close();
-					document.getElementById("encontrar_a").value=item;
-					document.getElementById("encontrar_abis").value=item;
-					EncontrarA(item);
+				//div.addEventListener('click', () => {
+				//	inputbusqueda.value = item;
+				//	sugerenciaz.innerHTML = '';
+				//	barralateral.close();
+				//	document.getElementById("encontrar_a").value=item;
+				//	document.getElementById("encontrar_abis").value=item;
+				//	EncontrarA(item);
+				//});
+				div.addEventListener('click', function(e){
+				   e.preventDefault();
+				   e.stopPropagation();
+				   inputbusqueda.value=item;
+				   sugerenciaz.innerHTML='';
+				   setTimeout(()=>{
+					  EncontrarA(item);
+					  barralateral.close();
+				   },0);
 				});
 				sugerenciaz.appendChild(div);
 			});
 		};
 		//inputbusqueda.setSelectionRange(pos, pos);
-	});
-	document.addEventListener('click', function(e) {
-		if (!sugerenciaz.contains(e.target) && e.target !== inputbusqueda) {
-			sugerenciaz.innerHTML = '';
-			document.getElementById("ventanaSugerencias").style.display = "none";
-		};
 	});
 	
 	<!--Bloque Busqueda Sectores, servicios, personas, especialidades Entrada Barra Lateral-->
@@ -3280,19 +3401,36 @@
 				const div = document.createElement('div');
 				div.textContent = item;
 				div.classList.add('sugerencia-item');
-				div.addEventListener('click', () => {
-					inputbusquedabis.value = item;
-					sugerenciasbiz.innerHTML = '';
-					barralateral.close();
-					document.getElementById("encontrar_a").value=item;
-					document.getElementById("encontrar_abis").value=item;
-					EncontrarA(item);
+				//div.addEventListener('click', () => {
+				//	inputbusquedabis.value = item;
+				//	sugerenciasbiz.innerHTML = '';
+				//	barralateral.close();
+				//	document.getElementById("encontrar_a").value=item;
+				//	document.getElementById("encontrar_abis").value=item;
+				//	EncontrarA(item);
+				//});
+				div.addEventListener('click', function(e){
+				   e.preventDefault();
+				   e.stopPropagation();
+				   inputbusquedabis.value=item;
+				   sugerenciasbiz.innerHTML='';
+				   setTimeout(()=>{
+					  EncontrarA(item);
+					  barralateral.close();
+				   },0);
 				});
 				sugerenciasbiz.appendChild(div);
 			});
 		};
 	});
 	document.addEventListener('click', function(e) {
+		if (!sugerencia.contains(e.target) && e.target !== inputbusquedabisunidad) {
+			sugerencia.innerHTML = '';
+		};
+		if (!sugerenciaz.contains(e.target) && e.target !== inputbusqueda) {
+			sugerenciaz.innerHTML = '';
+			document.getElementById("ventanaSugerencias").style.display = "none";
+		};
 		if (!sugerenciasbiz.contains(e.target) && e.target !== inputbusquedabis) {
 			sugerenciasbiz.innerHTML = '';
 		};
@@ -3738,7 +3876,13 @@
 		modalinicial.close();
 		clearInterval(intervalo);
 		clearTimeout(temporizadormodalflash);
-		if (ruta) {ruta.remove();botondetallesruta.classList.add("ocultar")};
+		//if (ruta) {ruta.remove();botondetallesruta.classList.add("ocultar")};
+		if (ruta){
+		   ruta.off(); // elimina listeners
+		   ruta.remove();
+		   ruta = null;
+		   botondetallesruta.classList.add("ocultar");
+		};
 		if (avisovelocidadmaxima=="" && avisollegada=="si" && dentroeeamza && dispositivo=="movil") {
 			const utterance = new SpeechSynthesisUtterance("Estas dentro del inta. La velocidad maxima recomendada para circular aqui dentro es de 30 kilometros por hora.-");
 			speechSynthesis.speak(utterance);
@@ -3769,7 +3913,12 @@
 		avisollegada="si";
 		if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino!"};
 		if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino!"};
-		if (distancia<1100 && ruta) {ruta.remove();botondetallesruta.classList.add("ocultar");};
+		if (distancia<1100 && ruta) {
+			ruta.off(); // elimina listeners
+			ruta.remove();
+			ruta = null;
+			botondetallesruta.classList.add("ocultar")
+		};//ruta.remove();botondetallesruta.classList.add("ocultar");};
 		cajadistancia.classList.add("visible");
 		cajadistancia.textContent = msg+" (En línea recta).-";
 		clearInterval(intervalo);
