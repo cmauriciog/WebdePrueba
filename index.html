@@ -1982,12 +1982,12 @@
 		};
 		if (!coordenadas_ubicacion_real) {
 			//LAS DOS PROXIMAS LINEAS SON PARA MANIPULAR LA UBICACION
-			coordenadas_ubicacion_real=L.latLng(-33.196691901572414, -68.44088744239326);
-			marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
-			//marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
+			//coordenadas_ubicacion_real=L.latLng(-33.196691901572414, -68.44088744239326);
+			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
+			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
 				.bindPopup("Estás por aquí")
 				.openPopup();
-			//coordenadas_ubicacion_real=e.latlng;
+			coordenadas_ubicacion_real=e.latlng;
 			mapa.setView(coordenadas_ubicacion_real, 17);
 		};
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
