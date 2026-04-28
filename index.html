@@ -523,34 +523,15 @@
 			z-index: 9999;
 			animation: pulsobotonlimpiar 2s infinite ease-in-out;
 		}
-		/* Animación automática Boton Limpiar Pantalla*/
-		@keyframes pulsobotonlimpiar {
-			0% {
-				background-color: #001a33;
-				transform: translateX(-50%) scale(1);
-				box-shadow: 0 0 10px rgba(0,255,255,0.5);
-			}
-			50% {
-				background-color: #004c99; /* azul más claro */
-				transform: translateX(-50%) scale(1.12);
-				box-shadow: 0 0 26px rgba(0,255,255,1);
-			}
-			100% {
-				background-color: #001a33;
-				transform: translateX(-50%) scale(1);
-				box-shadow: 0 0 10px rgba(0,255,255,0.5);
-			}
-		}
 		
 		/*Boton para desplegar detalles de rutas sugeridas*/
 		#BotonDetallesRuta {
 			position: fixed;
 			top: 28%;
 			right: 3%;
-			/*z-index: 1050;*/
-			z-index:999999 !important;
+			z-index: 1050 !important;
 			background: #fff;
-			color: white;
+			color: black;
 			border: 1px solid #777;
 			border-radius: 6px;
 			cursor: pointer;
@@ -575,6 +556,27 @@
 		.resaltarlonovedoso {
 			animation: palpitar 1s infinite ease-in-out, cambiarColor 3s infinite ease-in-out;/*2s infinite alternate;*/
 		}
+		
+		/* Animación automática Boton Limpiar Pantalla*/
+		@keyframes pulsobotonlimpiar {
+			0% {
+				background-color: #001a33;
+				transform: translateX(-50%) scale(1);
+				box-shadow: 0 0 10px rgba(0,255,255,0.5);
+			}
+			50% {
+				background-color: #004c99; /* azul más claro */
+				transform: translateX(-50%) scale(1.12);
+				box-shadow: 0 0 26px rgba(0,255,255,1);
+				color: white;
+			}
+			100% {
+				background-color: #001a33;
+				transform: translateX(-50%) scale(1);
+				box-shadow: 0 0 10px rgba(0,255,255,0.5);
+			}
+		}
+		
 		/* Palpitar (latido) */
 		@keyframes palpitar {
 			0%   { transform: scaleX(1); }
