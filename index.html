@@ -523,15 +523,34 @@
 			z-index: 9999;
 			animation: pulsobotonlimpiar 2s infinite ease-in-out;
 		}
+		/* Animación automática Boton Limpiar Pantalla*/
+		@keyframes pulsobotonlimpiar {
+			0% {
+				background-color: #001a33;
+				transform: translateX(-50%) scale(1);
+				box-shadow: 0 0 10px rgba(0,255,255,0.5);
+			}
+			50% {
+				background-color: #004c99; /* azul más claro */
+				transform: translateX(-50%) scale(1.12);
+				box-shadow: 0 0 26px rgba(0,255,255,1);
+			}
+			100% {
+				background-color: #001a33;
+				transform: translateX(-50%) scale(1);
+				box-shadow: 0 0 10px rgba(0,255,255,0.5);
+			}
+		}
 		
 		/*Boton para desplegar detalles de rutas sugeridas*/
 		#BotonDetallesRuta {
 			position: fixed;
 			top: 28%;
 			right: 3%;
-			z-index: 1050 !important;
+			/*z-index: 1050;*/
+			z-index:999999 !important;
 			background: #fff;
-			color: black;
+			color: white;
 			border: 1px solid #777;
 			border-radius: 6px;
 			cursor: pointer;
@@ -556,27 +575,6 @@
 		.resaltarlonovedoso {
 			animation: palpitar 1s infinite ease-in-out, cambiarColor 3s infinite ease-in-out;/*2s infinite alternate;*/
 		}
-		
-		/* Animación automática Boton Limpiar Pantalla*/
-		@keyframes pulsobotonlimpiar {
-			0% {
-				background-color: #001a33;
-				transform: translateX(-50%) scale(1);
-				box-shadow: 0 0 10px rgba(0,255,255,0.5);
-			}
-			50% {
-				background-color: #004c99; /* azul más claro */
-				transform: translateX(-50%) scale(1.12);
-				box-shadow: 0 0 26px rgba(0,255,255,1);
-				color: white;
-			}
-			100% {
-				background-color: #001a33;
-				transform: translateX(-50%) scale(1);
-				box-shadow: 0 0 10px rgba(0,255,255,0.5);
-			}
-		}
-		
 		/* Palpitar (latido) */
 		@keyframes palpitar {
 			0%   { transform: scaleX(1); }
@@ -1743,7 +1741,7 @@
 				actualizarRutaForzada(destino);
 			}//trazarRutaInteligente(coordenadas_ubicacion_real,capa_buscar1)}//puntomascercano)}//TrazarRutaFueraEEA()}
 		};
-		console.log("Elegiste Encontrar A");
+		//console.log("Elegiste Encontrar A");
 	};
 
 	<!--Funcion para resetear todo-->
@@ -1911,7 +1909,7 @@
 				};
 			};
 			seguimiento="si";
-			console.log("Seguimiento: "+seguimiento);
+			//console.log("Seguimiento: "+seguimiento);
 			botoncentrado.classList.remove("ocultar");
 			//cajadistancia.classList.add("visible");
 			mapa.locate({setView: false, watch: true, enableHighAccuracy: true});
@@ -1964,12 +1962,12 @@
 		ultimaUbicacionRuta = coordenadas_ubicacion_real;
 		ultimoDestino = destino;
 		trazarRutaInteligente(coordenadas_ubicacion_real,destino);
-		console.log(destino);
+		//console.log(destino);
 	};
 
 	// Evento al encontrar la ubicación
 	function ActualizarUbicacion(e) {
-		if (!puntomascercano) {puntomascercano=centroide};
+		if (!puntomascercano) {puntomascercano=entradaeea};
 		if (coordenadas_ubicacion_real) {
 			//marca_ubicacion_real.remove();
 			if (marca_ubicacion_real){
@@ -1978,19 +1976,19 @@
 			   marca_ubicacion_real=null;
 			};
 			//LA PROXIMA LINEA ES PARA MANIPULAR LA UBICACION
-			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
-			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
+			marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
+			//marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
 				.bindPopup("Vas por aquí");
-			coordenadas_ubicacion_real=e.latlng;
+			//coordenadas_ubicacion_real=e.latlng;
 		};
 		if (!coordenadas_ubicacion_real) {
 			//LAS DOS PROXIMAS LINEAS SON PARA MANIPULAR LA UBICACION
-			//coordenadas_ubicacion_real=L.latLng(-33.196691901572414, -68.44088744239326);
-			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
-			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
+			coordenadas_ubicacion_real=L.latLng(-33.196691901572414, -68.44088744239326);
+			marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
+			//marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
 				.bindPopup("Estás por aquí")
 				.openPopup();
-			coordenadas_ubicacion_real=e.latlng;
+			//coordenadas_ubicacion_real=e.latlng;
 			mapa.setView(coordenadas_ubicacion_real, 17);
 		};
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
@@ -2191,11 +2189,6 @@
 		coordenadas_ubicacion_real="";
 		distancia="";
 		mapa.stopLocate();
-		//if (marca_ubicacion_real) {
-		//	marca_ubicacion_real.remove();
-		//	coordenadas_ubicacion_real = "";
-		//	marca_ubicacion_real = "";
-		//};
 		if (marca_ubicacion_real){
 		   marca_ubicacion_real.off();
 		   mapa.removeLayer(marca_ubicacion_real);
@@ -2315,9 +2308,8 @@
 		return path;
 	};
 	
-	//---------------- TRAZAR RUTA DENTRO DEL PREDIO
 	function TrazarRutaDentroEEA(){
-		console.log("Dentro.-");
+		console.log("1");
 		mapa.removeLayer(osm);
 		mapa.addLayer(googlesatelite);
 		capa=googlesatelite;
@@ -2407,266 +2399,14 @@
 	//##### NUEVO BLOQUE FUERA DEL PREDIO DE LA EEA MENDOZA ####
 	//###########################################################
 
-	//function TrazarRutaFueraEEA() {
-	//	cajadistancia.classList.add("visible");
-	//	VerificarConexion();
-	//	if (conexion !== "si") return;
-	//	VerificarGPS();
-	//	avisollegada = "si";
-	//	btnindicacionesmodalflash.classList.add("ocultar");
-	//	mimodalflash.classList.add("ocultar");
-	//	let distancia = DistanciaEnTiempoReal();
-	//	cajadistancia.style.color = "#155724";
-	//	// 🔹 Si está cerca, no trazamos ruta
-	//	if (distancia <= 2200 && lugar) {
-	//		if (ruta) {ruta.setWaypoints([])};
-	//		clearInterval(temporizadorruta);
-	//		ActualizarUbicacion();
-	//		return;
-	//	};
-	//	// 🔴 Evitar múltiples cálculos simultáneos
-	//	//if (calculandoRuta) return;
-	//	let timeoutRuta = setTimeout(() => {
-	//		if (calculandoRuta) {
-	//			console.warn("Timeout OSRM");
-	//			calculandoRuta = false;
-	//			//TrazarRutaGraphHopper();
-	//			trazarRutaInteligente();
-	//		}
-	//	}, 3000); // 8 segundos
-	//	calculandoRuta = true;
-	//	// 🔴 Crear ruta SOLO una vez
-	//	if (!ruta) {
-	//		ruta = L.Routing.control({
-	//			waypoints: [],
-	//			router: L.Routing.osrmv1({
-	//				serviceUrl: 'https://router.project-osrm.org/route/v1',
-	//				language: 'es',
-	//			}),
-	//			showAlternatives: true, // 🔥 menos carga
-	//			routeWhileDragging: false, // 🔥 clave para móviles
-	//			draggableWaypoints: false,
-	//			collapsible: true,
-	//			lineOptions: {
-	//				styles: [{
-	//					color: '#ff0000',   // rojo fuerte
-	//					opacity: 0.9,       // bien visible
-	//					weight: 7           // 🔥 gruesa
-	//				}]
-	//			},
-	//			altLineOptions: {
-	//				styles: [{
-	//					color: '#ff00aa',  // fucsia (base)
-	//					opacity: 0.6,
-	//					weight: 6,
-	//					dashArray: '8, 10'
-	//				},
-	//				{
-	//					color: '#4da6ff',  // azul encima
-	//					opacity: 0.8,
-	//					weight: 3,
-	//					dashArray: '8, 10'
-	//				}]
-	//			},
-	//			showAlternatives: true,
-	//			createMarker: () => null // 🔥 evita render innecesario
-	//		}).addTo(mapa);
-	//		// ✅ Evento OK
-	//		ruta.on('routesfound', function (e) {
-	//			clearTimeout(timeoutRuta);
-	//			//calculandoRuta = false;
-	//			botoncentrado.classList.remove("ocultar");
-	//			calculandoRuta = false;
-	//			let route = e.routes[0];
-	//			let distancia;
-	//			if (route.summary.totalDistance < 1000) {distancia = route.summary.totalDistance.toLocaleString('es-AR', {maximumFractionDigits: 0}) + " m";
-	//			} else {distancia = (route.summary.totalDistance / 1000).toLocaleString('es-AR', {minimumFractionDigits: 2,maximumFractionDigits: 2}) + " km";
-	//			};
-	//			const tiempoSeg = route.summary.totalTime;
-	//			const horas = Math.floor(tiempoSeg / 3600);
-	//			const minutos = Math.round((tiempoSeg % 3600) / 60);
-	//			const tiempoFormateado = horas > 0 ? `${horas} horas ${minutos} min.` : `${minutos} min.`;
-	//			cajadistancia.classList.add("visible");
-	//			cajadistancia.innerHTML = `Ruta recomendada (en rojo):<br>Distancia: ${distancia} <br>Tiempo estimado: ${tiempoFormateado} <br> Servicio de ruta: OSRM`;
-	//			botondetallesruta.classList.remove("ocultar");
-	//			panelrutas.classList.remove("ocultar");
-	//			panelrutas.replaceChildren(ruta.getContainer());
-	//			console.log("Ruteo con OSRM");
-	//			if (!e.routes || e.routes.length === 0) {
-	//				//TrazarRutaGraphHopper();
-	//				trazarRutaInteligente();
-	//				return;
-	//			};
-	//		});
-	//		// ❌ Evento error (ANTES NO TENÍAS ESTO)
-	//		ruta.on('routingerror', function (e) {
-	//			clearTimeout(timeoutRuta);
-	//			//calculandoRuta = false;
-	//			calculandoRuta = false;
-	//			cajadistancia.classList.add("visible");
-	//			cajadistancia.innerHTML =  "⚠️  No pude trazar la ruta ...  <img src='images/todomal.jpg' width='20' style='vertical-align:middle;'>";
-	//			//TrazarRutaGraphHopper();
-	//			trazarRutaInteligente();
-	//		});
-	//	};
-	//	let recalcular = false;
-	//	// 🔵 Detectar cambio de ubicación
-	//	if (!ultimaUbicacion) {
-	//		recalcular = true;
-	//	} else {
-	//		let dif = mapa.distance(ultimaUbicacion, coordenadas_ubicacion_real);
-	//		if (dif > 30) recalcular = true;
-	//	};
-	//	// ❌ Si no te moviste → no recalcula
-	//	if (!recalcular) {
-	//		calculandoRuta = false;
-	//		return;
-	//	};
-	//	// ✅ Guardar ubicación
-	//	ultimaUbicacion = coordenadas_ubicacion_real;
-	//	if (!puntomascercano) {puntomascercano=centroide};
-	//	ultimoDestino = puntomascercano;
-	//	// ✅ Actualizar ruta SIN recrearla
-	//	ruta.setWaypoints([
-	//		coordenadas_ubicacion_real,
-	//		puntomascercano
-	//	]);
-	//	// 📱 Solo móvil → actualizar cada 60s PERO sin duplicar
-	//	if (dispositivo === "movil" && !temporizadorruta) {
-	//		temporizadorruta = setInterval(() => {
-	//			if (!calculandoRuta) {
-	//			trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano);
-	//			//TrazarRutaFueraEEA(); // reutiliza la misma lógica
-	//			}
-	//		}, 60000);
-	//	};
-	//	// 🔵 Centrar solo una vez
-	//	if (actualizarruta === "si") {
-	//		const bounds = L.latLngBounds(
-	//			coordenadas_ubicacion_real,
-	//			puntomascercano
-	//		);
-	//		mapa.fitBounds(bounds, { padding: [50, 50] });
-	//		actualizarruta = "no";
-	//	};
-	//};
-	
-	//function TrazarRutaGraphHopper() {
-	//	cajadistancia.classList.remove("ocultar");
-	//	VerificarConexion();
-	//	if (conexion !== "si") return;
-	//	VerificarGPS();
-	//	avisollegada = "si";
-	//	btnindicacionesmodalflash.style.display = "none";
-	//	mimodalflash.classList.add("ocultar");
-	//	let distancia = DistanciaEnTiempoReal();
-	//	cajadistancia.style.color = "#155724";
-	//	// 🔹 Si está cerca, no trazamos ruta
-	//	if (distancia <= 2200 && lugar) {
-	//		if (ruta) mapa.removeLayer(ruta);
-	//		clearInterval(temporizadorruta);
-	//		ActualizarUbicacion();
-	//		return;
-	//	};
-	//	// 🔴 Evitar múltiples cálculos
-	//	if (calculandoRuta) return;
-	//	calculandoRuta = true;
-	//	let recalcular = false;
-	//	if (!ultimaUbicacion) {
-	//		recalcular = true;
-	//	} else {
-	//		let dif = mapa.distance(ultimaUbicacion, coordenadas_ubicacion_real);
-	//		if (dif > 30) recalcular = true;
-	//	};
-	//	if (!recalcular) {
-	//		calculandoRuta = false;
-	//		return;
-	//	};
-	//	// ✅ Guardar ubicación
-	//	ultimaUbicacion = coordenadas_ubicacion_real;
-	//	if (!puntomascercano) {puntomascercano = centroide};
-	//	ultimoDestino = puntomascercano;
-	//	// 🔥 GRAPHOPPER API
-	//	//let url = `https://graphhopper.com/api/1/route?point=${coordenadas_ubicacion_real.lat},${coordenadas_ubicacion_real.lng}&point=${puntomascercano.lat},${puntomascercano.lng}&vehicle=car&locale=es&points_encoded=false&key=33491870-874e-4387-a016-4b04185ce4a3`;
-	//	let url = `https://graphhopper.com/api/1/route?point=${coordenadas_ubicacion_real.lat},${coordenadas_ubicacion_real.lng}&point=${puntomascercano.lat},${puntomascercano.lng}&vehicle=car&locale=es&points_encoded=false&key=${apikeygraphhopper}`;
-	//	fetch(url)
-	//	.then(res => res.json())
-	//	.then(data => {
-	//		calculandoRuta = false;
-	//		if (!data.paths || data.paths.length === 0) {
-	//			throw new Error("Sin ruta");
-	//		};
-	//		let path = data.paths[0];
-	//		// 🔴 borrar ruta anterior
-	//		if (ruta) mapa.removeLayer(ruta);
-	//		// 🔵 convertir coords
-	//		let coords = path.points.coordinates;
-	//		let latlngs = coords.map(c => [c[1], c[0]]);
-	//		// 🔴 dibujar ruta (igual estilo)
-	//		ruta = L.polyline(latlngs, {
-	//			color: '#ff0000',
-	//			opacity: 0.9,
-	//			weight: 7
-	//		}).addTo(mapa);
-	//		// 📏 distancia
-	//		let distanciaTxt;
-	//		if (path.distance < 1000) {
-	//			distanciaTxt = path.distance.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + " m";
-	//		} else {
-	//			distanciaTxt = (path.distance / 1000).toLocaleString('es-AR', {
-	//				minimumFractionDigits: 2,
-	//				maximumFractionDigits: 2
-	//			}) + " km";
-	//		};
-	//		// ⏱ tiempo
-	//		let tiempoSeg = path.time / 1000;
-	//		const horas = Math.floor(tiempoSeg / 3600);
-	//		const minutos = Math.round((tiempoSeg % 3600) / 60);
-	//		const tiempoFormateado = horas > 0
-	//			? `${horas} horas ${minutos} min.`
-	//			: `${minutos} min.`;
-	//		cajadistancia.innerHTML = `Ruta recomendada (en rojo):<br>Distancia: ${distanciaTxt} <br>Tiempo estimado: ${tiempoFormateado} <br> Servicio de ruta: GraphHopper`;
-	//		//botondetallesruta.style.display = "block";
-	//		botondetallesruta.classList.remove("ocultar");
-	//		botoncentrado.classList.remove("ocultar");
-	//		console.log("Ruteo con GraphHopper");
-	//	})
-	//	.catch(err => {
-	//		calculandoRuta = false;
-	//		cajadistancia.innerHTML = "⚠️ No pude trazar la ruta ... <img src='images/todomal.jpg' width='20' style='vertical-align:middle;'>";
-	//		console.log("Error GraphHopper:", err);
-	//		// 🔥 fallback si querés
-	//		// TrazarRutaValhalla();
-	//	});
-	//	// 📱 refresco móvil
-	//	if (dispositivo === "movil" && !temporizadorruta) {
-	//		temporizadorruta = setInterval(() => {
-	//			if (!calculandoRuta) {
-	//				trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano);
-	//				//TrazarRutaFueraEEA();
-	//			}
-	//		}, 60000);
-	//	};
-	//	// 🔵 centrar una vez
-	//	if (actualizarruta === "si") {
-	//		const bounds = L.latLngBounds(
-	//			coordenadas_ubicacion_real,
-	//			puntomascercano
-	//		);
-	//		mapa.fitBounds(bounds, { padding: [50, 50] });
-	//		actualizarruta = "no";
-	//	};
-	//};
-
 	function trazarRutaInteligente(origen, destino) {
-		console.log("Ruteando hacia", destino);
 		if (calculandoRuta) return;
 		calculandoRuta = true;
 		let intentos = 0;
 		const proveedores = [
 			{ nombre: "GraphHopper", fn: usarGraphHopper },
 			{ nombre: "OSRM", fn: usarOSRM },
-			{ nombre: "OpenRouteService", fn: usarOpenRouteService }
+		//	{ nombre: "OpenRouteService", fn: usarOpenRouteService }
 		];
 		function intentarSiguiente() {
 			if (intentos >= proveedores.length) {
@@ -2683,7 +2423,8 @@
 					console.log("✅ Ruta obtenida con:", proveedor.nombre);
 					// opcional: mostrar en UI
 					cajadistancia.innerHTML = "Ruta usando: " + proveedor.nombre;
-					mostrarRuta(resultado);
+					mostrarRuta(resultado,proveedor.nombre);
+					if (!dentroeeamza && lugar) {TrazarRutaDentroEEA()};
 				})
 				.catch(err => {
 					//console.warn("Fallo proveedor:", proveedor.nombre, err);
@@ -2692,7 +2433,6 @@
 		}
 		intentarSiguiente();
 	};
-	
 	let datosRutas = {
 		principal: {
 			tiempo: null,
@@ -2783,7 +2523,6 @@
 	};
 		
 	let controlOSRM = null;
-
 	function usarOSRM(origen, destino) {
 		return new Promise((resolve, reject) => {
 			if (!origen || !destino) {
@@ -2813,7 +2552,7 @@
 				addWaypoints: false,
 				draggableWaypoints: false,
 				routeWhileDragging: false,
-				show: false
+				//show: false
 			});
 			controlOSRM.on('routesfound', e => {
 				clearTimeout(timeout);
@@ -2822,7 +2561,11 @@
 				let distancia = (ruta.summary.totalDistance / 1000).toFixed(2);
 				datosRutas.principal.tiempo = tiempo;
 				datosRutas.principal.distancia = distancia;
-				let instrucciones = ruta.instructions.map(i => i.text);
+				//let instrucciones = ruta.instructions.map(i => i.text);
+				let instrucciones = ruta.instructions.map(i=>({
+				   text:i.text,
+				   distance:i.distance
+				}));
 				resolve({
 					points: {
 						coordinates: ruta.coordinates.map(c => [c.lng, c.lat])
@@ -2833,12 +2576,12 @@
 					raw: ruta
 				});
 			});
-			controlOSRM.on('routingerror', e => {
+			controlOSRM.on('routingerror', function(e){
 				clearTimeout(timeout);
-				if (controlOSRM) {
+				if(controlOSRM){
 					controlOSRM.off();
 					mapa.removeControl(controlOSRM);
-					controlOSRM = null;
+					controlOSRM=null;
 				}
 				reject("Error OSRM");
 			});
@@ -2846,84 +2589,32 @@
 		});
 	};
 	
-	function usarOpenRouteService(origen, destino) {
-		return new Promise((resolve, reject) => {
-			if (!origen || !destino || origen.lat == null || origen.lng == null || destino.lat == null || destino.lng == null) {
-				return reject("Coords inválidas ORS");
-			}
-			const controller = new AbortController();
-			const signal = controller.signal;
-			let url = `https://api.openrouteservice.org/v2/directions/driving-car`;
-			//let timeoutActivo = true;
-			let timeout = setTimeout(() => {
-				timeoutActivo = false;
-				controller.abort();
-				reject("Timeout ORS");
-			}, 6000);
-			//fetch(url, {
-			//	method: 'POST',
-			//	headers: {
-			//		'Content-Type': 'application/json',
-			//		'Authorization': apikeyors
-			//	},
-			//	signal: signal,
-			//	body: JSON.stringify({
-			//		coordinates: [
-			//			[Number(origen.lng), Number(origen.lat)],
-			//			[Number(destino.lng), Number(destino.lat)]
-			//		],
-			//		instructions: true,
-			//		geometry_simplify: false
-			//	})
-			//})
-			fetch("https://api.openrouteservice.org/v2/directions/driving-car", {
-				method: "POST",
-				headers: {
-					"Authorization": apikeyors,
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					coordinates: [
-						[origen.lng, origen.lat],
-						[destino.lng, destino.lat]
-					]
-				})
-			})
-			.then(res => {
-				if (!res.ok) {
-					return res.text().then(t => { throw new Error(t); });
-				}
-				return res.json();
-			})
-			.then(data => {
-				clearTimeout(timeout);
-				if (!data.routes || data.routes.length === 0) {
-					return reject("Sin ruta ORS");
-				}
-				console.log("OpenRouteService OK");
-				resolve(data.routes[0]);
-				// resolve(data); // no data.routes[0]
-			})
-			.catch(err => {
-				clearTimeout(timeout);
-				if (err.name === "AbortError") {
-					reject("Timeout ORS (abortado)");
-				} else {
-					reject(err.message || err);
-				}
-			});
-		});
-	};
-	
 	let capaRutaPrincipal = null;
 	let capaRutaAlternativa = null;
-	function mostrarRuta(route) {
-		let horas=Math.round(datosRutas.principal.tiempo/60);
-		let minutos=Math.round(datosRutas.principal.tiempo);
-		if (minutos>60) {minutos=Math.round(minutos-horas*60)};
-		let distancia = datosRutas.principal.distancia.replace(".", ",");
-		cajadistancia.classList.add("visible");
-		cajadistancia.innerHTML = "✅ Ruta Recomendada (en rojo): "+distancia+" km."+"<br> Tiempo estimado: "+horas+" hs. y "+minutos+" min.";
+	function mostrarRuta(route,proveedor) {
+		botondetallesruta.classList.remove("ocultar");
+botondetallesruta.style.display="block";
+botondetallesruta.style.visibility="visible";
+botondetallesruta.style.zIndex="99999";
+		if (proveedor==="OpenRouteService") {
+			let minutos=Math.round(route.summary.duration/60);
+			let horas=Math.floor(minutos/60);
+			minutos=minutos%60;
+			let distancia=(route.summary.distance/1000)
+			   .toFixed(1)
+			   .replace(".",",");
+			cajadistancia.innerHTML=
+			"Ruta: "+distancia+" km<br>"+
+			"Tiempo: "+horas+" hs "+minutos+" min";
+		}
+		else {
+			let horas=Math.round(datosRutas.principal.tiempo/60);
+			let minutos=Math.round(datosRutas.principal.tiempo);
+			if (minutos>60) {minutos=Math.round(minutos-horas*60)};
+			let distancia = datosRutas.principal.distancia.replace(".", ",");
+			cajadistancia.classList.add("visible");
+			cajadistancia.innerHTML = "✅ Ruta Recomendada (en rojo): "+distancia+" km."+"<br> Tiempo estimado: "+horas+" hs. y "+minutos+" min."
+		};
 		// Limpiar rutas anteriores
 		//if (capaRutaPrincipal) mapa.removeLayer(capaRutaPrincipal);
 		//if (capaRutaAlternativa) mapa.removeLayer(capaRutaAlternativa);
@@ -2938,10 +2629,10 @@
 				weight: 7
 			}).addTo(mapa);
 			// 👉 Alternativa
-			if (capaRutaAlternativa) {
-				capaRutaAlternativa.off(); // 👈 limpia eventos
-				mapa.removeLayer(capaRutaAlternativa);
-			};
+			//if (capaRutaAlternativa) {
+			//	capaRutaAlternativa.off(); // 👈 limpia eventos
+			//	mapa.removeLayer(capaRutaAlternativa);
+			//};
 			if (route.alternativa) {
 				let coordsAlt = route.alternativa.points.coordinates.map(c => [c[1], c[0]]);
 				if (capaRutaAlternativa) {mapa.removeLayer(capaRutaAlternativa)};
@@ -2952,16 +2643,16 @@
 					dashArray: "8, 10",
 				}).addTo(mapa);
 				// 👉 Click para intercambiar rutas
-				if (capaRutaAlternativa) {
-					capaRutaAlternativa.off(); // 👈 limpia eventos
-					mapa.removeLayer(capaRutaAlternativa);
-				};
+				//if (capaRutaAlternativa) {
+				//	capaRutaAlternativa.off(); // 👈 limpia eventos
+				//	mapa.removeLayer(capaRutaAlternativa);
+				//};
 				capaRutaAlternativa.on("click", () => {
 					console.log("Elegiste ruta alternativa");
 					let temp = route.principal;
 					route.principal = route.alternativa;
 					route.alternativa = temp;
-					mostrarRuta(route); // redibujar
+					mostrarRuta(route,proveedor); // redibujar
 				});
 			}
 			// Ajustar mapa
@@ -3007,23 +2698,45 @@
 			return;
 		}
 		// 🔵 CASO 3: OpenRouteService
-		//if (route.geometry) {
-		//	let coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
-		//	if (capaRutaPrincipal) {mapa.removeLayer(capaRutaPrincipal)};
-		//	capaRutaPrincipal = L.polyline(coords, { color: 'blue', weight: 6 }).addTo(mapa);
-		//	return;
-		//}
-		if(route.features){
-		   let coords = route.features[0].geometry.coordinates.map(
-			  c => [c[1],c[0]]
+		if(route.geometry){
+		   let coords = route.geometry.coordinates.map(
+			  c => [c[1], c[0]]
 		   );
-		   if(capaRutaPrincipal) mapa.removeLayer(capaRutaPrincipal);
-		   capaRutaPrincipal=L.polyline(coords,{
+		   if(capaRutaPrincipal){
+			  mapa.removeLayer(capaRutaPrincipal);
+		   }
+		   capaRutaPrincipal = L.polyline(coords,{
 			  color:"blue",
 			  weight:6
 		   }).addTo(mapa);
-		}
-		// ⚙️ CASO 4: OSRM (lo maneja Leaflet Routing Machine)
+		   mapa.fitBounds(capaRutaPrincipal.getBounds());
+		   
+		   
+		   if(route.segments?.[0]?.steps){
+
+   botondetallesruta.classList.remove("ocultar");
+   panelrutas.classList.remove("ocultar");
+
+   let lista=document.createElement("ol");
+
+   route.segments[0].steps.forEach(step=>{
+      let li=document.createElement("li");
+
+      li.innerHTML=
+        step.instruction +
+        " (" +
+        (step.distance/1000).toFixed(2)+
+        " km)";
+
+      lista.appendChild(li);
+   });
+
+   panelrutas.replaceChildren(lista);
+}
+		   
+		   
+		   return;
+		};
 	};
 
 	<!--Funcion para mostrar imagen estadísticas en ventana modal-->
