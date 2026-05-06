@@ -1926,19 +1926,19 @@
 			   marca_ubicacion_real=null;
 			};
 			//LA PROXIMA LINEA ES PARA MANIPULAR LA UBICACION
-			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
-			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
+			marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
+			//marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
 				.bindPopup("Vas por aquí");
-			coordenadas_ubicacion_real=e.latlng;
+			//coordenadas_ubicacion_real=e.latlng;
 		};
 		if (!coordenadas_ubicacion_real) {
 			//LAS DOS PROXIMAS LINEAS SON PARA MANIPULAR LA UBICACION
-			//coordenadas_ubicacion_real=L.latLng(-32.94949373638869, -68.81989938649201);
-			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
-			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
+			coordenadas_ubicacion_real=L.latLng(-32.94949373638869, -68.81989938649201);
+			marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
+			//marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
 				.bindPopup("Estás por aquí")
 				.openPopup();
-			coordenadas_ubicacion_real=e.latlng;
+			//coordenadas_ubicacion_real=e.latlng;
 			mapa.setView(coordenadas_ubicacion_real, 17);
 		};
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
