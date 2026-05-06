@@ -178,20 +178,6 @@
 		
 		/*Modal Flash*/
 		.modalflash {
-			/*position: fixed;*/
-			/*top: 50%;*/
-			/*left: 50%;*/
-			/*transform: translate(-50%, -50%);*/
-			/*width: 95vw;*/
-			/*max-width: 700px;*/
-			/*max-height: 93vh;*/
-			/*background-color: yellow;*/
-			/*border: 2px solid black;*/
-			/*border-radius: 10px;*/
-			/*display: flex;*/
-			/*flex-direction: column;*/
-			/*overflow-y: auto;*/
-			/*z-index: 99999;   /* MUY IMPORTANTE */*/
 			position: fixed;
 			top: 50%;
 			left: 50%;
@@ -218,9 +204,6 @@
 			flex-shrink: 0;
 		}
 		.modalflash-cuerpo {
-			/*padding: 10px;*/
-			/*flex: 1;                /* OCUPA TODA LA ALTURA RESTANTE */*/
-			/*overflow-y: auto;       /* SCROLL SI SE LLENA */*/
 			padding: 10px;
 			/* 🔥 IMPORTANTE */
 			flex: 0;              /* NO expandirse */
@@ -277,15 +260,12 @@
 			left: 5px;
 			padding: 15px 20px;
 			font-size: 18px;
-			/*border: 3px solid;*/
-			/*box-sizing: border-box;*/
 			border: 3px solid #ff0080;
 			border-radius: 10px;
 			outline: none;
 			background: linear-gradient(45deg, #ff0080, #ff8c00, #40e0d0, #ff0080);
 			background-size: 400% 400%;
 			color: white;
-			/*transition: all 0.3s ease;*/
 			width:100%;
 			flex:1;
 			min-width:120px;
@@ -755,7 +735,6 @@
 		</div>
 	</div>
 	<div class="col-imagen">
-		<!--<div id="ubicacion_texto" style="font-size:10px; text-align:right; background-color:lightblue; color:blue;width:80px"><strong>Mi ubicación</strong><a id="ubicacion_estado" href="javascript:activar_seguimiento(seguimiento)"><img id="gps" src="./images/slide_off.jpg" width="50" height="30"></img></a></div>-->
 		<div id="ubicacion_texto" class="colorful-div" style="text-align:center;color:blue;"><strong>Mi ubicación</strong><a id="ubicacion_estado" href="javascript:activar_seguimiento(seguimiento)"><img id="gps" src="./images/slide_off.jpg" width="50" height="30"></img></a></div>
 	</div>
 </div>
@@ -1073,9 +1052,6 @@
 	
 	<!-- la guía/modal con flecha (se posiciona con JS) -->
 	<div id="cartelnuevo" class="novedad" role="dialog" aria-modal="true" style="display:none">
-		<!--<p style="color:green";>Las herramientas que estaban en la pantalla,</p>
-		<p style="color:green";>ahora están ordenadas dentro de esta barra.</p>
-		<p style="color:green";>Así, tendrás más espacio para ver mejor el mapa.</p>-->
 		<br><p class="resaltarlonovedoso"><strong>LO NUEVO DE ESTA VERSION</strong></p>
 		<br><p style="color: blue;">Se actualizaron todas las estadísticas de producción hasta el año 2025.<br><br>Por otra parte, se modificaron algunas parcelas.</p>
 		<br></br>
@@ -1358,7 +1334,6 @@
 	function onEachFeature(feature, layer) {
 		if (encontrar_a.value=="") {
 		let logo = './images/Edificios.jpg';
-		//if (encontrar_abis.value=="") {
 		sup_total=sup_total+feature.properties.Sup_Croqui;
 		tot_parc=tot_parc+1;
 		//Calcular el promedio general
@@ -1469,12 +1444,6 @@
 						.bindPopup(contenidoPopup, formatoPopup)
 						.openPopup()};
 		};
-		//if (seguimiento==="si") {
-		//	dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
-		//	if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
-		//	if (!dentroeeamza && aviso===0) {trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)}//;TrazarRutaFueraEEA()}
-		//};
-		//console.log("Elegiste OnEachFeature");
 	};
 
 	<!--Funcion para filtrar con criterio distinto a vid. Es insensible al uso de mayúsculas/minúsculas y busca con criterio tipo "*...*" -->
@@ -1701,7 +1670,6 @@
 		<!--Resetear variables-->
 		barralateral.close();
 		var buscado=encontrar;
-		//ResetearTodo();
 		coincidencia="";
 		sector="";
 		oficina="";
@@ -1724,18 +1692,13 @@
 			capa_buscar1=L.geoJSON(parcelas,{filter:Filtrar_Buscar2, style:PersonalizarBusquedas, onEachFeature}).addTo(mapa);
 			capa_buscar.remove();
 		};
-		//if (Object.keys(capa_buscar._layers).length ==0) {mapa.flyToBounds(capa_buscar.getBounds(),18)};
-		//if (Object.keys(capa_buscar1._layers).length ==0) {mapa.flyToBounds(capa_buscar1.getBounds(),18)};
-		//if (seguimiento==="si" || marca_ubicacion_real) {
 		if (marca_ubicacion_real) {
 			mapa.flyToBounds(capa_buscar.getBounds(),18);
 			mapa.flyToBounds(capa_buscar1.getBounds(),18);
 			dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
 			if (dentroeeamza && coord.length !== 0) {alertaZonaMedia = false;TrazarRutaDentroEEA()};
 			if (!dentroeeamza && aviso===0) {
-				//let destino = capa_buscar.getBounds().getCenter();
-				//actualizarRutaForzada(destino);}
-				trazarRutaInteligente(coordenadas_ubicacion_real,entradaeea)}//TrazarRutaFueraEEA()}
+				trazarRutaInteligente(coordenadas_ubicacion_real,entradaeea)}
 		};
 	};
 
@@ -1744,7 +1707,6 @@
 		document.getElementById("volvereea").classList.add("ocultar");
 		if (lugar){lugar.remove()};
 		if (aer){aer.remove()};
-		//if (ruta) {ruta.remove()};
 		if (ruta){ruta.off(); // elimina listeners
 			ruta.remove();
 			ruta = null;
@@ -1754,10 +1716,8 @@
 		   mapa.removeLayer(marca_ubicacion_real);
 		   marca_ubicacion_real=null;
 		};
-		//if (marca_ubicacion_real) {marca_ubicacion_real.remove()};
 		if (grupoeeamza) {mapa.removeLayer(grupoeeamza)};
 		if (perimetro) {mapa.removeLayer(perimetro)};
-		//if (superficie) {mapa.removeLayer(superficie)};
 		if (tot_parc) {CerrarModalEstadistico()};
 		botondetallesruta.classList.add("ocultar");
 		clearInterval(intervalo);
@@ -1904,9 +1864,7 @@
 				};
 			};
 			seguimiento="si";
-			//console.log("Seguimiento: "+seguimiento);
 			botoncentrado.classList.remove("ocultar");
-			//cajadistancia.classList.add("visible");
 			mapa.locate({setView: false, watch: true, enableHighAccuracy: true});
 			mapa.on('locationfound', ActualizarUbicacion);
 			mapa.on('locationerror', ErrorGPS);
@@ -1957,14 +1915,11 @@
 		ultimaUbicacionRuta = coordenadas_ubicacion_real;
 		ultimoDestino = destino;
 		trazarRutaInteligente(coordenadas_ubicacion_real,destino);
-		//console.log(destino);
 	};
 
 	// Evento al encontrar la ubicación
 	function ActualizarUbicacion(e) {
-		//if (!puntomascercano) {puntomascercano=centroide};//entradaeea};
 		if (coordenadas_ubicacion_real) {
-			//marca_ubicacion_real.remove();
 			if (marca_ubicacion_real){
 			   marca_ubicacion_real.off();
 			   mapa.removeLayer(marca_ubicacion_real);
@@ -1994,14 +1949,11 @@
 			if (!dentroeeamza && aviso===0 && debeActualizarRuta()) {
 				trazarRutaInteligente(coordenadas_ubicacion_real,entradaeea);
 			}
-		};//trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)};//TrazarRutaFueraEEA()};
+		};
 		if (orientarme=="si") {
 			if (distancia<=1100) {
 				botondetallesruta.classList.add("ocultar");
 				panelrutas.classList.add("ocultar");
-				//if (ruta) {
-				//	ruta.remove();
-				//};
 				if (ruta){
 				   ruta.off(); // elimina listeners
 				   ruta.remove();
@@ -2377,16 +2329,6 @@
 			🚶 : ${formatearTiempo(tiempoPie)}<br>
 			🚗 : ${formatearTiempo(tiempoAuto)}
 		`;
-		//var velPie = 5;   // km/h
-		//var velAuto = 30; // km/h
-		//var tiempoPie = (distancia / velPie) * 60;
-		//var tiempoAuto = (distancia / velAuto) * 60;
-		//cajadistancia.classList.add("visible");
-		//cajadistancia.innerHTML = `
-		//	📏 Distancia: ${(distancia * 1000).toFixed(0)} m<br>
-		//	🚶 Tiempo a pie: ${tiempoPie.toFixed(0)} min<br>
-		//	🚗 Tiempo en auto: ${tiempoAuto.toFixed(0)} min
-		//`;
 	};
 
 	//###########################################################
@@ -2417,10 +2359,8 @@
 					// opcional: mostrar en UI
 					cajadistancia.innerHTML = "Ruta usando: " + proveedor.nombre;
 					mostrarRuta(resultado,proveedor.nombre);
-					//if (!dentroeeamza && lugar) {TrazarRutaDentroEEA()};
 				})
 				.catch(err => {
-					//console.warn("Fallo proveedor:", proveedor.nombre, err);
 					intentarSiguiente();
 				});
 		}
@@ -2520,6 +2460,7 @@
 		
 	let controlOSRM = null;
 	function usarOSRM(origen, destino) {
+		alert("Se disparó la función de OSRM");
 		return new Promise((resolve, reject) => {
 			if (!origen || !destino) {
 				return reject("Coords inválidas OSRM");
@@ -2601,9 +2542,6 @@
 	let capaRutaAlternativa = null;
 	function mostrarRuta(route,proveedor) {
 		botondetallesruta.classList.remove("ocultar");
-		//botondetallesruta.style.display="block";
-		//botondetallesruta.style.visibility="visible";
-		//botondetallesruta.style.zIndex="99999";
 		let instrucciones = route.instruccionesPrincipal;
 		if (proveedor==="OpenRouteService") {
 			let minutos=Math.round(route.summary.duration/60);
@@ -2927,7 +2865,6 @@
 		if (aer !=="") {aer.remove()};
 		clearInterval(intervalo);
 		clearTimeout(temporizadormodalflash);
-		//if (ruta) {ruta.remove()};
 		if (ruta){
 		   ruta.off(); // elimina listeners
 		   ruta.remove();
@@ -3106,12 +3043,6 @@
 				const div = document.createElement('div');
 				div.textContent = item;
 				div.classList.add('sugerencia-item');
-				//div.addEventListener('click', () => {
-				//	inputbusquedabisunidad.value = item;
-				//	sugerencia.innerHTML = '';
-				//	IrUnidad(item);
-				//	barralateral.close();
-				//});
 				div.addEventListener('click', function(e){
 				   e.preventDefault();
 				   e.stopPropagation();
@@ -3160,16 +3091,6 @@
 					document.getElementById("encontrar_abis").value=item;
 					EncontrarA(item);
 				});
-				//div.addEventListener('click', function(e){
-				//  e.preventDefault();
-				//   e.stopPropagation();
-				//  inputbusqueda.value=item;
-				//   sugerenciaz.innerHTML='';
-				//   setTimeout(()=>{
-				//	  EncontrarA(item);
-				//	  //barralateral.close();
-				//   },0);
-				//});
 				sugerenciaz.appendChild(div);
 			});
 		};
@@ -3204,16 +3125,6 @@
 					document.getElementById("encontrar_abis").value=item;
 					EncontrarA(item);
 				});
-				//div.addEventListener('click', function(e){
-				//   e.preventDefault();
-				//   e.stopPropagation();
-				//   inputbusquedabis.value=item;
-				//   sugerenciasbiz.innerHTML='';
-				//   setTimeout(()=>{
-				//	  EncontrarA(item);
-				//	  //barralateral.close();
-				//   },0);
-				//});
 				sugerenciasbiz.appendChild(div);
 			});
 		};
