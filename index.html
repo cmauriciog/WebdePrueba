@@ -1735,7 +1735,7 @@
 			if (!dentroeeamza && aviso===0) {
 				//let destino = capa_buscar.getBounds().getCenter();
 				//actualizarRutaForzada(destino);}
-				trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)}//TrazarRutaFueraEEA()}
+				trazarRutaInteligente(coordenadas_ubicacion_real,entradaeea)}//TrazarRutaFueraEEA()}
 		};
 	};
 
@@ -1962,7 +1962,7 @@
 
 	// Evento al encontrar la ubicación
 	function ActualizarUbicacion(e) {
-		if (!puntomascercano) {puntomascercano=centroide};//entradaeea};
+		//if (!puntomascercano) {puntomascercano=centroide};//entradaeea};
 		if (coordenadas_ubicacion_real) {
 			//marca_ubicacion_real.remove();
 			if (marca_ubicacion_real){
@@ -1989,10 +1989,10 @@
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
 		distancia=DistanciaEnTiempoReal();
 		ultimoDestino=null;
-		if (dentroeeamza && coord.length !== 0) {TrazarRutaDentroEEA()};
+		if (dentroeeamza && coord.length !== 0) {botondetallesruta.classList.add("ocultar");panelrutas.classList.add("ocultar");if (capaRutaPrincipal) {mapa.removeLayer(capaRutaPrincipal)};if (capaRutaAlternativa) {mapa.removeLayer(capaRutaAlternativa)};TrazarRutaDentroEEA()};
 		if (!dentroeeamza && aviso===0) {
 			if (!dentroeeamza && aviso===0 && debeActualizarRuta()) {
-				trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano);
+				trazarRutaInteligente(coordenadas_ubicacion_real,entradaeea);
 			}
 		};//trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)};//TrazarRutaFueraEEA()};
 		if (orientarme=="si") {
@@ -2016,21 +2016,10 @@
 			if (distancia>6000) {msg="¡Estás a unos "+(Math.round(distancia/1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" kilómetros del destino!"};
 			if (distancia<6001) {msg="¡Estás a unos "+(Math.round(distancia).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))+" metros del destino!"};
 		};
-		//if (!dentroeeamza || aer || lugar) {
-		//	cajadistancia.textContent = msg+" (En línea recta).-";
-		//	cajadistancia.style.background = "#d4edda";
-		//	cajadistancia.style.color = "#155724"
-		//} else {
-		//	if (dispositivo=="movil") {cajadistancia.innerHTML = "Estás dentro de la EEA Mendoza.<br>La velocidad máxima recomendada para circular aquí es de 30 km/h.-"};
-		//	if (dispositivo=="pc") {cajadistancia.innerHTML = "Estás dentro de la EEA Mendoza.-"};
-		//	cajadistancia.style.background = "#d4edda";
-		//	cajadistancia.style.color = "#155724";
-		//	botondetallesruta.classList.add("ocultar");
-		//};
 		if (distancia>180) {alertaZonaMedia=false;avisollegada="si"};
 		if (distancia >80 && distancia <= 180 && dispositivo=="movil") {
 			if (!alertaZonaMedia) {
-				msg="Avanza despacio y con atención. ¡Estás a pocos metros del destino!. Recordá que la velocidad maxima recomendada dentro del inta es de 30 kilometros por hora";
+				msg="Avanzá despacio y con atención. ¡Estás a pocos metros del destino!. Recordá que la velocidad maxima recomendada dentro del inta es de 30 kilometros por hora";
 				if (avisollegada=="si") {AlertaLlegada(msg)};
 				alertaZonaMedia=true;
 			};
@@ -2064,7 +2053,7 @@
 		const utterance = new SpeechSynthesisUtterance(leerdistancia);
 		speechSynthesis.speak(utterance);
 		if (distancia>10) {avisollegada="no"};
-		if (distancia<=10) {avisollegada="no"};//DetenerActualizarUbicacion()};
+		if (distancia<=10) {avisollegada="no"};
 		clearTimeout(temporizadormodalflash);
 	};
 	
@@ -2121,7 +2110,6 @@
 		clearTimeout(temporizadormodalflash);
 		actualizarruta="si";
 		document.getElementById("dondestoy").classList.add("ocultar");
-		//if (ruta) {ruta.remove()};
 		if (ruta){
 		   ruta.off(); // elimina listeners
 		   ruta.remove();
@@ -2133,11 +2121,6 @@
 		mapa.stopLocate();
 		mapa.off('locationfound', ActualizarUbicacion);
 		mapa.off('locationerror', ErrorGPS);
-		//if (marca_ubicacion_real) {
-		//	marca_ubicacion_real.remove();
-		//	coordenadas_ubicacion_real = "";
-		//	marca_ubicacion_real = "";
-		//};
 		if (marca_ubicacion_real){
 		   marca_ubicacion_real.off();
 		   mapa.removeLayer(marca_ubicacion_real);
@@ -2175,7 +2158,6 @@
 		document.getElementById("ubicacion_estado").href="javascript:activar_seguimiento(seguimiento)";
 		clearInterval(intervalo);
 		clearTimeout(temporizadormodalflash);
-		//if (ruta) {ruta.remove()};
 		if (ruta){
 		   ruta.off(); // elimina listeners
 		   ruta.remove();
@@ -2197,7 +2179,6 @@
 		btncerrarmodalflash.textContent = "Cerrar";
 		tiempomodalflash=5000;
 		ModalFlash(tiempomodalflash);
-		//if (ruta) {ruta.remove()};
 		if (ruta){
 		   ruta.off(); // elimina listeners
 		   ruta.remove();
@@ -2310,8 +2291,6 @@
 			capa=googlesatelite;
 			mapa.removeLayer(predioeeamza);
 		};
-		//if (capaRutaPrincipal) {mapa.removeLayer(capaRutaPrincipal)};
-		//if (capaRutaAlternativa) {mapa.removeLayer(capaRutaAlternativa)};
 		if (marcadoreeamzaeste) {marcadoreeamzaeste.remove()};
 		if (marcadoreeamzaoeste) {marcadoreeamzaoeste.remove()};
 		let coord_ubic_real = [coordenadas_ubicacion_real.lng, coordenadas_ubicacion_real.lat];
@@ -2384,11 +2363,30 @@
 		var velAuto = 30; // km/h
 		var tiempoPie = (distancia / velPie) * 60;
 		var tiempoAuto = (distancia / velAuto) * 60;
+		// 🔥 función para formatear tiempo
+		function formatearTiempo(minutos) {
+			if (minutos < 1) {
+				let segundos = Math.round(minutos * 60);
+				return segundos + " seg";
+			}
+			return Math.round(minutos) + " min";
+		}
 		cajadistancia.classList.add("visible");
-		cajadistancia.innerHTML =
-			"Distancia: " + (distancia * 1000).toFixed(0) + " m<br>" +
-			"Tiempo a pie: " + tiempoPie.toFixed(0) + " min<br>" +
-			"Tiempo en auto: " + tiempoAuto.toFixed(0) + " min";
+		cajadistancia.innerHTML = `
+			📏 Distancia: ${(distancia * 1000).toFixed(0)} m<br>
+			🚶 : ${formatearTiempo(tiempoPie)}<br>
+			🚗 : ${formatearTiempo(tiempoAuto)}
+		`;
+		//var velPie = 5;   // km/h
+		//var velAuto = 30; // km/h
+		//var tiempoPie = (distancia / velPie) * 60;
+		//var tiempoAuto = (distancia / velAuto) * 60;
+		//cajadistancia.classList.add("visible");
+		//cajadistancia.innerHTML = `
+		//	📏 Distancia: ${(distancia * 1000).toFixed(0)} m<br>
+		//	🚶 Tiempo a pie: ${tiempoPie.toFixed(0)} min<br>
+		//	🚗 Tiempo en auto: ${tiempoAuto.toFixed(0)} min
+		//`;
 	};
 
 	//###########################################################
@@ -2603,7 +2601,7 @@
 	let capaRutaAlternativa = null;
 	function mostrarRuta(route,proveedor) {
 		botondetallesruta.classList.remove("ocultar");
-		botondetallesruta.style.display="block";
+		//botondetallesruta.style.display="block";
 		//botondetallesruta.style.visibility="visible";
 		//botondetallesruta.style.zIndex="99999";
 		let instrucciones = route.instruccionesPrincipal;
@@ -2616,7 +2614,7 @@
 			   .replace(".",",");
 			cajadistancia.innerHTML=
 			"Ruta: "+distancia+" km<br>"+
-			"Tiempo: "+horas+" hs "+minutos+" min";
+			"Tiempo en 🚗: "+horas+" hs "+minutos+" min";
 		}
 		else {
 			let horas=Math.round(datosRutas.principal.tiempo/60);
@@ -2636,7 +2634,7 @@
 				  border-radius:50%;
 				  margin-right:6px;
 			   "></span>
-			   <b>Ruta principal</b>: ${distanciaP} km - ${tiempoP} min
+			   <b>Ruta principal</b>: ${distanciaP} km - 🚗 ${tiempoP} min
 			</div>
 			`;
 			if (route.alternativa) {
@@ -2652,7 +2650,7 @@
 					 border-radius:50%;
 					 margin-right:6px;
 				  "></span>
-				  <b>Alternativa</b>: ${distanciaA} km - ${tiempoA} min
+				  <b>Alternativa</b>: ${distanciaA} km - 🚗 ${tiempoA} min
 			   </div>
 			   `;
 			}
@@ -2755,6 +2753,7 @@
 					   });
 					   contenedor.appendChild(listaA);
 					};
+					panelrutas.innerHTML = "";
 					panelrutas.replaceChildren(contenedor);
 			return;
 		}
@@ -2791,6 +2790,7 @@
 				" km)";
 			  lista.appendChild(li);
 		   });
+		   panelrutas.innerHTML = "";
 		   panelrutas.replaceChildren(lista);
 		}
 		   return;
