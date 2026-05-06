@@ -1914,6 +1914,7 @@
 		ultimaActualizacionRuta = Date.now();
 		ultimaUbicacionRuta = coordenadas_ubicacion_real;
 		ultimoDestino = destino;
+		alert("¿.....?");
 		trazarRutaInteligente(coordenadas_ubicacion_real,destino);
 	};
 
@@ -2358,7 +2359,7 @@
 					console.log("✅ Ruta obtenida con:", proveedor.nombre);
 					// opcional: mostrar en UI
 					cajadistancia.innerHTML = "Ruta usando: " + proveedor.nombre;
-					mostrarRuta(resultado,proveedor.nombre);
+					MostrarRuta(resultado,proveedor.nombre);
 				})
 				.catch(err => {
 					intentarSiguiente();
@@ -2540,7 +2541,7 @@
 	
 	let capaRutaPrincipal = null;
 	let capaRutaAlternativa = null;
-	function mostrarRuta(route,proveedor) {
+	function MostrarRuta(route,proveedor) {
 		botondetallesruta.classList.remove("ocultar");
 		let instrucciones = route.instruccionesPrincipal;
 		if (proveedor==="OpenRouteService") {
@@ -2552,7 +2553,7 @@
 			   .replace(".",",");
 			cajadistancia.innerHTML=
 			"Ruta: "+distancia+" km<br>"+
-			"Tiempo en 🚗: "+horas+" hs "+minutos+" min";
+			"Tiempo en 🚗: "+horas+" hs "+minutos+" min"+"Servidor: "+proveedor;
 		}
 		else {
 			let horas=Math.round(datosRutas.principal.tiempo/60);
@@ -2572,7 +2573,7 @@
 				  border-radius:50%;
 				  margin-right:6px;
 			   "></span>
-			   <b>Ruta principal</b>: ${distanciaP} km - 🚗 ${tiempoP} min
+			   <b>Ruta principal</b>: ${distanciaP} km - 🚗 ${tiempoP} min - Servidor: ${proveedor}
 			</div>
 			`;
 			if (route.alternativa) {
@@ -2588,7 +2589,7 @@
 					 border-radius:50%;
 					 margin-right:6px;
 				  "></span>
-				  <b>Alternativa</b>: ${distanciaA} km - 🚗 ${tiempoA} min
+				  <b>Alternativa</b>: ${distanciaA} km - 🚗 ${tiempoA} min - Servidor: ${proveedor}
 			   </div>
 			   `;
 			}
@@ -2754,7 +2755,7 @@
 		  datosRutas.principal.distancia = route.distanciaPrincipal;
 	   }
 	   // 🔄 redibujar todo
-	   mostrarRuta(route, proveedor);
+	   MostrarRuta(route, proveedor);
 	};
 
 	<!--Funcion para mostrar imagen estadísticas en ventana modal-->
@@ -3582,7 +3583,6 @@
 		modalinicial.close();
 		clearInterval(intervalo);
 		clearTimeout(temporizadormodalflash);
-		//if (ruta) {ruta.remove();botondetallesruta.classList.add("ocultar")};
 		if (ruta){
 		   ruta.off(); // elimina listeners
 		   ruta.remove();
@@ -3606,7 +3606,7 @@
 		if (btncerrarmodalflash.textContent.trim() === "No") {orientarme = "no"};
 		avisollegada="no";
 		if (mail==="si") {EnviarMail()};
-		if (iraaer==="si") {trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)};//TrazarRutaFueraEEA()};
+		if (iraaer==="si") {alert("Acá estoooooy...");trazarRutaInteligente(coordenadas_ubicacion_real,puntomascercano)};
 		visitas.classList.add("ocultar");
 	});
 	
