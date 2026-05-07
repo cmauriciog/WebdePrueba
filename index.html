@@ -398,7 +398,7 @@
 			border: none;
 			cursor: pointer;
 			padding: 0;
-			z-index:999;
+			z-index:9999;
 		}
 		.botoncentrado img {
 			width: 35px;
@@ -1927,19 +1927,19 @@
 			   marca_ubicacion_real=null;
 			};
 			//LA PROXIMA LINEA ES PARA MANIPULAR LA UBICACION
-			marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
-			//marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
+			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
+			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
 				.bindPopup("Vas por aquí");
-			//coordenadas_ubicacion_real=e.latlng;
+			coordenadas_ubicacion_real=e.latlng;
 		};
 		if (!coordenadas_ubicacion_real) {
 			//LAS DOS PROXIMAS LINEAS SON PARA MANIPULAR LA UBICACION
-			coordenadas_ubicacion_real=L.latLng(-32.94949373638869, -68.81989938649201);
-			marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
-			//marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
+			//coordenadas_ubicacion_real=L.latLng(-32.94949373638869, -68.81989938649201);
+			//marca_ubicacion_real = L.marker(coordenadas_ubicacion_real,{icon:icono_posicion}).addTo(mapa)
+			marca_ubicacion_real = L.marker(e.latlng,{icon:icono_posicion}).addTo(mapa)
 				.bindPopup("Estás por aquí")
 				.openPopup();
-			//coordenadas_ubicacion_real=e.latlng;
+			coordenadas_ubicacion_real=e.latlng;
 			mapa.setView(coordenadas_ubicacion_real, 17);
 		};
 		dentroeeamza = Chequeardentroeeamza(coordenadas_ubicacion_real);
@@ -2490,9 +2490,10 @@
 				addWaypoints: false,
 				draggableWaypoints: false,
 				routeWhileDragging: false,
-				show: false
+				show: false,
+				collapsible: false,
 			});
-			controlOSRM.on('routesfound', e => {
+			controlOSRM.on('routesfound', function (e) {
 				clearTimeout(timeout);
 				let ruta = e.routes[0];
 				let tiempo = Math.round(ruta.summary.totalTime / 60);
@@ -2525,6 +2526,7 @@
 					instrucciones,
 					raw: ruta
 				});
+				panelrutas.replaceChildren(controlOSRM.getContainer());
 			});
 			controlOSRM.on('routingerror', function(e){
 				clearTimeout(timeout);
