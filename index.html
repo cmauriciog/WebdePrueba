@@ -2239,6 +2239,7 @@
 	};
 	
 	function TrazarRutaDentroEEA(){
+		if (distancia <= 10) return;
 		if (dentroeeamza) {
 			mapa.removeLayer(osm);
 			mapa.addLayer(googlesatelite);
@@ -2247,12 +2248,10 @@
 		};
 		if (marcadoreeamzaeste) {marcadoreeamzaeste.remove()};
 		if (marcadoreeamzaoeste) {marcadoreeamzaoeste.remove()};
-		//alert(dentroeeamza);
 		if (dentroeeamza) {coord_ubic_real = [coordenadas_ubicacion_real.lng, coordenadas_ubicacion_real.lat]};
 		if (!dentroeeamza) {coord_ubic_real=[-68.85766687268227, -33.003773232329486]};
 		let sentroide = [centroide.lng, centroide.lat];
 		var s1 = snapSegment(coord_ubic_real);
-		console.log(s1);
 		var s2 = snapSegment(sentroide);
 		var start = insertarNodo(s1);
 		var end = insertarNodo(s2);
